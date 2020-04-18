@@ -58,11 +58,12 @@ public class CarWheel {
 
 		}
 
-		updateFriction(lBody);
 		updateForwardVelocity(lBody);
 		updateLateralVelocity(lBody);
+		updateFriction(lBody);
 
 		if (isFrontWheel) {
+
 			updateDrive(lBody);
 
 			{
@@ -127,7 +128,7 @@ public class CarWheel {
 		pBody.applyLinearImpulse(lImpulse, pBody.getWorldCenter(), true);
 
 		// reduce the angular velocity of the wheel
-		pBody.applyAngularImpulse(0.1f * pBody.getInertia() * -pBody.getAngularVelocity());
+		pBody.applyAngularImpulse(.1f * pBody.getInertia() * -pBody.getAngularVelocity());
 
 	}
 
@@ -158,10 +159,10 @@ public class CarWheel {
 	}
 
 	private void updateTurn(Body pBody, RevoluteJoint pWheeljoint) {
-		final float lLockAngleInDegrees = 25.f;
+		final float lLockAngleInDegrees = mParentCar.steeringAngleLockDeg();
 		float lLockAngle = (float) Math.toRadians(lLockAngleInDegrees);
 
-		float lTurnSpeedPerSecond = (float) Math.toRadians(120.f);
+		float lTurnSpeedPerSecond = (float) Math.toRadians(mParentCar.turnSpeedPerSecond());
 		float lTurnPerTimeStep = lTurnSpeedPerSecond / 60.f;
 
 		float lDesiredAngle = 0.f;
@@ -169,6 +170,7 @@ public class CarWheel {
 			lDesiredAngle = lLockAngle;
 		else if (mParentCar.input().isTurningRight)
 			lDesiredAngle = -lLockAngle;
+		// else return;
 
 		float lCurrentAngle = pWheeljoint.getJointAngle();
 		float lAngleToTurn = lDesiredAngle - lCurrentAngle;

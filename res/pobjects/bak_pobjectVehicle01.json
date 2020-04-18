@@ -213,7 +213,7 @@
 			[
 				
 				{
-					"density" : 0.7,
+					"density" : 1.233334302902222,
 					"friction" : 0.2,
 					"name" : "fixture0",
 					"polygon" : 
@@ -227,7 +227,7 @@
 				},
 				
 				{
-					"density" : 0.7,
+					"density" : 1.233334302902222,
 					"friction" : 0.2,
 					"name" : "fixture0",
 					"polygon" : 
@@ -295,7 +295,7 @@
 		
 		{
 			"aspectScale" : 1,
-			"body" : 0,
+			"body" : 1,
 			"center" : 0,
 			"corners" : 
 			{
@@ -332,47 +332,6 @@
 			"name" : "image1",
 			"opacity" : 0.5,
 			"scale" : 1.964359879493713
-		},
-		
-		{
-			"aspectScale" : 1,
-			"body" : -1,
-			"center" : 0,
-			"corners" : 
-			{
-				"x" : 
-				[
-					-1.192120075225830,
-					1.192120075225830,
-					1.192120075225830,
-					-1.192120075225830
-				],
-				"y" : 
-				[
-					-2.128785848617554,
-					-2.128785848617554,
-					2.128785848617554,
-					2.128785848617554
-				]
-			},
-			"file" : "../../Aseprite/Vehicle01/split/MainBody.png",
-			"filter" : 1,
-			"glDrawElements" : [ 0, 1, 2, 2, 3, 0 ],
-			"glTexCoordPointer" : [ 0.0, 0.0, 1, 0.0, 1, 1, 0.0, 1 ],
-			"glVertexPointer" : 
-			[
-				-1.192120075225830,
-				-2.128785848617554,
-				1.192120075225830,
-				-2.128785848617554,
-				1.192120075225830,
-				2.128785848617554,
-				-1.192120075225830,
-				2.128785848617554
-			],
-			"name" : "image0",
-			"opacity" : 0.5,
-			"scale" : 4.257571697235107
 		},
 		
 		{
@@ -459,7 +418,48 @@
 		
 		{
 			"aspectScale" : 1,
-			"body" : 1,
+			"body" : -1,
+			"center" : 0,
+			"corners" : 
+			{
+				"x" : 
+				[
+					-1.192120075225830,
+					1.192120075225830,
+					1.192120075225830,
+					-1.192120075225830
+				],
+				"y" : 
+				[
+					-2.128785848617554,
+					-2.128785848617554,
+					2.128785848617554,
+					2.128785848617554
+				]
+			},
+			"file" : "../../Aseprite/Vehicle01/split/MainBody.png",
+			"filter" : 1,
+			"glDrawElements" : [ 0, 1, 2, 2, 3, 0 ],
+			"glTexCoordPointer" : [ 0.0, 0.0, 1, 0.0, 1, 1, 0.0, 1 ],
+			"glVertexPointer" : 
+			[
+				-1.192120075225830,
+				-2.128785848617554,
+				1.192120075225830,
+				-2.128785848617554,
+				1.192120075225830,
+				2.128785848617554,
+				-1.192120075225830,
+				2.128785848617554
+			],
+			"name" : "image0",
+			"opacity" : 0.5,
+			"scale" : 4.257571697235107
+		},
+		
+		{
+			"aspectScale" : 1,
+			"body" : 0,
 			"center" : 0,
 			"corners" : 
 			{
@@ -505,39 +505,18 @@
 			"anchorA" : 0,
 			"anchorB" : 
 			{
-				"x" : -1,
-				"y" : -2
+				"x" : 1.4,
+				"y" : 2.4
 			},
-			"bodyA" : 3,
+			"bodyA" : 0,
 			"bodyB" : 4,
-			"enableLimit" : true,
+			"enableLimit" : false,
 			"enableMotor" : false,
 			"jointSpeed" : 0,
 			"lowerLimit" : 0,
 			"maxMotorTorque" : 0,
 			"motorSpeed" : 0,
-			"name" : "RearLeftJoint",
-			"refAngle" : 0,
-			"type" : "revolute",
-			"upperLimit" : 0
-		},
-		
-		{
-			"anchorA" : 0,
-			"anchorB" : 
-			{
-				"x" : 1,
-				"y" : -2
-			},
-			"bodyA" : 2,
-			"bodyB" : 4,
-			"enableLimit" : true,
-			"enableMotor" : false,
-			"jointSpeed" : 0,
-			"lowerLimit" : 0,
-			"maxMotorTorque" : 0,
-			"motorSpeed" : 0,
-			"name" : "RearRightJoint",
+			"name" : "FrontRightJoint",
 			"refAngle" : 0,
 			"type" : "revolute",
 			"upperLimit" : 0
@@ -568,18 +547,39 @@
 			"anchorA" : 0,
 			"anchorB" : 
 			{
-				"x" : 1.4,
-				"y" : 2.4
+				"x" : 1,
+				"y" : -2
 			},
-			"bodyA" : 0,
+			"bodyA" : 2,
 			"bodyB" : 4,
-			"enableLimit" : false,
+			"enableLimit" : true,
 			"enableMotor" : false,
 			"jointSpeed" : 0,
 			"lowerLimit" : 0,
 			"maxMotorTorque" : 0,
 			"motorSpeed" : 0,
-			"name" : "FrontRightJoint",
+			"name" : "RearRightJoint",
+			"refAngle" : 0,
+			"type" : "revolute",
+			"upperLimit" : 0
+		},
+		
+		{
+			"anchorA" : 0,
+			"anchorB" : 
+			{
+				"x" : -1,
+				"y" : -2
+			},
+			"bodyA" : 3,
+			"bodyB" : 4,
+			"enableLimit" : true,
+			"enableMotor" : false,
+			"jointSpeed" : 0,
+			"lowerLimit" : 0,
+			"maxMotorTorque" : 0,
+			"motorSpeed" : 0,
+			"name" : "RearLeftJoint",
 			"refAngle" : 0,
 			"type" : "revolute",
 			"upperLimit" : 0

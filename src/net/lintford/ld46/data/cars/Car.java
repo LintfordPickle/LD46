@@ -3,6 +3,7 @@ package net.lintford.ld46.data.cars;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
 import net.lintford.library.core.LintfordCore;
@@ -27,7 +28,10 @@ public class Car extends JBox2dEntity {
 	private float mMaxForwardSpeed;
 	private float mMaxBackwardSpeed;
 	private float mMaxDriveForce;
+
 	private float mMaxLateralForce;
+	private float mSteeringAngleLockDeg;
+	private float mTurnSpeedPerSecond;
 
 	// ---------------------------------------------
 	// Properties
@@ -53,11 +57,25 @@ public class Car extends JBox2dEntity {
 		return mMaxForwardSpeed;
 	}
 
-	public void setCarProperties(float pMaxForwardSpeed, float pMaxBackwardSpeed, float pMaxDriveForce, float pMaxLateralForce) {
+	public float steeringAngleLockDeg() {
+		return mSteeringAngleLockDeg;
+	}
+
+	public float turnSpeedPerSecond() {
+		return mTurnSpeedPerSecond;
+	}
+
+	public void setCarDriveProperties(float pMaxForwardSpeed, float pMaxBackwardSpeed, float pMaxDriveForce) {
 		mMaxForwardSpeed = pMaxForwardSpeed;
 		mMaxBackwardSpeed = pMaxBackwardSpeed;
 		mMaxDriveForce = pMaxDriveForce;
+
+	}
+
+	public void setCarSteeringProperties(float pMaxLateralForce, float pSteeringAngleLockDeg, float pTurnSpeedPerSecondDeg) {
 		mMaxLateralForce = pMaxLateralForce;
+		mSteeringAngleLockDeg = pSteeringAngleLockDeg;
+		mTurnSpeedPerSecond = pTurnSpeedPerSecondDeg;
 
 	}
 
@@ -148,6 +166,36 @@ public class Car extends JBox2dEntity {
 		}
 
 		mCarInput.reset();
+
+		// TEST
+
+		final var lBody = mJBox2dEntityInstance.mainBody().mBody;
+		Vec2 mTempVec2 = new Vec2();
+		Vec2 mLatVec2 = new Vec2();
+
+		mTempVec2.set(lBody.getWorldVector(new Vec2(.1f, 0.f)));
+		final float lDotRightNormal = Vec2.dot(mTempVec2, lBody.getLinearVelocity());
+		mLatVec2.set(mTempVec2.x * lDotRightNormal, mTempVec2.y * lDotRightNormal);
+
+		float lMass = 2.f;
+
+		// Offset the lateral force to prevent sideways movement of the wheels
+		Vec2 lImpulse = new Vec2();
+
+		// but first allow for some amount of skidding, by limiting the maximum return force
+		lImpulse.set(-mLatVec2.x * lMass, -mLatVec2.y * lMass);
+		final var lMaxLateralForce = maxLateralForce();
+		if (lImpulse.length() > lMaxLateralForce)
+			lImpulse.set(lImpulse.mul(lMaxLateralForce / lImpulse.length()));
+
+		lBody.applyLinearImpulse(lImpulse, lBody.getWorldCenter(), true);
+
+		// reduce the angular velocity of the wheel
+		// with the follow, the vehicle is stable
+		// lBody.applyAngularImpulse(1f * lBody.getInertia() * -lBody.getAngularVelocity());
+		lBody.applyAngularImpulse(.4f * lBody.getInertia() * -lBody.getAngularVelocity());
+
+		//
 
 	}
 

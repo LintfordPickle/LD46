@@ -1,4 +1,4 @@
-package net.lintford.ld46.controllers.world;
+package net.lintford.ld46.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +26,9 @@ public class TrackController extends BaseController {
 	// ---------------------------------------------
 
 	public static final String CONTROLLER_NAME = "Track Controller";
+
+	float lSegmentWidth = 512f;
+	float lTrackScale = 2.f;
 
 	// ---------------------------------------------
 	// Variables
@@ -148,12 +151,11 @@ public class TrackController extends BaseController {
 			final var lOuterPoint = new Vec2();
 			final var lInnerPoint = new Vec2();
 
-			float lSegmentWidth = 256f;
-			lOuterPoint.x = (pSpline.points().get(i).x + lTempVector.x * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
-			lOuterPoint.y = (pSpline.points().get(i).y + lTempVector.y * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
+			lOuterPoint.x = (pSpline.points().get(i).x + lTempVector.x * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS * lTrackScale;
+			lOuterPoint.y = (pSpline.points().get(i).y + lTempVector.y * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS * lTrackScale;
 
-			lInnerPoint.x = (pSpline.points().get(i).x - lTempVector.x * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
-			lInnerPoint.y = (pSpline.points().get(i).y - lTempVector.y * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
+			lInnerPoint.x = (pSpline.points().get(i).x - lTempVector.x * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS * lTrackScale;
+			lInnerPoint.y = (pSpline.points().get(i).y - lTempVector.y * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS * lTrackScale;
 
 			lInnerVertices[i] = lInnerPoint;
 			lOuterVertices[i] = lOuterPoint;
@@ -176,9 +178,14 @@ public class TrackController extends BaseController {
 		final var lBody = pWorld.createBody(lTrackBodyDef);
 
 		FixtureDef lInnerFixtureDef = new FixtureDef();
+		lInnerFixtureDef.filter.categoryBits = Box2dGameController.CATEGORY_TRACK;
+		lInnerFixtureDef.filter.maskBits = Box2dGameController.CATEGORY_CAR;
+
 		lInnerFixtureDef.setShape(lInnerChainShape);
 
 		FixtureDef lOuterFixtureDef = new FixtureDef();
+		lOuterFixtureDef.filter.categoryBits = Box2dGameController.CATEGORY_TRACK;
+		lOuterFixtureDef.filter.maskBits = Box2dGameController.CATEGORY_CAR;
 		lOuterFixtureDef.setShape(lOuterChainShape);
 
 		lBody.createFixture(lInnerFixtureDef);

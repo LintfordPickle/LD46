@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import net.lintford.ld46.controllers.world.TrackController;
+import net.lintford.ld46.controllers.TrackController;
 import net.lintford.ld46.data.tracks.Track;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.graphics.shaders.ShaderMVP_PT;

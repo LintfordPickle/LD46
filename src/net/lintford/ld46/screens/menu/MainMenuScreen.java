@@ -1,4 +1,4 @@
-package net.lintford.ld46.screens;
+package net.lintford.ld46.screens.menu;
 
 import net.lintford.library.screenmanager.MenuScreen;
 import net.lintford.library.screenmanager.ScreenManager;

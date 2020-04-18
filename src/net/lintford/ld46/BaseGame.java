@@ -1,7 +1,7 @@
 package net.lintford.ld46;
 
+import net.lintford.ld46.screens.GameScreen;
 import net.lintford.ld46.screens.IntroScreen;
-import net.lintford.ld46.screens.TrackGameScreen;
 import net.lintford.library.GameInfo;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.screenmanager.IMenuAction;
@@ -90,9 +90,9 @@ public class BaseGame extends LintfordCore {
 			addMenuScreens();
 
 		} else {
-			// LoadingScreen.load(mScreenManager, true, new GameScreen(mScreenManager));
-			
-			LoadingScreen.load(mScreenManager, true, new TrackGameScreen(mScreenManager));
+			// LoadingScreen.load(mScreenManager, true, new CarGameScreen(mScreenManager));
+			// LoadingScreen.load(mScreenManager, true, new TrackGameScreen(mScreenManager));
+			LoadingScreen.load(mScreenManager, true, new GameScreen(mScreenManager));
 			
 		}
 

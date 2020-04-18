@@ -1,4 +1,4 @@
-package net.lintford.ld46.controllers.world;
+package net.lintford.ld46.controllers;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -61,14 +61,16 @@ public class CarController extends BaseController {
 	}
 
 	private void setupPlayerCar() {
-
 		final var lNewPlayerCar = new Car(0);
-		lNewPlayerCar.setCarProperties(150.f, -30.f, 75.f, 2.5f);
+		lNewPlayerCar.setCarDriveProperties(150.f, -30.f, 75.f);
+		lNewPlayerCar.setCarSteeringProperties(5.5f, 32.0f, 320.0f);
 
 		final var lResourceManager = mResourceController.resourceManager();
 		final var lBox2dWorld = mBox2dWorldController.world();
 
 		final var lPObjectInstance = lResourceManager.pobjectManager().getNewInstanceFromPObject(lBox2dWorld, "POBJECT_VEHICLE_01");
+		lPObjectInstance.setFixtureCategory(Box2dGameController.CATEGORY_CAR);
+		lPObjectInstance.setFixtureBitMask(Box2dGameController.CATEGORY_TRACK);
 		lNewPlayerCar.setPhysicsObject(lPObjectInstance);
 		lNewPlayerCar.loadPhysics(lBox2dWorld);
 
@@ -105,6 +107,9 @@ public class CarController extends BaseController {
 		super.update(pCore);
 
 		final var lPlayerCar = mCarManager.playerCar();
+
+		lPlayerCar.setCarDriveProperties(150.f, -30.f, 75.f);
+		lPlayerCar.setCarSteeringProperties(3.25f, 40.0f, 320.0f);
 
 		lPlayerCar.updatePhyics(pCore);
 

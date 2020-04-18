@@ -1,24 +1,21 @@
-package net.lintford.ld46.screens;
+package net.lintford.ld46.screens.tests;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 import org.lwjgl.opengl.GL11;
 
-import net.lintford.ld46.controllers.world.TrackController;
-import net.lintford.ld46.data.tracks.TrackManager;
-import net.lintford.ld46.renderers.TrackRenderer;
+import net.lintford.ld46.controllers.CarController;
+import net.lintford.ld46.data.cars.CarManager;
 import net.lintford.library.controllers.box2d.Box2dWorldController;
-import net.lintford.library.controllers.camera.CameraController;
 import net.lintford.library.controllers.camera.CameraZoomController;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
-import net.lintford.library.core.debug.Debug;
-import net.lintford.library.core.maths.spline.SplinePoint;
+import net.lintford.library.core.graphics.textures.Texture;
 import net.lintford.library.renderers.debug.DebugBox2dDrawer;
 import net.lintford.library.screenmanager.ScreenManager;
 import net.lintford.library.screenmanager.screens.BaseGameScreen;
 
-public class TrackGameScreen extends BaseGameScreen {
+public class CarGameScreen extends BaseGameScreen {
 
 	// ---------------------------------------------
 	// Constants
@@ -32,24 +29,24 @@ public class TrackGameScreen extends BaseGameScreen {
 
 	// Data
 	private World mBox2dWorld;
-	private TrackManager mTrackManger;
+	private CarManager mCarManager;
 
 	// Controllers
 	private Box2dWorldController mBox2dWorldController;
-	private TrackController mTrackController;
+	private CarController mCarController;
 
 	// Renderers
-	private TrackRenderer mTrackRenderer;
+	private Texture mGridTexture;
 
 	// ---------------------------------------------
 	// Constructor
 	// ---------------------------------------------
 
-	public TrackGameScreen(ScreenManager pScreenManager) {
+	public CarGameScreen(ScreenManager pScreenManager) {
 		super(pScreenManager);
 
 		mBox2dWorld = new World(BOX2D_GRAVITY);
-		mTrackManger = new TrackManager();
+		mCarManager = new CarManager();
 
 	}
 
@@ -71,6 +68,8 @@ public class TrackGameScreen extends BaseGameScreen {
 
 		createRenderers();
 
+		mGridTexture = pResourceManager.textureManager().loadTexture("TEXTURE_GRID", "res/textures/textureGrid01.png", GL11.GL_NEAREST, entityGroupID());
+
 	}
 
 	@Override
@@ -90,48 +89,23 @@ public class TrackGameScreen extends BaseGameScreen {
 		GL11.glClearColor(0.03f, 0.37f, 0.13f, 1);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
+		final var lTextureBatch = mRendererManager.uiTextureBatch();
+		lTextureBatch.begin(pCore.gameCamera());
+
+		final var lOrigWidth = pCore.gameCamera().getWidth();
+		final var lOrigHeight = pCore.gameCamera().getHeight();
+
+		final var lDestWidth = pCore.gameCamera().getWidth() * pCore.gameCamera().getZoomFactorOverOne();
+		final var lDestHeight = pCore.gameCamera().getHeight() * pCore.gameCamera().getZoomFactorOverOne();
+
+		lTextureBatch.draw(mGridTexture, -0, -0, lOrigWidth, lOrigHeight, -lDestWidth * 0.5f, -lDestHeight * 0.5f, lDestWidth, lDestHeight, -0.05f, 1f, 1f, 1f, 1f);
+		lTextureBatch.end();
+
 		super.draw(pCore);
 
-		{
-			final var offset = mTrackManger.currentTrack().trackSpline().isLooped() ? 0f : 3f;
-			for (float t = 0; t < mTrackManger.currentTrack().trackSpline().points().size() - offset; t += 0.025f) {
-				SplinePoint lPoint = mTrackManger.currentTrack().trackSpline().getPointOnSpline(t);
-				if (lPoint.x == 9) {
-
-				}
-				Debug.debugManager().drawers().drawPointImmediate(pCore.gameCamera(), lPoint.x, lPoint.y, -0.01f, 1f, 1f, 0f, 1f);
-			}
-		}
-		
-		{
-			GL11.glPointSize(4f);
-
-			final var lTextFont = mRendererManager.textFont();
-			
-			lTextFont.begin(pCore.HUD());
-			Debug.debugManager().drawers().beginPointRenderer(pCore.gameCamera());
-
-			final int lNumPoints = mTrackManger.currentTrack().trackSpline().points().size();
-			for (int i = 0; i < lNumPoints; i++) {
-				final var lPoint = mTrackManger.currentTrack().trackSpline().points().get(i);
-				Debug.debugManager().drawers().drawPoint(lPoint.x, lPoint.y, 1f, 1f, 0f, 1f);
-				lTextFont.draw(String.format("%d (%.2f)", i, lPoint.length), lPoint.x, lPoint.y, 1f);
-
-			}
-
-			Debug.debugManager().drawers().endPointRenderer();
-			lTextFont.end();
-		}
-		
-		
 		final var lFontUnit = mRendererManager.textFont();
 		lFontUnit.begin(pCore.HUD());
-
-		final float lLeft = pCore.HUD().boundingRectangle().left();
-		final float lTop = pCore.HUD().boundingRectangle().top();
-
-		lFontUnit.draw("Track Screen", lLeft + 5f, lTop + 5, 1f);
-		lFontUnit.draw("Camera Zoom: " + pCore.gameCamera().getZoomFactor(), lLeft + 5f, lTop + 25, 1f);
+		lFontUnit.draw("Camera Zoom: " + pCore.gameCamera().getZoomFactor(), 0, 0, 1f);
 		lFontUnit.end();
 
 	}
@@ -148,19 +122,15 @@ public class TrackGameScreen extends BaseGameScreen {
 		mBox2dWorldController = new Box2dWorldController(lControllerManager, mBox2dWorld, entityGroupID());
 		mBox2dWorldController.initialize(lCore);
 
+		mCarController = new CarController(lControllerManager, mCarManager, entityGroupID());
+		mCarController.initialize(lCore);
+
 		final var lZoomController = new CameraZoomController(lControllerManager, lGameCamera, entityGroupID());
 		lZoomController.setZoomConstraints(0.25f, 50.0f);
-
-		new CameraController(lControllerManager, lGameCamera, entityGroupID());
-
-		mTrackController = new TrackController(lControllerManager, mTrackManger, entityGroupID());
-		mTrackController.initialize(lCore);
 
 	}
 
 	private void createRenderers() {
-		mTrackRenderer = new TrackRenderer(mRendererManager, entityGroupID());
-
 		new DebugBox2dDrawer(mRendererManager, mBox2dWorld, entityGroupID());
 
 	}
