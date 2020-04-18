@@ -1,0 +1,11 @@
+{
+	"PObjectMetaDefinitions" : [
+	
+		{
+			"pObjectName":"POBJECT_VEHICLE_01",
+			"filepath":"res/pobjects/pobjectVehicle01.json",
+			"reloadable":"false"
+		}
+		
+	]
+}

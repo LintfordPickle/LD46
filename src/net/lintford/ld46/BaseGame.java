@@ -112,6 +112,7 @@ public class BaseGame extends LintfordCore {
 		mScreenManager.loadGLContent(mResourceManager);
 
 		// Load game resources here
+		mResourceManager.pobjectManager().definitionRepository().loadDefinitionsFromMetaFile("res/pobjects/meta.json");
 
 	}
 
