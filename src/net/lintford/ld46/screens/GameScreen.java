@@ -1,20 +1,18 @@
 package net.lintford.ld46.screens;
 
-import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.World;
 import org.lwjgl.opengl.GL11;
 
 import net.lintford.ld46.controllers.CarController;
+import net.lintford.ld46.controllers.GameStateController;
 import net.lintford.ld46.controllers.TrackController;
-import net.lintford.ld46.data.cars.CarManager;
-import net.lintford.ld46.data.tracks.TrackManager;
+import net.lintford.ld46.data.GameWorld;
+import net.lintford.ld46.renderers.GameStateRenderer;
 import net.lintford.ld46.renderers.TrackRenderer;
 import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.controllers.camera.CameraFollowController;
 import net.lintford.library.controllers.camera.CameraZoomController;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
-import net.lintford.library.core.graphics.textures.Texture;
 import net.lintford.library.renderers.debug.DebugBox2dDrawer;
 import net.lintford.library.screenmanager.ScreenManager;
 import net.lintford.library.screenmanager.screens.BaseGameScreen;
@@ -22,30 +20,18 @@ import net.lintford.library.screenmanager.screens.BaseGameScreen;
 public class GameScreen extends BaseGameScreen {
 
 	// ---------------------------------------------
-	// Constants
-	// ---------------------------------------------
-
-	private static final Vec2 BOX2D_GRAVITY = new Vec2(0, 0);
-
-	// ---------------------------------------------
 	// Variables
 	// ---------------------------------------------
 
 	// Data
-	private World mBox2dWorld;
-	private CarManager mCarManager;
-	private TrackManager mTrackManager;
-
-	private Texture mGridTexture;
+	private GameWorld mGameWorld;
 
 	// Controllers
 	private Box2dWorldController mBox2dWorldController;
 	private CameraFollowController mCameraFollowController;
 	private CarController mCarController;
 	private TrackController mTrackController;
-
-	// Renderers
-	private TrackRenderer mTrackRenderer;
+	private GameStateController mGameStateController;
 
 	// ---------------------------------------------
 	// Constructor
@@ -54,9 +40,7 @@ public class GameScreen extends BaseGameScreen {
 	public GameScreen(ScreenManager pScreenManager) {
 		super(pScreenManager);
 
-		mBox2dWorld = new World(BOX2D_GRAVITY);
-		mCarManager = new CarManager();
-		mTrackManager = new TrackManager();
+		mGameWorld = new GameWorld();
 
 	}
 
@@ -77,8 +61,6 @@ public class GameScreen extends BaseGameScreen {
 		super.loadGLContent(pResourceManager);
 
 		createRenderers();
-
-		mGridTexture = pResourceManager.textureManager().loadTexture("TEXTURE_GRID", "res/textures/textureGrid01.png", GL11.GL_NEAREST, entityGroupID());
 
 	}
 
@@ -117,29 +99,32 @@ public class GameScreen extends BaseGameScreen {
 		final var lControllerManager = lCore.controllerManager();
 		final var lGameCamera = lCore.gameCamera();
 
-		mBox2dWorldController = new Box2dWorldController(lControllerManager, mBox2dWorld, entityGroupID());
+		mBox2dWorldController = new Box2dWorldController(lControllerManager, mGameWorld.box2dWorld(), entityGroupID());
 		mBox2dWorldController.initialize(lCore);
 
 		final var lZoomController = new CameraZoomController(lControllerManager, lGameCamera, entityGroupID());
 		lZoomController.setZoomConstraints(0.25f, 50.0f);
 
-		// new CameraController(lControllerManager, lGameCamera, entityGroupID());
-
-		mCarController = new CarController(lControllerManager, mCarManager, entityGroupID());
+		mCarController = new CarController(lControllerManager, mGameWorld.carManager(), entityGroupID());
 		mCarController.initialize(lCore);
 
-		mTrackController = new TrackController(lControllerManager, mTrackManager, entityGroupID());
+		mTrackController = new TrackController(lControllerManager, mGameWorld.trackManager(), entityGroupID());
 		mTrackController.initialize(lCore);
 
-		mCameraFollowController = new CameraFollowController(lControllerManager, lGameCamera, mCarManager.playerCar(), entityGroupID());
+		final var lPlayerCar = mGameWorld.carManager().playerCar();
+		mCameraFollowController = new CameraFollowController(lControllerManager, lGameCamera, lPlayerCar, entityGroupID());
 		mCameraFollowController.initialize(lCore);
+
+		mGameStateController = new GameStateController(lControllerManager, mGameWorld, entityGroupID());
+		mGameStateController.initialize(lCore);
 
 	}
 
 	private void createRenderers() {
-		mTrackRenderer = new TrackRenderer(mRendererManager, entityGroupID());
+		new TrackRenderer(mRendererManager, entityGroupID());
+		new GameStateRenderer(mRendererManager, entityGroupID());
 
-		new DebugBox2dDrawer(mRendererManager, mBox2dWorld, entityGroupID());
+		new DebugBox2dDrawer(mRendererManager, mGameWorld.box2dWorld(), entityGroupID());
 
 	}
 

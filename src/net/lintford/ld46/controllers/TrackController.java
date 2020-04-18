@@ -20,7 +20,7 @@ import net.lintford.library.core.maths.spline.Spline;
 import net.lintford.library.core.maths.spline.SplinePoint;
 
 public class TrackController extends BaseController {
-
+	
 	// ---------------------------------------------
 	// Constants
 	// ---------------------------------------------
