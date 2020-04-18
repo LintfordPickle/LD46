@@ -60,7 +60,13 @@ public class CarWheel {
 
 		updateForwardVelocity(lBody);
 		updateLateralVelocity(lBody);
-		updateFriction(lBody);
+
+		float lMaxLateralVelocity = mParentCar.maxLateralForce();
+		if (!isFrontWheel && mParentCar.input().isHandBrake) {
+			lMaxLateralVelocity *= 0.3f;
+		}
+
+		updateWheelFriction(lBody, lMaxLateralVelocity);
 
 		if (isFrontWheel) {
 
@@ -113,7 +119,7 @@ public class CarWheel {
 	// Methods
 	// --------------------------------------
 
-	private void updateFriction(Body pBody) {
+	private void updateWheelFriction(Body pBody, float pMaxLateralForce) {
 		float lMass = pBody.getMass();
 
 		// Offset the lateral force to prevent sideways movement of the wheels
@@ -121,9 +127,8 @@ public class CarWheel {
 
 		// but first allow for some amount of skidding, by limiting the maximum return force
 		lImpulse.set(-mLateralVelocity.x * lMass, -mLateralVelocity.y * lMass);
-		final var lMaxLateralForce = mParentCar.maxLateralForce();
-		if (lImpulse.length() > lMaxLateralForce)
-			lImpulse.set(lImpulse.mul(lMaxLateralForce / lImpulse.length()));
+		if (lImpulse.length() > pMaxLateralForce)
+			lImpulse.set(lImpulse.mul(pMaxLateralForce / lImpulse.length()));
 
 		pBody.applyLinearImpulse(lImpulse, pBody.getWorldCenter(), true);
 
@@ -134,10 +139,13 @@ public class CarWheel {
 
 	private void updateDrive(Body pBody) {
 		float lDesiredSpeed = 0.f;
-		if (mParentCar.input().isGas)
+		if (mParentCar.input().isHandBrake)
+			lDesiredSpeed = mParentCar.maxForwardSpeed() * .05f;
+		else if (mParentCar.input().isGas)
 			lDesiredSpeed = mParentCar.maxForwardSpeed();
 		else if (mParentCar.input().isBrake)
 			lDesiredSpeed = mParentCar.maxBackwardSpeed();
+
 		else
 			return; // do nothing on no input
 
