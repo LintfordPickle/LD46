@@ -2,7 +2,7 @@ package net.lintford.ld46.controllers.world;
 
 import org.lwjgl.glfw.GLFW;
 
-import net.lintford.ld46.data.Car;
+import net.lintford.ld46.data.cars.Car;
 import net.lintford.ld46.data.cars.CarManager;
 import net.lintford.library.controllers.BaseController;
 import net.lintford.library.controllers.box2d.Box2dWorldController;

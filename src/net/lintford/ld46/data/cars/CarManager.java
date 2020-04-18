@@ -3,8 +3,6 @@ package net.lintford.ld46.data.cars;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.lintford.ld46.data.Car;
-
 public class CarManager {
 
 	// ---------------------------------------------

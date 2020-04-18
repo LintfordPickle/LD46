@@ -1,4 +1,4 @@
-package net.lintford.ld46.data;
+package net.lintford.ld46.data.cars;
 
 import java.util.ArrayList;
 import java.util.List;

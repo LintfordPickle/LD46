@@ -1,4 +1,4 @@
-package net.lintford.ld46.data;
+package net.lintford.ld46.data.cars;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
