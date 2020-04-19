@@ -81,7 +81,7 @@ public class CarController extends BaseController {
 
 		final var lPObjectInstance = lResourceManager.pobjectManager().getNewInstanceFromPObject(lBox2dWorld, "POBJECT_VEHICLE_01");
 		lPObjectInstance.setFixtureCategory(Box2dGameController.CATEGORY_CAR);
-		lPObjectInstance.setFixtureBitMask(Box2dGameController.CATEGORY_TRACK);
+		lPObjectInstance.setFixtureBitMask(Box2dGameController.CATEGORY_TRACK | Box2dGameController.CATEGORY_CAR);
 		lNewPlayerCar.setPhysicsObject(lPObjectInstance);
 		lNewPlayerCar.loadPhysics(lBox2dWorld);
 
@@ -90,6 +90,35 @@ public class CarController extends BaseController {
 	}
 
 	private void setupOpponents(final int pNumOpponents) {
+		final var lResourceManager = mResourceController.resourceManager();
+		final var lBox2dWorld = mBox2dWorldController.world();
+
+		final float lNormalizedDistanceBetweenSpawns = 0.3f;
+		float lCurrentMarker = lNormalizedDistanceBetweenSpawns;
+		final var lTrack = mTrackController.currentTrack();
+
+		for (int i = 0; i < pNumOpponents; i++) {
+			// Work out a start position
+			final var lSplinePoint = lTrack.trackSpline().getPointOnSpline(lCurrentMarker += lNormalizedDistanceBetweenSpawns);
+
+			final var lNewOpponent = new Car(getCarPoolUid());
+			lNewOpponent.setCarDriveProperties(150.f, -30.f, 75.f);
+			lNewOpponent.setCarSteeringProperties(5.5f, 32.0f, 320.0f);
+
+			// lPlayerCar.setCarDriveProperties(190.f, -30.f, 75.f);
+			// lPlayerCar.setCarSteeringProperties(3.25f, 40.0f, 300.0f);
+
+			final var lPObjectInstance = lResourceManager.pobjectManager().getNewInstanceFromPObject(lBox2dWorld, "POBJECT_VEHICLE_01");
+			lPObjectInstance.setFixtureCategory(Box2dGameController.CATEGORY_CAR);
+			lPObjectInstance.setFixtureBitMask(Box2dGameController.CATEGORY_TRACK | Box2dGameController.CATEGORY_CAR);
+			lNewOpponent.setPhysicsObject(lPObjectInstance);
+			lNewOpponent.loadPhysics(lBox2dWorld);
+			lNewOpponent.setRotation((float) Math.toRadians(90));
+			lNewOpponent.setPosition(lSplinePoint.x, lSplinePoint.y);
+
+			mCarManager.opponents().add(lNewOpponent);
+
+		}
 
 	}
 
@@ -120,9 +149,6 @@ public class CarController extends BaseController {
 
 		final var lPlayerCar = mCarManager.playerCar();
 
-		lPlayerCar.setCarDriveProperties(190.f, -30.f, 75.f);
-		lPlayerCar.setCarSteeringProperties(3.25f, 40.0f, 300.0f);
-
 		lPlayerCar.updatePhyics(pCore);
 
 		final var lTrack = mTrackController.currentTrack();
@@ -133,6 +159,8 @@ public class CarController extends BaseController {
 
 		for (int i = 0; i < lNumOpponents; i++) {
 			final var lOpponentCar = lOpponentsList.get(i);
+			lOpponentCar.updatePhyics(pCore);
+
 			updateCarProgress(pCore, lOpponentCar, lTrack);
 
 		}

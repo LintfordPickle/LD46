@@ -21,6 +21,7 @@ public class GameWorld {
 	private World mBox2dWorld;
 	private CarManager mCarManager;
 	private TrackManager mTrackManager;
+	private TelekinesisManager mTelekinesisManager;
 
 	// ---------------------------------------------
 	// Properties
@@ -38,6 +39,10 @@ public class GameWorld {
 		return mTrackManager;
 	}
 
+	public TelekinesisManager telekinesisManager() {
+		return mTelekinesisManager;
+	}
+
 	// ---------------------------------------------
 	// Constructor
 	// ---------------------------------------------
@@ -46,6 +51,7 @@ public class GameWorld {
 		mBox2dWorld = new World(BOX2D_GRAVITY);
 		mCarManager = new CarManager();
 		mTrackManager = new TrackManager();
+		mTelekinesisManager = new TelekinesisManager();
 
 	}
 

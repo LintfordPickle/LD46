@@ -19,6 +19,9 @@ public class CameraCarChaseController extends BaseController {
 	public static final String CONTROLLER_NAME = "Camera Car Chase Controller";
 
 	private static final float CAMERA_MAN_MOVE_SPEED = 0.2f;
+	
+	private static final float MIN_ZOOM = 0.8f;
+	private static final float MAX_ZOOM = 0.25f;
 
 	// ---------------------------------------------
 	// Variables
@@ -221,7 +224,8 @@ public class CameraCarChaseController extends BaseController {
 		mZoomFactor += mZoomVelocity * pCore.time().elapseGameTimeMilli() * 0.001f;
 		mZoomVelocity *= 0.987f;
 		mZoomVelocity = MathHelper.clamp(mZoomVelocity, -0.25f, 0.25f);
-
+		mZoomFactor = MathHelper.clamp(mZoomFactor, MAX_ZOOM, MIN_ZOOM);
+		
 		mGameCamera.setZoomFactor(mZoomFactor);
 	}
 

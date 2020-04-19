@@ -5,6 +5,7 @@ import net.lintford.ld46.data.cars.Car;
 import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
+import net.lintford.library.core.camera.ICamera;
 import net.lintford.library.core.graphics.textures.Texture;
 import net.lintford.library.core.graphics.textures.texturebatch.SubPixelTextureBatch;
 import net.lintford.library.renderers.BaseRenderer;
@@ -84,15 +85,27 @@ public class CarRenderer extends BaseRenderer {
 	@Override
 	public void draw(LintfordCore pCore) {
 
+	}
+
+	public void draw(LintfordCore pCore, ICamera pCamera) {
 		final var lPlayerCar = mCarController.carManager().playerCar();
-		drawCar(pCore, lPlayerCar);
+		drawCar(pCore, pCamera, lPlayerCar);
 
 		final var lListOfOpponents = mCarController.carManager().opponents();
 		final int lNumOfOpponents = lListOfOpponents.size();
 
 		for (int i = 0; i < lNumOfOpponents; i++) {
+			final var lOpponentCar = lListOfOpponents.get(i);
+			drawCar(pCore, pCamera, lOpponentCar);
 
 		}
+	}
+
+	public void draw(LintfordCore pCore, ICamera pCamera, int pCarIndex) {
+		final var lListOfOpponents = mCarController.carManager().opponents();
+		final var lSelectOpponentCar = lListOfOpponents.get(pCarIndex);
+
+		drawCar(pCore, pCamera, lSelectOpponentCar);
 
 	}
 
@@ -100,12 +113,12 @@ public class CarRenderer extends BaseRenderer {
 	// Methods
 	// ---------------------------------------------
 
-	private void drawCar(LintfordCore pCore, Car pCar) {
+	private void drawCar(LintfordCore pCore, ICamera pCamera, Car pCar) {
 
 		// Yuck!
 		final float lScale = 3.f;
 
-		mTextureBatch.begin(pCore.gameCamera());
+		mTextureBatch.begin(pCamera);
 		mTextureBatch.update(pCore);
 		mTextureBatch.pixelSize(lScale);
 

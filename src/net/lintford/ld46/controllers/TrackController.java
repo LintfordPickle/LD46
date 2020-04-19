@@ -144,6 +144,8 @@ public class TrackController extends BaseController {
 		final Vec2[] lInnerVertices = new Vec2[lNumSplinePoints + 1];
 		final Vec2[] lOuterVertices = new Vec2[lNumSplinePoints + 1];
 
+		final float lScaledSegWidth = lSegmentWidth * lTrackScale;
+
 		for (int i = 0; i < lNumSplinePoints; i++) {
 			int nextIndex = i + 1;
 			if (nextIndex > lNumSplinePoints - 1) {
@@ -162,11 +164,11 @@ public class TrackController extends BaseController {
 			final var lOuterPoint = new Vec2();
 			final var lInnerPoint = new Vec2();
 
-			lOuterPoint.x = (pSpline.points().get(i).x + lTempVector.x * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
-			lOuterPoint.y = (pSpline.points().get(i).y + lTempVector.y * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
+			lOuterPoint.x = (pSpline.points().get(i).x + lTempVector.x * lScaledSegWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
+			lOuterPoint.y = (pSpline.points().get(i).y + lTempVector.y * lScaledSegWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
 
-			lInnerPoint.x = (pSpline.points().get(i).x - lTempVector.x * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
-			lInnerPoint.y = (pSpline.points().get(i).y - lTempVector.y * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
+			lInnerPoint.x = (pSpline.points().get(i).x - lTempVector.x * lScaledSegWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
+			lInnerPoint.y = (pSpline.points().get(i).y - lTempVector.y * lScaledSegWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
 
 			lInnerVertices[i] = lInnerPoint;
 			lOuterVertices[i] = lOuterPoint;

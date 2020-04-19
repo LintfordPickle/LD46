@@ -24,4 +24,14 @@ public class CarInput {
 		isHandBrake = false;
 
 	}
+
+	public void copyFrom(CarInput pOtherInput) {
+		isTurningLeft = pOtherInput.isTurningLeft;
+		isTurningRight = pOtherInput.isTurningRight;
+		isGas = pOtherInput.isGas;
+		isBrake = pOtherInput.isBrake;
+		isHandBrake = pOtherInput.isHandBrake;
+
+	}
+
 }
