@@ -22,8 +22,10 @@ public class Car extends JBox2dEntity {
 	// Variables
 	// ---------------------------------------------
 
+	private CarProgress mCarProgress;
 	private CarInput mCarInput;
 	private List<CarWheel> mWheels;
+	private boolean mIsDestroyed;
 
 	private float mMaxForwardSpeed;
 	private float mMaxBackwardSpeed;
@@ -36,6 +38,18 @@ public class Car extends JBox2dEntity {
 	// ---------------------------------------------
 	// Properties
 	// ---------------------------------------------
+
+	public boolean isDestroyed() {
+		return mIsDestroyed;
+	}
+
+	public void isDestroyed(boolean pNewDestroyedState) {
+		mIsDestroyed = pNewDestroyedState;
+	}
+
+	public CarProgress carProgress() {
+		return mCarProgress;
+	}
 
 	public CarInput input() {
 		return mCarInput;
@@ -86,11 +100,13 @@ public class Car extends JBox2dEntity {
 	public Car(int pPoolUid) {
 		super(pPoolUid);
 
+		mCarProgress = new CarProgress(0, 0);
+
 		mCarInput = new CarInput();
 		mWheels = new ArrayList<>();
 
 	}
-
+	
 	// ---------------------------------------------
 	// Core-Methods
 	// ---------------------------------------------

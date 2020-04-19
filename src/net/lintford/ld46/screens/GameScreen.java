@@ -54,6 +54,8 @@ public class GameScreen extends BaseGameScreen {
 
 		createControllers();
 
+		mGameStateController.startNewGame();
+
 	}
 
 	@Override
@@ -73,6 +75,18 @@ public class GameScreen extends BaseGameScreen {
 	@Override
 	public void update(LintfordCore pCore, boolean pOtherScreenHasFocus, boolean pCoveredByOtherScreen) {
 		super.update(pCore, pOtherScreenHasFocus, pCoveredByOtherScreen);
+
+		if (mGameStateController.getEndConditionFlag() != GameStateController.END_CONDITION_NOT_SET) {
+			switch(mGameStateController.getEndConditionFlag()) {
+			case GameStateController.END_CONDITION_DESTROYED:
+			case GameStateController.END_CONDITION_LOST:
+			case GameStateController.END_CONDITION_WON_FIGHTING:
+			case GameStateController.END_CONDITION_WON_RACING:
+				mScreenManager.exitGame();
+				
+			}
+			
+		}
 
 	}
 

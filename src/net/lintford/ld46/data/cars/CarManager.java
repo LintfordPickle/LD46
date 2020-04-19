@@ -24,6 +24,19 @@ public class CarManager {
 		mPlayerCar = pNewCar;
 	}
 
+	public int numberOfActiveOpponents() {
+		int lReturnNumber = 0;
+
+		final int lNumberOpponents = mOpponentCars.size();
+		for (int i = 0; i < lNumberOpponents; i++) {
+			if (!mOpponentCars.get(i).isDestroyed())
+				lReturnNumber++;
+
+		}
+
+		return lReturnNumber;
+	}
+
 	public List<Car> opponents() {
 		return mOpponentCars;
 	}

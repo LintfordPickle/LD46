@@ -1,8 +1,8 @@
 package net.lintford.ld46.renderers;
 
+import net.lintford.ld46.controllers.CarController;
 import net.lintford.ld46.controllers.GameStateController;
 import net.lintford.library.core.LintfordCore;
-import net.lintford.library.core.graphics.textures.texturebatch.TextureBatch;
 import net.lintford.library.renderers.BaseRenderer;
 import net.lintford.library.renderers.RendererManager;
 
@@ -18,6 +18,7 @@ public class GameStateRenderer extends BaseRenderer {
 	// Variables
 	// ---------------------------------------------
 
+	private CarController mCarController;
 	private GameStateController mGameStateController;
 
 	// ---------------------------------------------
@@ -47,6 +48,7 @@ public class GameStateRenderer extends BaseRenderer {
 		final var lControllerManager = pCore.controllerManager();
 
 		mGameStateController = (GameStateController) lControllerManager.getControllerByNameRequired(GameStateController.CONTROLLER_NAME, entityGroupID());
+		mCarController = (CarController) lControllerManager.getControllerByNameRequired(CarController.CONTROLLER_NAME, entityGroupID());
 
 	}
 
@@ -64,9 +66,13 @@ public class GameStateRenderer extends BaseRenderer {
 		final float lLineHeight = 20.f;
 		final float lLinePosOffsetY = lHudBoundingBox.getMinY();
 
+		final var lPlayerCar = mCarController.carManager().playerCar();
+		final var lPlayerCarProgress = lPlayerCar.carProgress();
+
 		lFontUnit.begin(pCore.HUD());
-		lFontUnit.draw("Current Lap:", lHudBoundingBox.getMinX() + 5.f, lLinePosOffsetY + (lLinePosY), 1.f);
-		lFontUnit.draw("Current Position:", lHudBoundingBox.getMinX() + 5.f, lHudBoundingBox.getMinY() + (lLinePosY += lLineHeight), 1.f);
+		lFontUnit.draw("Current Lap: " + lPlayerCarProgress.currentLapNumber + "/" + mGameStateController.totalLaps(), lHudBoundingBox.getMinX() + 5.f, lLinePosOffsetY + (lLinePosY), 1.f);
+		lFontUnit.draw("Current Position: " + lPlayerCarProgress.position + "/" + mGameStateController.totalRacers(), lHudBoundingBox.getMinX() + 5.f, lHudBoundingBox.getMinY() + (lLinePosY += lLineHeight), 1.f);
+		lFontUnit.draw("Next Node Id: " + lPlayerCarProgress.nextControlNodeId + " " + (lPlayerCarProgress.isGoingWrongWay ? "!":""), lHudBoundingBox.getMinX() + 5.f, lHudBoundingBox.getMinY() + (lLinePosY += lLineHeight), 1.f);
 
 		lFontUnit.end();
 

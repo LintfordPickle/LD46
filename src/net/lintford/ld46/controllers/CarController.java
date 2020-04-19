@@ -4,11 +4,13 @@ import org.lwjgl.glfw.GLFW;
 
 import net.lintford.ld46.data.cars.Car;
 import net.lintford.ld46.data.cars.CarManager;
+import net.lintford.ld46.data.tracks.Track;
 import net.lintford.library.controllers.BaseController;
 import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.controllers.core.ControllerManager;
 import net.lintford.library.controllers.core.ResourceController;
 import net.lintford.library.core.LintfordCore;
+import net.lintford.library.core.maths.Vector2f;
 
 public class CarController extends BaseController {
 
@@ -118,10 +120,65 @@ public class CarController extends BaseController {
 
 		final var lPlayerCar = mCarManager.playerCar();
 
-		lPlayerCar.setCarDriveProperties(150.f, -30.f, 75.f);
-		lPlayerCar.setCarSteeringProperties(3.25f, 40.0f, 320.0f);
+		lPlayerCar.setCarDriveProperties(200.f, -30.f, 85.f);
+		lPlayerCar.setCarSteeringProperties(3.25f, 40.0f, 300.0f);
 
 		lPlayerCar.updatePhyics(pCore);
+
+		final var lTrack = mTrackController.currentTrack();
+		updateCarProgress(pCore, lPlayerCar, lTrack);
+
+		final var lOpponentsList = mCarManager.opponents();
+		final int lNumOpponents = lOpponentsList.size();
+
+		for (int i = 0; i < lNumOpponents; i++) {
+			final var lOpponentCar = lOpponentsList.get(i);
+			updateCarProgress(pCore, lOpponentCar, lTrack);
+
+		}
+
+	}
+
+	private void updateCarProgress(LintfordCore pCore, Car pCar, Track pTrack) {
+		final int lNumNodes = pTrack.trackSpline().numberSplineControlPoints();
+		final int lNextNodeId = pCar.carProgress().nextControlNodeId;
+
+		if (lNextNodeId >= lNumNodes) {
+			// We lapped
+			pCar.carProgress().currentLapNumber++;
+			pCar.carProgress().nextControlNodeId = 0;
+
+		}
+
+		// We check the next node and also all 'futher' nodes (only until the end), incase the cars got past
+		for (int j = 0; j < lNumNodes; j++) {
+
+			final var lNode = pTrack.trackSpline().getControlPoint(j);
+
+			final float lDist2 = Vector2f.distance2(pCar.x, pCar.y, lNode.x, lNode.y);
+			if (lDist2 < 512f * 512) {
+				if (j != lNextNodeId) {
+					// going the wrong way
+
+					if (pCar.carProgress().lastVisitedNodeId != j) {
+						if (j + 5000 > pCar.carProgress().lastVisitedNodeId + 5000) {
+							pCar.carProgress().isGoingWrongWay = false;
+						} else
+							pCar.carProgress().isGoingWrongWay = true;
+
+					}
+
+				} else {
+					pCar.carProgress().nextControlNodeId++;
+					pCar.carProgress().isGoingWrongWay = false;
+
+				}
+
+				pCar.carProgress().lastVisitedNodeId = j;
+
+			}
+
+		}
 
 	}
 
