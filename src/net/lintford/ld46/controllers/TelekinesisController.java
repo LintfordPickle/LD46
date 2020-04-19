@@ -161,6 +161,13 @@ public class TelekinesisController extends BaseController {
 	public void update(LintfordCore pCore) {
 		super.update(pCore);
 
+		final int lNumOpponents = mCarController.carManager().opponents().size();
+		if (lNumOpponents == 0) {
+			mTelekinesisManager.isInTelekinesesMode = false;
+			return;
+
+		}
+
 		final float lDelta = (float) pCore.time().elapseGameTimeMilli();
 		final var lPlayerCar = mCarController.carManager().playerCar();
 

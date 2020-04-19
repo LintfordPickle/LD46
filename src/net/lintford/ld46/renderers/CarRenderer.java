@@ -1,11 +1,14 @@
 package net.lintford.ld46.renderers;
 
+import org.lwjgl.opengl.GL11;
+
 import net.lintford.ld46.controllers.CarController;
 import net.lintford.ld46.data.cars.Car;
 import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
 import net.lintford.library.core.camera.ICamera;
+import net.lintford.library.core.debug.Debug;
 import net.lintford.library.core.graphics.textures.Texture;
 import net.lintford.library.core.graphics.textures.texturebatch.SubPixelTextureBatch;
 import net.lintford.library.renderers.BaseRenderer;
@@ -114,6 +117,40 @@ public class CarRenderer extends BaseRenderer {
 	// ---------------------------------------------
 
 	private void drawCar(LintfordCore pCore, ICamera pCamera, Car pCar) {
+
+		GL11.glPointSize(3f);
+		Debug.debugManager().drawers().drawPointImmediate(pCamera, pCar.pointOnTrackX, pCar.pointOnTrackY);
+
+		{ // Wheels
+			final float lCarPosX = pCar.x;
+			final float lCarPosY = pCar.y;
+			final float lEndX = lCarPosX + (float) Math.cos(pCar.wheelAngle) * 100.f;
+			final float lEndY = lCarPosY + (float) Math.sin(pCar.wheelAngle) * 100.f;
+
+			Debug.debugManager().drawers().drawLineImmediate(pCamera, lCarPosX, lCarPosY, lEndX, lEndY, -0.01f, 1f, 0f, 0f);
+
+		}
+
+		{ // Track
+			final float lCarPosX = pCar.x;
+			final float lCarPosY = pCar.y;
+
+			final float lEndX = lCarPosX + (float) Math.cos(pCar.trackAngle) * 100.f;
+			final float lEndY = lCarPosY + (float) Math.sin(pCar.trackAngle) * 100.f;
+
+			Debug.debugManager().drawers().drawLineImmediate(pCamera, lCarPosX, lCarPosY, lEndX, lEndY, -0.01f, 0f, 1f, 0f);
+		}
+
+		{ // Ai HEading
+			final float lCarPosX = pCar.x;
+			final float lCarPosY = pCar.y;
+
+			final float l1Rad = (float) pCar.wheelAngle;
+			final float lEndX = lCarPosX + (float) Math.cos(pCar.aiHeadingAngle+l1Rad) * 100.f;
+			final float lEndY = lCarPosY + (float) Math.sin(pCar.aiHeadingAngle+l1Rad) * 100.f;
+
+			Debug.debugManager().drawers().drawLineImmediate(pCamera, lCarPosX, lCarPosY, lEndX, lEndY, -0.01f, 0f, 0f, 1f);
+		}
 
 		// Yuck!
 		final float lScale = 3.f;

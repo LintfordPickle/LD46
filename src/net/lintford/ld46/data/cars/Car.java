@@ -8,6 +8,7 @@ import org.jbox2d.dynamics.World;
 
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.entity.JBox2dEntity;
+import net.lintford.library.core.maths.MathHelper;
 
 // tutorial here: http://www.iforce2d.net/b2dtut/top-down-car
 public class Car extends JBox2dEntity {
@@ -32,14 +33,25 @@ public class Car extends JBox2dEntity {
 	private float mMaxDriveForce;
 
 	private float mMaxLateralForce;
+	private float mSteeringAngleDeg;
 	private float mSteeringAngleLockDeg;
 	private float mTurnSpeedPerSecond;
 
 	private float mCurrentSpeed;
 
+	public float pointOnTrackX;
+	public float pointOnTrackY;
+	public float trackAngle;
+	public float wheelAngle;
+	public float aiHeadingAngle;
+
 	// ---------------------------------------------
 	// Properties
 	// ---------------------------------------------
+
+	public List<CarWheel> wheels() {
+		return mWheels;
+	}
 
 	public float currentSpeed() {
 		return mCurrentSpeed;
@@ -79,6 +91,14 @@ public class Car extends JBox2dEntity {
 
 	public float steeringAngleLockDeg() {
 		return mSteeringAngleLockDeg;
+	}
+
+	public float steeringAngleDeg() {
+		return mSteeringAngleDeg;
+	}
+
+	public void steeringAngleDeg(float pNewSteeringAngleDeg) {
+		mSteeringAngleDeg = pNewSteeringAngleDeg;
 	}
 
 	public float turnSpeedPerSecond() {
@@ -182,12 +202,14 @@ public class Car extends JBox2dEntity {
 	public void updatePhyics(LintfordCore pCore) {
 		super.updatePhyics(pCore);
 
+		mSteeringAngleDeg = MathHelper.clamp(mSteeringAngleDeg, -mSteeringAngleLockDeg, mSteeringAngleLockDeg);
+
 		final int lNumWheels = mWheels.size();
 		for (int i = 0; i < lNumWheels; i++) {
 			mWheels.get(i).update(pCore);
 		}
 
-		mCarInput.reset();
+		// mCarInput.reset();
 
 		// TEST
 

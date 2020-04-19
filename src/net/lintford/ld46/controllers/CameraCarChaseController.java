@@ -209,7 +209,7 @@ public class CameraCarChaseController extends BaseController {
 
 	private void updateWorldZoomFactor(LintfordCore pCore) {
 		float lTargetZoom = (100f / mTrackedEntity.currentSpeed()) / 10f;
-		lTargetZoom = MathHelper.clamp(lTargetZoom, 0.25f, 1.0f);
+		lTargetZoom = MathHelper.clamp(lTargetZoom, 0.25f, 0.5f);
 
 		final float lVelStepSize = 0.0075f;
 

@@ -10,7 +10,9 @@ import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.controllers.core.ControllerManager;
 import net.lintford.library.controllers.core.ResourceController;
 import net.lintford.library.core.LintfordCore;
+import net.lintford.library.core.maths.MathHelper;
 import net.lintford.library.core.maths.Vector2f;
+import net.lintford.library.core.maths.spline.SplinePoint;
 
 public class CarController extends BaseController {
 
@@ -139,6 +141,15 @@ public class CarController extends BaseController {
 		lPlayerCar.input().isBrake = pCore.input().keyboard().isKeyDown(GLFW.GLFW_KEY_S);
 		lPlayerCar.input().isHandBrake = pCore.input().keyboard().isKeyDown(GLFW.GLFW_KEY_SPACE);
 
+		if (lPlayerCar.input().isTurningLeft) {
+			lPlayerCar.steeringAngleDeg(lPlayerCar.steeringAngleLockDeg());
+		}
+
+		else if (lPlayerCar.input().isTurningRight) {
+			lPlayerCar.steeringAngleDeg(-lPlayerCar.steeringAngleLockDeg());
+		} else
+			lPlayerCar.steeringAngleDeg(0);
+
 		return super.handleInput(pCore);
 
 	}
@@ -154,6 +165,10 @@ public class CarController extends BaseController {
 		final var lTrack = mTrackController.currentTrack();
 		updateCarProgress(pCore, lPlayerCar, lTrack);
 
+		// updateCarAI(pCore, lPlayerCar);
+
+		// OPPONENTS
+
 		final var lOpponentsList = mCarManager.opponents();
 		final int lNumOpponents = lOpponentsList.size();
 
@@ -163,6 +178,7 @@ public class CarController extends BaseController {
 
 			updateCarProgress(pCore, lOpponentCar, lTrack);
 
+			updateCarAI(pCore, lOpponentCar);
 		}
 
 	}
@@ -208,6 +224,77 @@ public class CarController extends BaseController {
 
 		}
 
+	}
+
+	private void updateCarAI(LintfordCore pCore, Car pCar) {
+		final var lTrack = mTrackController.currentTrack();
+
+		final int lNumControlNodes = lTrack.trackSpline().numberSplineControlPoints();
+		final int lLastNodeId = pCar.carProgress().lastVisitedNodeId;
+		final int lNextNodeId = (int) ((lLastNodeId + 1 >= lNumControlNodes) ? 0 : lLastNodeId + 1);
+
+		final float lCarPositionAlongSpling = lTrack.trackSpline().getNormalizedPositionAlongSpline(lLastNodeId, pCar.x, pCar.y);
+		SplinePoint lTrackSplinePoint = lTrack.trackSpline().getPointOnSpline(lLastNodeId + lCarPositionAlongSpling);
+
+		pCar.pointOnTrackX = lTrackSplinePoint.x;
+		pCar.pointOnTrackY = lTrackSplinePoint.y;
+
+		final float lNode0X = pCar.pointOnTrackX;
+		final float lNode0Y = pCar.pointOnTrackY;
+
+		lTrackSplinePoint = lTrack.trackSpline().getControlPoint(lNextNodeId);
+
+		final float lNode1X = lTrackSplinePoint.x;
+		final float lNode1Y = lTrackSplinePoint.y;
+
+		final float lHeadingVecX = lNode1X - lNode0X;
+		final float lHeadingVecY = lNode1Y - lNode0Y;
+
+		final var lWheel = pCar.wheels().get(0);
+		final var lWheelBody = lWheel.mBox2dBodyInstance.mBody;
+
+		if (lWheelBody != null) {
+			pCar.wheelAngle = lWheelBody.getAngle() + (float) Math.toRadians(-90f);
+		}
+
+		pCar.trackAngle = (float) Math.atan2(lHeadingVecY, lHeadingVecX);
+		pCar.aiHeadingAngle = turnToFace(pCar.wheelAngle, pCar.trackAngle, 0.15f);
+
+		pCar.steeringAngleDeg((float) Math.toDegrees(pCar.aiHeadingAngle));
+
+		if (pCar.aiHeadingAngle > 0) {
+			pCar.input().isTurningLeft = true;
+			pCar.input().isTurningRight = false;
+		}
+
+		if (pCar.aiHeadingAngle < 0) {
+			pCar.input().isTurningLeft = false;
+			pCar.input().isTurningRight = true;
+		}
+
+		pCar.input().isGas = true;
+		
+	}
+
+	static float turnToFace(float pTrackHeading, float pCurrentAngle, float pTurnSpeed) {
+		float difference = wrapAngle(pTrackHeading - pCurrentAngle);
+
+		// clamp
+		difference = MathHelper.clamp(difference, -pTurnSpeed, pTurnSpeed);
+
+		return wrapAngle(difference);
+
+	}
+
+	/** wraps to -PI / PI */
+	public static float wrapAngle(float radians) {
+		while (radians < -Math.PI) {
+			radians += Math.PI * 2;
+		}
+		while (radians > Math.PI) {
+			radians -= Math.PI * 2;
+		}
+		return radians;
 	}
 
 }
