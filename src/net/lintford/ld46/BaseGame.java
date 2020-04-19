@@ -93,7 +93,7 @@ public class BaseGame extends LintfordCore {
 			// LoadingScreen.load(mScreenManager, true, new CarGameScreen(mScreenManager));
 			// LoadingScreen.load(mScreenManager, true, new TrackGameScreen(mScreenManager));
 			LoadingScreen.load(mScreenManager, true, new GameScreen(mScreenManager));
-			
+
 		}
 
 	}
@@ -104,8 +104,8 @@ public class BaseGame extends LintfordCore {
 
 	@Override
 	protected void oninitializeGL() {
-		// TODO Auto-generated method stub
 		super.oninitializeGL();
+
 	}
 
 	@Override

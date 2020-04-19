@@ -35,9 +35,15 @@ public class Car extends JBox2dEntity {
 	private float mSteeringAngleLockDeg;
 	private float mTurnSpeedPerSecond;
 
+	private float mCurrentSpeed;
+
 	// ---------------------------------------------
 	// Properties
 	// ---------------------------------------------
+
+	public float currentSpeed() {
+		return mCurrentSpeed;
+	}
 
 	public boolean isDestroyed() {
 		return mIsDestroyed;
@@ -106,7 +112,7 @@ public class Car extends JBox2dEntity {
 		mWheels = new ArrayList<>();
 
 	}
-	
+
 	// ---------------------------------------------
 	// Core-Methods
 	// ---------------------------------------------
@@ -196,24 +202,31 @@ public class Car extends JBox2dEntity {
 		float lMass = 2.f;
 
 		// Offset the lateral force to prevent sideways movement of the wheels
-		Vec2 lImpulse = new Vec2();
-
 		// but first allow for some amount of skidding, by limiting the maximum return force
-		lImpulse.set(-mLatVec2.x * lMass, -mLatVec2.y * lMass);
+		mImpulseVector.set(-mLatVec2.x * lMass, -mLatVec2.y * lMass);
 		final var lMaxLateralForce = maxLateralForce();
-		if (lImpulse.length() > lMaxLateralForce)
-			lImpulse.set(lImpulse.mul(lMaxLateralForce / lImpulse.length()));
+		if (mImpulseVector.length() > lMaxLateralForce)
+			mImpulseVector.set(mImpulseVector.mul(lMaxLateralForce / mImpulseVector.length()));
 
-		lBody.applyLinearImpulse(lImpulse, lBody.getWorldCenter(), true);
+		lBody.applyLinearImpulse(mImpulseVector, lBody.getWorldCenter(), true);
 
 		// reduce the angular velocity of the wheel
 		// with the follow, the vehicle is stable
 		// lBody.applyAngularImpulse(1f * lBody.getInertia() * -lBody.getAngularVelocity());
 		lBody.applyAngularImpulse(.4f * lBody.getInertia() * -lBody.getAngularVelocity());
 
-		//
+		mTempVec2.set(lBody.getWorldVector(CarWheel.FORWARD_VECTOR));
+		final float lDotForwardNormal = Vec2.dot(lBody.getLinearVelocity(), mTempVec2);
+		mForwardVelocity.set(mTempVec2.x * lDotForwardNormal, mTempVec2.y * lDotForwardNormal);
+
+		// Get current speed
+		mTempVec2.set(lBody.getWorldVector(CarWheel.FORWARD_VECTOR));
+		mCurrentSpeed = Vec2.dot(mTempVec2, mForwardVelocity);
 
 	}
+
+	private Vec2 mImpulseVector = new Vec2();
+	private Vec2 mForwardVelocity = new Vec2();
 
 	public void draw(LintfordCore pCore) {
 		final int lNumWheels = mWheels.size();

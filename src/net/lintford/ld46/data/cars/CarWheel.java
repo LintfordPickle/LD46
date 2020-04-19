@@ -17,8 +17,8 @@ public class CarWheel {
 	// Constants
 	// --------------------------------------
 
-	private static final Vec2 FORWARD_VECTOR = new Vec2(0.f, -1.f);
-	private static final Vec2 RIGHT_VECTOR = new Vec2(1.f, 0.f);
+	public static final Vec2 FORWARD_VECTOR = new Vec2(0.f, -1.f);
+	public static final Vec2 RIGHT_VECTOR = new Vec2(1.f, 0.f);
 
 	// --------------------------------------
 	// Variables

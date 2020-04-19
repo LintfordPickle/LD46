@@ -120,7 +120,7 @@ public class CarController extends BaseController {
 
 		final var lPlayerCar = mCarManager.playerCar();
 
-		lPlayerCar.setCarDriveProperties(200.f, -30.f, 85.f);
+		lPlayerCar.setCarDriveProperties(190.f, -30.f, 75.f);
 		lPlayerCar.setCarSteeringProperties(3.25f, 40.0f, 300.0f);
 
 		lPlayerCar.updatePhyics(pCore);
