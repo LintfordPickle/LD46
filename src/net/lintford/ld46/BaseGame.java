@@ -16,7 +16,7 @@ public class BaseGame extends LintfordCore {
 	// ---------------------------------------------
 
 	public static final String APPLICATION_NAME = "Ludum Dare #46";
-	public static final String WINDOW_TITLE = "Ludum Dare #46 © John Hampson";
+	public static final String WINDOW_TITLE = "Ludum Dare #46 - John Hampson";
 
 	private static final boolean SKIP_INTRO = true;
 	private static final boolean SKIP_MENU = true;

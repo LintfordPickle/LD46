@@ -1,5 +1,8 @@
 package net.lintford.ld46.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.glfw.GLFW;
 
 import net.lintford.ld46.data.cars.Car;
@@ -32,6 +35,9 @@ public class CarController extends BaseController {
 	private TrackController mTrackController;
 	private Box2dWorldController mBox2dWorldController;
 
+	private List<Car> mCarResolverList;
+	private float mCarResolverTimer;
+
 	// ---------------------------------------------
 	// Properties
 	// ---------------------------------------------
@@ -57,6 +63,7 @@ public class CarController extends BaseController {
 		super(pControllerManager, CONTROLLER_NAME, pEntityGroupID);
 
 		mCarManager = pCarManager;
+		mCarResolverList = new ArrayList<>();
 
 	}
 
@@ -73,7 +80,7 @@ public class CarController extends BaseController {
 		mCarUidCounter = 0;
 
 		setupPlayerCar();
-		setupOpponents(5);
+		setupOpponents(15);
 
 	}
 
@@ -112,7 +119,6 @@ public class CarController extends BaseController {
 		super.update(pCore);
 
 		final var lPlayerCar = mCarManager.playerCar();
-
 		lPlayerCar.updatePhyics(pCore);
 
 		final var lTrack = mTrackController.currentTrack();
@@ -128,6 +134,7 @@ public class CarController extends BaseController {
 
 		for (int i = 0; i < lNumOpponents; i++) {
 			final var lOpponentCar = lOpponentsList.get(i);
+
 			lOpponentCar.updatePhyics(pCore);
 
 			updateCarProgress(pCore, lOpponentCar, lTrack);
@@ -136,6 +143,19 @@ public class CarController extends BaseController {
 
 			updateCrashResolver(pCore, lOpponentCar);
 
+		}
+
+		// Resolve crashes one vehicle at a time
+		if (mCarResolverList.size() > 0) {
+			mCarResolverTimer -= pCore.time().elapseGameTimeMilli();
+			if (mCarResolverTimer < 0.0f) {
+				mCarResolverTimer = 1000.0f;
+
+				final var lCar = mCarResolverList.remove(0);
+
+				resetCarToCenter(pCore, lCar);
+
+			}
 		}
 
 	}
@@ -255,7 +275,7 @@ public class CarController extends BaseController {
 				pCar.mLastCrashResolverCounter++;
 
 				if (pCar.mLastCrashResolverCounter > 2.f) {
-					resetCarToCenter(pCore, pCar);
+					mCarResolverList.add(pCar);
 
 					pCar.mLastCrashResolverUpdateX = .0f;
 					pCar.mLastCrashResolverUpdateY = .0f;
@@ -278,7 +298,6 @@ public class CarController extends BaseController {
 		float lAngle = getTrackGradientAtVehicleLocation(pCar);
 
 		pCar.mJBox2dEntityInstance.setTransform(pCar.pointOnTrackX * Box2dWorldController.PIXELS_TO_UNITS, pCar.pointOnTrackY * Box2dWorldController.PIXELS_TO_UNITS, lAngle);
-		System.out.println("resolved crash");
 
 	}
 
@@ -292,7 +311,6 @@ public class CarController extends BaseController {
 
 	}
 
-	/** wraps to -PI / PI */
 	public static float wrapAngle(float radians) {
 		while (radians < -Math.PI) {
 			radians += Math.PI * 2;
@@ -314,10 +332,11 @@ public class CarController extends BaseController {
 		final var lPObjectInstance = lResourceManager.pobjectManager().getNewInstanceFromPObject(lBox2dWorld, "POBJECT_VEHICLE_01");
 		lPObjectInstance.setFixtureCategory(Box2dGameController.CATEGORY_CAR);
 		lPObjectInstance.setFixtureBitMask(Box2dGameController.CATEGORY_TRACK | Box2dGameController.CATEGORY_CAR);
-		lPObjectInstance.setWorldRotation((float) Math.toRadians(-90.f));
-		lPObjectInstance.setPosition(200 * Box2dWorldController.PIXELS_TO_UNITS, 50 * Box2dWorldController.PIXELS_TO_UNITS);
 		lNewPlayerCar.setPhysicsObject(lPObjectInstance);
 		lNewPlayerCar.loadPhysics(lBox2dWorld);
+
+		float lAngle = getTrackGradientAtVehicleLocation(lNewPlayerCar);
+		lPObjectInstance.setTransform(0.f, 0.f, lAngle);
 
 		mCarManager.playerCar(lNewPlayerCar);
 
@@ -327,7 +346,7 @@ public class CarController extends BaseController {
 		final var lResourceManager = mResourceController.resourceManager();
 		final var lBox2dWorld = mBox2dWorldController.world();
 
-		final float lNormalizedDistanceBetweenSpawns = 0.3f;
+		final float lNormalizedDistanceBetweenSpawns = 0.2f;
 		float lCurrentMarker = lNormalizedDistanceBetweenSpawns;
 		final var lTrack = mTrackController.currentTrack();
 
@@ -339,6 +358,9 @@ public class CarController extends BaseController {
 			// Work out a start position
 			final var lSplinePoint = lTrack.trackSpline().getPointOnSpline(lCurrentMarker += lNormalizedDistanceBetweenSpawns);
 
+			final float lX = lSplinePoint.x * Box2dWorldController.PIXELS_TO_UNITS;
+			final float lY = lSplinePoint.y * Box2dWorldController.PIXELS_TO_UNITS;
+
 			final var lNewOpponent = new Car(getCarPoolUid());
 			lNewOpponent.setCarDriveProperties(150.f, -30.f, 75.f);
 			lNewOpponent.setCarSteeringProperties(5.5f, 32.0f, 320.0f);
@@ -346,44 +368,18 @@ public class CarController extends BaseController {
 			final var lPObjectInstance = lResourceManager.pobjectManager().getNewInstanceFromPObject(lBox2dWorld, "POBJECT_VEHICLE_01");
 			lPObjectInstance.setFixtureCategory(Box2dGameController.CATEGORY_CAR);
 			lPObjectInstance.setFixtureBitMask(Box2dGameController.CATEGORY_TRACK | Box2dGameController.CATEGORY_CAR);
-			lPObjectInstance.setWorldPosition(lSplinePoint.x * Box2dWorldController.PIXELS_TO_UNITS, lSplinePoint.y * Box2dWorldController.PIXELS_TO_UNITS);
 
-			lPObjectInstance.setWorldRotation((float) Math.toRadians(90.f));
-
+			lPObjectInstance.setPosition(lX, lY);
 			lNewOpponent.setPhysicsObject(lPObjectInstance);
 			lNewOpponent.loadPhysics(lBox2dWorld);
+
+			lNewOpponent.carProgress().lastVisitedNodeId = (int) lCurrentMarker;
+			float lAngle = getTrackGradientAtVehicleLocation(lNewOpponent);
+			lPObjectInstance.setTransform(lX, lY, lAngle);
 
 			mCarManager.opponents().add(lNewOpponent);
 
 		}
-
-	}
-
-	private float getTrackAngle(Car pCar) {
-		final var lTrack = mTrackController.currentTrack();
-
-		final int lNumControlNodes = lTrack.trackSpline().numberSplineControlPoints();
-		final int lLastNodeId = pCar.carProgress().lastVisitedNodeId;
-		final int lNextNodeId = (int) ((lLastNodeId + 1 >= lNumControlNodes) ? 0 : lLastNodeId + 1);
-
-		final float lCarPositionAlongSpling = lTrack.trackSpline().getNormalizedPositionAlongSpline(lLastNodeId, pCar.x, pCar.y);
-		SplinePoint lTrackSplinePoint = lTrack.trackSpline().getPointOnSpline(lLastNodeId + lCarPositionAlongSpling);
-
-		pCar.pointOnTrackX = lTrackSplinePoint.x;
-		pCar.pointOnTrackY = lTrackSplinePoint.y;
-
-		final float lNode0X = pCar.pointOnTrackX;
-		final float lNode0Y = pCar.pointOnTrackY;
-
-		lTrackSplinePoint = lTrack.trackSpline().getControlPoint(lNextNodeId);
-
-		final float lNode1X = lTrackSplinePoint.x;
-		final float lNode1Y = lTrackSplinePoint.y;
-
-		final float lHeadingVecX = lNode1X - lNode0X;
-		final float lHeadingVecY = lNode1Y - lNode0Y;
-
-		return (float) Math.atan2(lHeadingVecY, lHeadingVecX);
 
 	}
 
@@ -408,6 +404,6 @@ public class CarController extends BaseController {
 		final float lHeadingVecX = lNode1X - lNode0X;
 		final float lHeadingVecY = lNode1Y - lNode0Y;
 
-		return (float) Math.toDegrees(Math.atan2(-lHeadingVecY, lHeadingVecX));
+		return (float) Math.atan2(lHeadingVecX, -lHeadingVecY);
 	}
 }
