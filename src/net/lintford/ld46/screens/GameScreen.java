@@ -16,7 +16,6 @@ import net.lintford.library.controllers.camera.CameraZoomController;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
 import net.lintford.library.core.camera.Camera;
-import net.lintford.library.renderers.debug.DebugBox2dDrawer;
 import net.lintford.library.screenmanager.ScreenManager;
 import net.lintford.library.screenmanager.screens.BaseGameScreen;
 
@@ -106,9 +105,9 @@ public class GameScreen extends BaseGameScreen {
 		GL11.glClearColor(0.03f, 0.37f, 0.13f, 1);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
+		super.draw(pCore);
+		
 		{ // Normal frame render
-
-			super.draw(pCore);
 
 			mCarRenderer.draw(pCore, pCore.gameCamera());
 
@@ -130,6 +129,8 @@ public class GameScreen extends BaseGameScreen {
 			}
 
 		}
+		
+		
 
 	}
 
@@ -180,10 +181,12 @@ public class GameScreen extends BaseGameScreen {
 
 		new TrackRenderer(mRendererManager, entityGroupID()).initialize(lCore);
 		new GameStateRenderer(mRendererManager, entityGroupID()).initialize(lCore);
-		new DebugBox2dDrawer(mRendererManager, mGameWorld.box2dWorld(), entityGroupID()).initialize(lCore);
+		
 		mCarRenderer = new CarRenderer(mRendererManager, entityGroupID());
 		mCarRenderer.initialize(lCore);
 
+		// new DebugBox2dDrawer(mRendererManager, mGameWorld.box2dWorld(), entityGroupID()).initialize(lCore);
+		
 	}
 
 }

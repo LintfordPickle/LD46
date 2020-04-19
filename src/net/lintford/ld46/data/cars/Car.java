@@ -50,6 +50,9 @@ public class Car extends JBox2dEntity {
 	public float mLastCrashResolverCounter;
 	public float mLastCrashResolverUpdateTime;
 
+	private Vec2 mImpulseVector = new Vec2();
+	private Vec2 mForwardVelocity = new Vec2();
+
 	// ---------------------------------------------
 	// Properties
 	// ---------------------------------------------
@@ -251,20 +254,5 @@ public class Car extends JBox2dEntity {
 		mCurrentSpeed = Vec2.dot(mTempVec2, mForwardVelocity);
 
 	}
-
-	private Vec2 mImpulseVector = new Vec2();
-	private Vec2 mForwardVelocity = new Vec2();
-
-	public void draw(LintfordCore pCore) {
-		final int lNumWheels = mWheels.size();
-		for (int i = 0; i < lNumWheels; i++) {
-			mWheels.get(i).draw(pCore);
-		}
-
-	}
-
-	// ---------------------------------------------
-	// Methods
-	// ---------------------------------------------
 
 }

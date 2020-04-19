@@ -324,7 +324,10 @@ public class CarController extends BaseController {
 	private void setupPlayerCar() {
 		final var lNewPlayerCar = new Car(getCarPoolUid());
 		lNewPlayerCar.setCarDriveProperties(150.f, -30.f, 75.f);
-		lNewPlayerCar.setCarSteeringProperties(5.5f, 32.0f, 320.0f);
+		lNewPlayerCar.setCarSteeringProperties(3.5f, 32.0f, 320.0f);
+		
+//		lNewPlayerCar.setCarDriveProperties(150.f, -30.f, 75.f);
+//		lNewPlayerCar.setCarSteeringProperties(5.5f, 32.0f, 320.0f);
 
 		final var lResourceManager = mResourceController.resourceManager();
 		final var lBox2dWorld = mBox2dWorldController.world();
@@ -387,10 +390,10 @@ public class CarController extends BaseController {
 		final var lTrack = mTrackController.currentTrack();
 
 		final int lNumControlNodes = lTrack.trackSpline().numberSplineControlPoints();
-		final int lLastNodeId = pCar.carProgress().lastVisitedNodeId;
+		final int lLastNodeId = (int) ((pCar.carProgress().lastVisitedNodeId + 1 >= lNumControlNodes) ? 0 : pCar.carProgress().lastVisitedNodeId);
 		final int lNextNodeId = (int) ((lLastNodeId + 1 >= lNumControlNodes) ? 0 : lLastNodeId + 1);
 
-		final float lCarPositionAlongSpling = lTrack.trackSpline().getNormalizedPositionAlongSpline(lLastNodeId, pCar.x, pCar.y);
+		final float lCarPositionAlongSpling = lTrack.trackSpline().getNormalizedPositionAlongSpline(lLastNodeId + 1, pCar.x, pCar.y);
 		SplinePoint lTrackSplinePoint = lTrack.trackSpline().getPointOnSpline(lLastNodeId + lCarPositionAlongSpling);
 
 		final float lNode0X = lTrackSplinePoint.x;

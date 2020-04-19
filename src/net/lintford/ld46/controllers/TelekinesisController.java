@@ -56,6 +56,7 @@ public class TelekinesisController extends BaseController {
 		super(pControllerManager, CONTROLLER_NAME, pEntityGroupID);
 
 		mTelekinesisManager = pTelekinesisManager;
+		mTelekinesisManager.isInTelekinesesMode = false;
 
 	}
 

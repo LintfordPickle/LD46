@@ -68,7 +68,6 @@ public class BaseGame extends LintfordCore {
 	@Override
 	protected void onInitializeApp() {
 		super.onInitializeApp();
-
 		mScreenManager.initialize();
 
 		if (!SKIP_INTRO) {

@@ -4,11 +4,9 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.joints.RevoluteJoint;
 
-import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.box2d.entity.Box2dBodyInstance;
 import net.lintford.library.core.box2d.entity.Box2dJointInstance;
-import net.lintford.library.core.debug.Debug;
 import net.lintford.library.core.maths.MathHelper;
 
 public class CarWheel {
@@ -86,32 +84,6 @@ public class CarWheel {
 			}
 
 		}
-
-	}
-
-	public void draw(LintfordCore pCore) {
-		final var lBody = mBox2dBodyInstance.mBody;
-		if (lBody == null) {
-			return;
-		}
-
-		final var lX = lBody.getWorldCenter().x * Box2dWorldController.UNITS_TO_PIXELS;
-		final var lY = lBody.getWorldCenter().y * Box2dWorldController.UNITS_TO_PIXELS;
-
-		mTempVec2.set(mForwardVelocity);
-		mTempVec2.normalize();
-		mTempVec2.mul(2.f);
-		final var lFX = lX + mTempVec2.x * Box2dWorldController.UNITS_TO_PIXELS;
-		final var lFY = lY + mTempVec2.y * Box2dWorldController.UNITS_TO_PIXELS;
-
-		mTempVec2.set(mLateralVelocity);
-		mTempVec2.normalize();
-		mTempVec2.mul(2.f);
-		final var lLX = lX + mTempVec2.x * Box2dWorldController.UNITS_TO_PIXELS;
-		final var lLY = lY + mTempVec2.y * Box2dWorldController.UNITS_TO_PIXELS;
-
-		Debug.debugManager().drawers().drawLineImmediate(pCore.gameCamera(), lX, lY, lFX, lFY, -0.01f, 1f, 0f, 0f);
-		Debug.debugManager().drawers().drawLineImmediate(pCore.gameCamera(), lX, lY, lLX, lLY, -0.01f, 1f, 1f, 0f);
 
 	}
 

@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -12,13 +13,10 @@ import net.lintford.ld46.controllers.TrackController;
 import net.lintford.ld46.data.tracks.Track;
 import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.core.LintfordCore;
-import net.lintford.library.core.debug.Debug;
+import net.lintford.library.core.ResourceManager;
 import net.lintford.library.core.graphics.shaders.ShaderMVP_PT;
 import net.lintford.library.core.graphics.textures.Texture;
 import net.lintford.library.core.maths.Matrix4f;
-import net.lintford.library.core.maths.Vector2f;
-import net.lintford.library.core.maths.spline.Spline;
-import net.lintford.library.core.maths.spline.SplinePoint;
 import net.lintford.library.renderers.BaseRenderer;
 import net.lintford.library.renderers.RendererManager;
 
@@ -61,10 +59,7 @@ public class TrackRenderer extends BaseRenderer {
 	// Variables
 	// ---------------------------------------------
 
-	private Track mTrack;
 	private FloatBuffer mTrackBuffer;
-	private Spline mTrackOuterSpline; // track outer wall // TODO: this is the same as the walls used for box2d (but with different resolution)??
-	private Spline mTrackInnerSpline; // track inner wall
 
 	protected int mVaoId = -1;
 	protected int mVboId = -1;
@@ -85,6 +80,17 @@ public class TrackRenderer extends BaseRenderer {
 	public TrackRenderer(RendererManager pRendererManager, int pEntityGroupID) {
 		super(pRendererManager, RENDERER_NAME, pEntityGroupID);
 
+		mShader = new ShaderMVP_PT("TrackShader", VERT_FILENAME, FRAG_FILENAME) {
+			@Override
+			protected void bindAtrributeLocations(int pShaderID) {
+				GL20.glBindAttribLocation(pShaderID, 0, "inPosition");
+				GL20.glBindAttribLocation(pShaderID, 1, "inColor");
+				GL20.glBindAttribLocation(pShaderID, 2, "inTexCoord");
+			}
+		};
+
+		mModelMatrix = new Matrix4f();
+
 	}
 
 	// ---------------------------------------------
@@ -104,6 +110,38 @@ public class TrackRenderer extends BaseRenderer {
 	}
 
 	@Override
+	public void loadGLContent(ResourceManager pResourceManager) {
+		super.loadGLContent(pResourceManager);
+
+		final var lTrack = mTrackController.currentTrack();
+
+		if (mVaoId == -1)
+			mVaoId = GL30.glGenVertexArrays();
+
+		if (mVboId == -1)
+			mVboId = GL15.glGenBuffers();
+
+		mShader.loadGLContent(pResourceManager);
+
+		loadTrackMesh(lTrack);
+
+	}
+
+	@Override
+	public void unloadGLContent() {
+		super.unloadGLContent();
+
+		mShader.unloadGLContent();
+
+		if (mVaoId > -1)
+			GL30.glDeleteVertexArrays(mVaoId);
+
+		if (mVboId > -1)
+			GL15.glDeleteBuffers(mVboId);
+
+	}
+
+	@Override
 	public void draw(LintfordCore pCore) {
 
 		if (!mTrackController.isinitialized()) {
@@ -114,26 +152,26 @@ public class TrackRenderer extends BaseRenderer {
 		if (lTrack == null)
 			return;
 
-		// Render control nodes
-		{
-			GL11.glPointSize(4f);
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		// GL11.glBindTexture(GL11.GL_TEXTURE_2D, mTrackTexture.getTextureID());
 
-			final var lTextFont = mRendererManager.textFont();
+		GL30.glBindVertexArray(mVaoId);
 
-			lTextFont.begin(pCore.gameCamera());
-			Debug.debugManager().drawers().beginPointRenderer(pCore.gameCamera());
+		mShader.projectionMatrix(pCore.gameCamera().projection());
+		mShader.viewMatrix(pCore.gameCamera().view());
+		mModelMatrix.setIdentity();
+		mModelMatrix.translate(0, 0f, -6f);
+		mShader.modelMatrix(mModelMatrix);
 
-			final int lNumPoints = lTrack.trackSpline().points().size();
-			for (int i = 0; i < lNumPoints; i++) {
-				final var lPoint = lTrack.trackSpline().points().get(i);
-				Debug.debugManager().drawers().drawPoint(lPoint.x, lPoint.y, 1f, 1f, 0f, 1f);
-				lTextFont.draw(String.format("%d (%.2f,%.2f)", i, lPoint.x * Box2dWorldController.PIXELS_TO_UNITS / 2.f, lPoint.y * Box2dWorldController.PIXELS_TO_UNITS / 2.f), lPoint.x, lPoint.y, 1f);
+		mShader.bind();
 
-			}
+		GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, mVertexCount);
 
-			Debug.debugManager().drawers().endPointRenderer();
-			lTextFont.end();
-		}
+		mShader.unbind();
+
+		GL30.glBindVertexArray(0);
+
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 
 	}
 
@@ -141,7 +179,7 @@ public class TrackRenderer extends BaseRenderer {
 	// Methods
 	// ---------------------------------------------
 
-	private void prepareTrackMesh(Track pTrack) {
+	private void loadTrackMesh(Track pTrack) {
 		if (pTrack == null)
 			return;
 
@@ -167,17 +205,11 @@ public class TrackRenderer extends BaseRenderer {
 	}
 
 	public void buildTrackMesh(Track pTrack) {
-		final var lTrackSpline = pTrack.trackSpline();
+		final var lInnerVertices = mTrackController.lInnerVertices;
+		final var lOuterVertices = mTrackController.lOuterVertices;
 
-		final int lNumSplinePoints = lTrackSpline.points().size();
+		final int lNumSplinePoints = lInnerVertices.length;
 		mTrackBuffer = BufferUtils.createFloatBuffer(lNumSplinePoints * 4 * stride);
-
-		final SplinePoint[] lOuterSplinePoints = new SplinePoint[lNumSplinePoints];
-		final SplinePoint[] lInnerSplinePoints = new SplinePoint[lNumSplinePoints];
-
-		Vector2f lTempVector = new Vector2f();
-		SplinePoint tempDriveDirection = new SplinePoint();
-		SplinePoint tempSideDirection = new SplinePoint();
 
 		for (int i = 0; i < lNumSplinePoints; i++) {
 			int nextIndex = i + 1;
@@ -185,35 +217,20 @@ public class TrackRenderer extends BaseRenderer {
 				nextIndex = 0;
 			}
 
-			tempDriveDirection.x = lTrackSpline.points().get(nextIndex).x - lTrackSpline.points().get(i).x;
-			tempDriveDirection.y = lTrackSpline.points().get(nextIndex).y - lTrackSpline.points().get(i).y;
+			final float lInnerPointX = lInnerVertices[i].x * Box2dWorldController.UNITS_TO_PIXELS;
+			final float lInnerPointY = lInnerVertices[i].y * Box2dWorldController.UNITS_TO_PIXELS;
+			final float lOuterPointX = lOuterVertices[i].x * Box2dWorldController.UNITS_TO_PIXELS;
+			final float lOuterPointY = lOuterVertices[i].y * Box2dWorldController.UNITS_TO_PIXELS;
 
-			tempSideDirection.x = tempDriveDirection.y;
-			tempSideDirection.y = -tempDriveDirection.x;
-
-			lTempVector.set(tempSideDirection.x, tempSideDirection.y);
-
-			lTempVector.nor();
-
-			SplinePoint lOuterPoint = new SplinePoint();
-			SplinePoint lInnerPoint = new SplinePoint();
-
-			float lSegmentWidth = 32f;
-			lOuterPoint.x = lTrackSpline.points().get(i).x + tempSideDirection.x * lSegmentWidth / 2;
-			lOuterPoint.y = lTrackSpline.points().get(i).y + tempSideDirection.y * lSegmentWidth / 2;
-
-			lInnerPoint.x = lTrackSpline.points().get(i).x - tempSideDirection.x * lSegmentWidth / 2;
-			lInnerPoint.y = lTrackSpline.points().get(i).y - tempSideDirection.y * lSegmentWidth / 2;
-
-			final float lSegmentLength = 0;
 			// TODO: If I want to texture the segments, need to generate UVs
-			addVertToBuffer(lInnerPoint.x, lInnerPoint.y, 0, 0, 1);
-			addVertToBuffer(lOuterPoint.x, lOuterPoint.y, 0, 1, 1);
+			addVertToBuffer(lInnerPointX, lInnerPointY, 0, 0, 1);
+			addVertToBuffer(lOuterPointX, lOuterPointY, 0, 1, 1);
 
 		}
 
-		mTrackOuterSpline = new Spline(lOuterSplinePoints);
-		mTrackInnerSpline = new Spline(lInnerSplinePoints);
+		// TODO: Add last two vertices?
+
+		mTrackBuffer.flip();
 
 	}
 

@@ -94,7 +94,9 @@ public class TrackController extends BaseController {
 
 			}
 
-			buildBox2dCollisionTrack(mBox2dWorldController.world(), getHiResSpline(lTrackSpline));
+			final var lHiResSpline = getHiResSpline(lTrackSpline);
+			mTrackManager.currentTrack().hiResSpline(lHiResSpline);
+			buildBox2dCollisionTrack(mBox2dWorldController.world(), lHiResSpline);
 
 		} else {
 			throw new RuntimeException("Could not load Box2d geometry for track");
@@ -117,6 +119,9 @@ public class TrackController extends BaseController {
 	// ---------------------------------------------
 	// Methods
 	// ---------------------------------------------
+
+	public Vec2[] lInnerVertices;
+	public Vec2[] lOuterVertices;
 
 	private Spline getHiResSpline(Spline pSpline) {
 		List<SplinePoint> lNewSplinePoints = new ArrayList<>();
@@ -141,8 +146,9 @@ public class TrackController extends BaseController {
 		SplinePoint tempDriveDirection = new SplinePoint();
 		SplinePoint tempSideDirection = new SplinePoint();
 
-		final Vec2[] lInnerVertices = new Vec2[lNumSplinePoints + 1];
-		final Vec2[] lOuterVertices = new Vec2[lNumSplinePoints + 1];
+		// TODO: Horrible
+		lInnerVertices = new Vec2[lNumSplinePoints + 1];
+		lOuterVertices = new Vec2[lNumSplinePoints + 1];
 
 		final float lScaledSegWidth = lSegmentWidth * lTrackScale;
 

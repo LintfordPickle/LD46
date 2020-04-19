@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GL11;
 
 import net.lintford.ld46.controllers.TrackController;
 import net.lintford.ld46.data.tracks.TrackManager;
-import net.lintford.ld46.renderers.TrackRenderer;
 import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.controllers.camera.CameraController;
 import net.lintford.library.controllers.camera.CameraZoomController;
@@ -37,9 +36,6 @@ public class TrackGameScreen extends BaseGameScreen {
 	// Controllers
 	private Box2dWorldController mBox2dWorldController;
 	private TrackController mTrackController;
-
-	// Renderers
-	private TrackRenderer mTrackRenderer;
 
 	// ---------------------------------------------
 	// Constructor
@@ -102,12 +98,12 @@ public class TrackGameScreen extends BaseGameScreen {
 				Debug.debugManager().drawers().drawPointImmediate(pCore.gameCamera(), lPoint.x, lPoint.y, -0.01f, 1f, 1f, 0f, 1f);
 			}
 		}
-		
+
 		{
 			GL11.glPointSize(4f);
 
 			final var lTextFont = mRendererManager.textFont();
-			
+
 			lTextFont.begin(pCore.HUD());
 			Debug.debugManager().drawers().beginPointRenderer(pCore.gameCamera());
 
@@ -122,8 +118,7 @@ public class TrackGameScreen extends BaseGameScreen {
 			Debug.debugManager().drawers().endPointRenderer();
 			lTextFont.end();
 		}
-		
-		
+
 		final var lFontUnit = mRendererManager.textFont();
 		lFontUnit.begin(pCore.HUD());
 
@@ -159,8 +154,6 @@ public class TrackGameScreen extends BaseGameScreen {
 	}
 
 	private void createRenderers() {
-		mTrackRenderer = new TrackRenderer(mRendererManager, entityGroupID());
-
 		new DebugBox2dDrawer(mRendererManager, mBox2dWorld, entityGroupID());
 
 	}

@@ -1,12 +1,9 @@
 package net.lintford.ld46.data.tracks;
 
-import org.lwjgl.glfw.GLFW;
-
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import net.lintford.library.controllers.box2d.Box2dWorldController;
-import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.debug.Debug;
 import net.lintford.library.core.maths.spline.Spline;
 import net.lintford.library.core.maths.spline.SplinePoint;
@@ -23,14 +20,20 @@ public class Track {
 	// Variables
 	// ---------------------------------------------
 
+	private Spline mHiResTrackSpline;
 	private Spline mTrackSpline;
-
-	private boolean mInUpdateMode;
-	private int mSelectedControlPointIndex;
 
 	// ---------------------------------------------
 	// Properties
 	// ---------------------------------------------
+
+	public Spline hiResSpline() {
+		return mHiResTrackSpline;
+	}
+
+	public void hiResSpline(Spline pSetSpline) {
+		mHiResTrackSpline = pSetSpline;
+	}
 
 	public Spline trackSpline() {
 		return mTrackSpline;
@@ -39,82 +42,12 @@ public class Track {
 	public float getTrackDistance() {
 		return mTrackSpline.totalSplineLength();
 	}
-	
+
 	// ---------------------------------------------
 	// Constructor
 	// ---------------------------------------------
 
 	public Track() {
-
-	}
-
-	// ---------------------------------------------
-	// Core-Methods
-	// ---------------------------------------------
-
-	public void handleInput(LintfordCore pCore) {
-
-		final float lDeltaTime = (float) pCore.time().elapseGameTimeMilli();
-
-		if (pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_X)) {
-			mSelectedControlPointIndex++;
-			if (mSelectedControlPointIndex >= mTrackSpline.points().size()) {
-				mSelectedControlPointIndex = 0;
-			}
-		}
-		if (pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_Z)) {
-			mSelectedControlPointIndex--;
-			if (mSelectedControlPointIndex < 0) {
-				mSelectedControlPointIndex = mTrackSpline.points().size() - 1;
-			}
-		}
-
-		{
-			boolean lUpdateKeyPressed = false;
-			final float lMovementSpeed = .1f;
-			if (pCore.input().keyboard().isKeyDown(GLFW.GLFW_KEY_LEFT)) {
-				mTrackSpline.points().get(mSelectedControlPointIndex).x -= lMovementSpeed * lDeltaTime;
-				mInUpdateMode = true;
-				lUpdateKeyPressed = true;
-			}
-
-			if (pCore.input().keyboard().isKeyDown(GLFW.GLFW_KEY_RIGHT)) {
-				mTrackSpline.points().get(mSelectedControlPointIndex).x += lMovementSpeed * lDeltaTime;
-				mInUpdateMode = true;
-				lUpdateKeyPressed = true;
-			}
-
-			if (pCore.input().keyboard().isKeyDown(GLFW.GLFW_KEY_UP)) {
-				mTrackSpline.points().get(mSelectedControlPointIndex).y -= lMovementSpeed * lDeltaTime;
-				mInUpdateMode = true;
-				lUpdateKeyPressed = true;
-			}
-
-			if (pCore.input().keyboard().isKeyDown(GLFW.GLFW_KEY_DOWN)) {
-				mTrackSpline.points().get(mSelectedControlPointIndex).y += lMovementSpeed * lDeltaTime;
-				mInUpdateMode = true;
-				lUpdateKeyPressed = true;
-			}
-
-			if (mInUpdateMode && !lUpdateKeyPressed) {
-				mTrackSpline.calculateSegmentLength();
-				mInUpdateMode = false;
-			}
-		}
-
-	}
-
-	public void draw(LintfordCore pCore) {
-
-		{ // Draw the spline
-			final var offset = mTrackSpline.isLooped() ? 0f : 3f;
-			for (float t = 0; t < mTrackSpline.points().size() - offset; t += 0.025f) {
-				final var lPoint = mTrackSpline.getPointOnSpline(t);
-
-				Debug.debugManager().drawers().drawPointImmediate(pCore.gameCamera(), lPoint.x, lPoint.y, -0.01f, 1f, 1f, 0f, 1f);
-
-			}
-		}
 
 	}
 

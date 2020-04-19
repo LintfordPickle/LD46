@@ -27,7 +27,6 @@ public class GameStateController extends BaseController {
 	private GameWorld mGameWorld;
 
 	private int mTotalLaps;
-	private int mTotalRacers;
 
 	private int mNumberCarsFinished;
 	private int mEndConditionFlag;
@@ -45,7 +44,7 @@ public class GameStateController extends BaseController {
 	}
 
 	public int totalRacers() {
-		return mTotalRacers;
+		return mGameWorld.carManager().numberOfActiveOpponents();
 	}
 
 	@Override
@@ -115,7 +114,6 @@ public class GameStateController extends BaseController {
 
 	public void startNewGame() {
 		mTotalLaps = 3;
-		mTotalRacers = 1;
 
 	}
 
