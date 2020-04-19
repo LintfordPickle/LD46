@@ -45,6 +45,11 @@ public class Car extends JBox2dEntity {
 	public float wheelAngle;
 	public float aiHeadingAngle;
 
+	public float mLastCrashResolverUpdateX;
+	public float mLastCrashResolverUpdateY;
+	public float mLastCrashResolverCounter;
+	public float mLastCrashResolverUpdateTime;
+
 	// ---------------------------------------------
 	// Properties
 	// ---------------------------------------------

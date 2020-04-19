@@ -166,13 +166,13 @@ public class GameScreen extends BaseGameScreen {
 		mTrackController.initialize(lCore);
 		mTelekinesisController.initialize(lCore);
 		mCarController.initialize(lCore);
-		
+
 		mGameStateController.initialize(lCore);
 
 		final var lPlayerCar = mGameWorld.carManager().playerCar();
 		mCameraChaseControler = new CameraCarChaseController(lControllerManager, lGameCamera, lPlayerCar, entityGroupID());
 		mCameraChaseControler.initialize(lCore);
-		
+
 	}
 
 	private void createRenderers() {

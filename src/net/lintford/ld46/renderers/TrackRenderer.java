@@ -111,6 +111,9 @@ public class TrackRenderer extends BaseRenderer {
 		}
 
 		final var lTrack = mTrackController.currentTrack();
+		if (lTrack == null)
+			return;
+
 		// Render control nodes
 		{
 			GL11.glPointSize(4f);
@@ -124,7 +127,7 @@ public class TrackRenderer extends BaseRenderer {
 			for (int i = 0; i < lNumPoints; i++) {
 				final var lPoint = lTrack.trackSpline().points().get(i);
 				Debug.debugManager().drawers().drawPoint(lPoint.x, lPoint.y, 1f, 1f, 0f, 1f);
-				lTextFont.draw(String.format("%d (%.2f,%.2f)", i, lPoint.x*Box2dWorldController.PIXELS_TO_UNITS/2.f, lPoint.y*Box2dWorldController.PIXELS_TO_UNITS/2.f), lPoint.x, lPoint.y, 1f);
+				lTextFont.draw(String.format("%d (%.2f,%.2f)", i, lPoint.x * Box2dWorldController.PIXELS_TO_UNITS / 2.f, lPoint.y * Box2dWorldController.PIXELS_TO_UNITS / 2.f), lPoint.x, lPoint.y, 1f);
 
 			}
 
