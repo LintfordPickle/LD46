@@ -20,7 +20,7 @@ import net.lintford.library.core.maths.spline.Spline;
 import net.lintford.library.core.maths.spline.SplinePoint;
 
 public class TrackController extends BaseController {
-	
+
 	// ---------------------------------------------
 	// Constants
 	// ---------------------------------------------
@@ -32,7 +32,7 @@ public class TrackController extends BaseController {
 
 	// ---------------------------------------------
 	// Variables
-	// ---------------------------------------------
+	// ---------------------------------------------{
 
 	private TrackManager mTrackManager;
 	private Box2dWorldController mBox2dWorldController;
@@ -82,6 +82,17 @@ public class TrackController extends BaseController {
 
 		if (mTrackManager.currentTrack() != null) {
 			final var lTrackSpline = mTrackManager.currentTrack().trackSpline();
+
+			// Need to rescale the control nodes
+			final var lPointsList = lTrackSpline.points();
+			final int lNumSplineNodes = lPointsList.size();
+			for (int i = 0; i < lNumSplineNodes; i++) {
+				final var lSplinePoint = lPointsList.get(i);
+
+				lSplinePoint.x *= lTrackScale;
+				lSplinePoint.y *= lTrackScale;
+
+			}
 
 			buildBox2dCollisionTrack(mBox2dWorldController.world(), getHiResSpline(lTrackSpline));
 
@@ -151,11 +162,11 @@ public class TrackController extends BaseController {
 			final var lOuterPoint = new Vec2();
 			final var lInnerPoint = new Vec2();
 
-			lOuterPoint.x = (pSpline.points().get(i).x + lTempVector.x * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS * lTrackScale;
-			lOuterPoint.y = (pSpline.points().get(i).y + lTempVector.y * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS * lTrackScale;
+			lOuterPoint.x = (pSpline.points().get(i).x + lTempVector.x * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
+			lOuterPoint.y = (pSpline.points().get(i).y + lTempVector.y * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
 
-			lInnerPoint.x = (pSpline.points().get(i).x - lTempVector.x * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS * lTrackScale;
-			lInnerPoint.y = (pSpline.points().get(i).y - lTempVector.y * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS * lTrackScale;
+			lInnerPoint.x = (pSpline.points().get(i).x - lTempVector.x * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
+			lInnerPoint.y = (pSpline.points().get(i).y - lTempVector.y * lSegmentWidth / 2) * Box2dWorldController.PIXELS_TO_UNITS;
 
 			lInnerVertices[i] = lInnerPoint;
 			lOuterVertices[i] = lOuterPoint;

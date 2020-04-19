@@ -36,6 +36,10 @@ public class Track {
 		return mTrackSpline;
 	}
 
+	public float getTrackDistance() {
+		return mTrackSpline.totalSplineLength();
+	}
+	
 	// ---------------------------------------------
 	// Constructor
 	// ---------------------------------------------

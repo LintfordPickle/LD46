@@ -22,13 +22,19 @@ public class CarController extends BaseController {
 	// Variables
 	// ---------------------------------------------
 
+	private int mCarUidCounter;
 	private CarManager mCarManager;
 	private ResourceController mResourceController;
+	private TrackController mTrackController;
 	private Box2dWorldController mBox2dWorldController;
 
 	// ---------------------------------------------
 	// Properties
 	// ---------------------------------------------
+
+	private int getCarPoolUid() {
+		return mCarUidCounter++;
+	}
 
 	@Override
 	public boolean isinitialized() {
@@ -54,6 +60,9 @@ public class CarController extends BaseController {
 	public void initialize(LintfordCore pCore) {
 		mResourceController = (ResourceController) pCore.controllerManager().getControllerByNameRequired(ResourceController.CONTROLLER_NAME, LintfordCore.CORE_ENTITY_GROUP_ID);
 		mBox2dWorldController = (Box2dWorldController) pCore.controllerManager().getControllerByNameRequired(Box2dWorldController.CONTROLLER_NAME, entityGroupID());
+		mTrackController = (TrackController) pCore.controllerManager().getControllerByNameRequired(TrackController.CONTROLLER_NAME, entityGroupID());
+
+		mCarUidCounter = 0;
 
 		setupPlayerCar();
 		setupOpponents(2);
@@ -61,7 +70,7 @@ public class CarController extends BaseController {
 	}
 
 	private void setupPlayerCar() {
-		final var lNewPlayerCar = new Car(0);
+		final var lNewPlayerCar = new Car(getCarPoolUid());
 		lNewPlayerCar.setCarDriveProperties(150.f, -30.f, 75.f);
 		lNewPlayerCar.setCarSteeringProperties(5.5f, 32.0f, 320.0f);
 

@@ -84,8 +84,12 @@ public class GameScreen extends BaseGameScreen {
 		super.draw(pCore);
 
 		final var lFontUnit = mRendererManager.textFont();
+		final var lZoomText = "Camera Zoom: " + pCore.gameCamera().getZoomFactor();
+		final var lHudBoundingBox = pCore.HUD().boundingRectangle();
+		final var lZoomTextWidth = lFontUnit.bitmap().getStringWidth(lZoomText);
+
 		lFontUnit.begin(pCore.HUD());
-		lFontUnit.draw("Camera Zoom: " + pCore.gameCamera().getZoomFactor(), 0, 0, 1f);
+		lFontUnit.draw(lZoomText, lHudBoundingBox.w() * .5f - 5.f - lZoomTextWidth, -lHudBoundingBox.h() * 0.5f, 1f);
 		lFontUnit.end();
 
 	}
@@ -103,13 +107,13 @@ public class GameScreen extends BaseGameScreen {
 		mBox2dWorldController.initialize(lCore);
 
 		final var lZoomController = new CameraZoomController(lControllerManager, lGameCamera, entityGroupID());
-		lZoomController.setZoomConstraints(0.25f, 50.0f);
-
-		mCarController = new CarController(lControllerManager, mGameWorld.carManager(), entityGroupID());
-		mCarController.initialize(lCore);
+		lZoomController.setZoomConstraints(0.025f, 50.0f);
 
 		mTrackController = new TrackController(lControllerManager, mGameWorld.trackManager(), entityGroupID());
 		mTrackController.initialize(lCore);
+
+		mCarController = new CarController(lControllerManager, mGameWorld.carManager(), entityGroupID());
+		mCarController.initialize(lCore);
 
 		final var lPlayerCar = mGameWorld.carManager().playerCar();
 		mCameraFollowController = new CameraFollowController(lControllerManager, lGameCamera, lPlayerCar, entityGroupID());
@@ -121,10 +125,11 @@ public class GameScreen extends BaseGameScreen {
 	}
 
 	private void createRenderers() {
-		new TrackRenderer(mRendererManager, entityGroupID());
-		new GameStateRenderer(mRendererManager, entityGroupID());
+		final var lCore = mScreenManager.core();
 
-		new DebugBox2dDrawer(mRendererManager, mGameWorld.box2dWorld(), entityGroupID());
+		new TrackRenderer(mRendererManager, entityGroupID()).initialize(lCore);
+		new GameStateRenderer(mRendererManager, entityGroupID()).initialize(lCore);
+		new DebugBox2dDrawer(mRendererManager, mGameWorld.box2dWorld(), entityGroupID()).initialize(lCore);
 
 	}
 

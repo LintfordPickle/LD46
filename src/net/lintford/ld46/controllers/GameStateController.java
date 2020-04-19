@@ -1,6 +1,7 @@
 package net.lintford.ld46.controllers;
 
 import net.lintford.ld46.data.GameWorld;
+import net.lintford.ld46.data.cars.Car;
 import net.lintford.library.controllers.BaseController;
 import net.lintford.library.controllers.core.ControllerManager;
 import net.lintford.library.core.LintfordCore;
@@ -41,6 +42,10 @@ public class GameStateController extends BaseController {
 
 	public GameWorld gameWorld() {
 		return mGameWorld;
+	}
+
+	public Car playerCar() {
+		return mGameWorld.carManager().playerCar();
 	}
 
 	public CarProgress getCarProgressById(int pCarIndex) {

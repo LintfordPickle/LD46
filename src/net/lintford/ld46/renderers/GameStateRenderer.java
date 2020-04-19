@@ -65,8 +65,8 @@ public class GameStateRenderer extends BaseRenderer {
 		final float lLinePosOffsetY = lHudBoundingBox.getMinY();
 
 		lFontUnit.begin(pCore.HUD());
-		lFontUnit.draw("Current Lap", lHudBoundingBox.getMinX() + 5.f, lLinePosOffsetY + (lLinePosY), 1.f);
-		lFontUnit.draw("Current Position", lHudBoundingBox.getMinX() + 5.f, lHudBoundingBox.getMinY() + (lLinePosY += lLineHeight), 1.f);
+		lFontUnit.draw("Current Lap:", lHudBoundingBox.getMinX() + 5.f, lLinePosOffsetY + (lLinePosY), 1.f);
+		lFontUnit.draw("Current Position:", lHudBoundingBox.getMinX() + 5.f, lHudBoundingBox.getMinY() + (lLinePosY += lLineHeight), 1.f);
 
 		lFontUnit.end();
 
