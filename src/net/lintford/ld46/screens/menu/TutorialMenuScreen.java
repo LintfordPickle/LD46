@@ -55,13 +55,22 @@ public class TutorialMenuScreen extends MenuScreen {
 	public void handleInput(LintfordCore pCore, boolean pAcceptMouse, boolean pAcceptKeyboard) {
 		super.handleInput(pCore, pAcceptMouse, pAcceptKeyboard);
 
-		if (pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_SPACE) || 
-				pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ESCAPE) || 
-				pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ENTER) ||
-				pCore.input().mouse().isMouseLeftButtonDown()) {
+		if (pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_SPACE) || pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ESCAPE) || pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ENTER)
+				|| pCore.input().mouse().isMouseLeftButtonDown()) {
+
+			mScreenManager.uiSounds().play("SOUND_MENU_CLICK");
+
 			exitScreen();
 
 		}
+
+	}
+
+	@Override
+	public void update(LintfordCore pCore, boolean pOtherScreenHasFocus, boolean pCoveredByOtherScreen) {
+		super.update(pCore, pOtherScreenHasFocus, pCoveredByOtherScreen);
+
+		pCore.time().setGameTimePaused(mScreenState == ScreenState.Active);
 
 	}
 

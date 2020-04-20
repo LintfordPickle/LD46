@@ -25,6 +25,8 @@ public class CarController extends BaseController {
 
 	public static final String CONTROLLER_NAME = "CarController";
 
+	public static final int NUMBER_OPPONENTS = 4;
+
 	// ---------------------------------------------
 	// Variables
 	// ---------------------------------------------
@@ -80,7 +82,7 @@ public class CarController extends BaseController {
 		mCarUidCounter = 0;
 
 		setupPlayerCar();
-		setupOpponents(15);
+		setupOpponents(NUMBER_OPPONENTS);
 
 	}
 
@@ -147,7 +149,7 @@ public class CarController extends BaseController {
 
 		// Resolve crashes one vehicle at a time
 		if (mCarResolverList.size() > 0) {
-			mCarResolverTimer -= pCore.time().elapseGameTimeMilli();
+			mCarResolverTimer -= pCore.time().elapseAppTimeMilli();
 			if (mCarResolverTimer < 0.0f) {
 				mCarResolverTimer = 1000.0f;
 
@@ -267,7 +269,7 @@ public class CarController extends BaseController {
 		final float lTimer = 500.0f;
 		final float lMinDist = 100f;
 
-		pCar.mLastCrashResolverUpdateTime -= pCore.time().elapseGameTimeMilli();
+		pCar.mLastCrashResolverUpdateTime -= pCore.time().elapseAppTimeMilli();
 		if (pCar.mLastCrashResolverUpdateTime < 0.0f) {
 			final float lDistTravelled = Vector2f.distance(pCar.mLastCrashResolverUpdateX, pCar.mLastCrashResolverUpdateY, pCar.x, pCar.y);
 
@@ -325,7 +327,7 @@ public class CarController extends BaseController {
 		final var lNewPlayerCar = new Car(getCarPoolUid());
 		lNewPlayerCar.setCarDriveProperties(150.f, -30.f, 75.f);
 		lNewPlayerCar.setCarSteeringProperties(3.5f, 32.0f, 320.0f);
-		
+
 //		lNewPlayerCar.setCarDriveProperties(150.f, -30.f, 75.f);
 //		lNewPlayerCar.setCarSteeringProperties(5.5f, 32.0f, 320.0f);
 

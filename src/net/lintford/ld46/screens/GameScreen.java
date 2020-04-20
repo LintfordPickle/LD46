@@ -1,5 +1,6 @@
 package net.lintford.ld46.screens;
 
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import net.lintford.ld46.controllers.CameraCarChaseController;
@@ -77,9 +78,16 @@ public class GameScreen extends BaseGameScreen {
 
 	}
 
+	boolean testPauseTime;
+
 	@Override
 	public void handleInput(LintfordCore pCore, boolean pAcceptMouse, boolean pAcceptKeyboard) {
 		super.handleInput(pCore, pAcceptMouse, pAcceptKeyboard);
+
+		if (pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_L)) {
+			testPauseTime = !testPauseTime;
+			pCore.time().setGameTimePaused(testPauseTime);
+		}
 
 	}
 
@@ -128,6 +136,23 @@ public class GameScreen extends BaseGameScreen {
 				mCarRenderer.draw(pCore, mTelekCamera, lTelekManager.mSelectedOpponentIndex);
 
 			}
+
+		}
+
+		{ // DEBUG
+
+			final var lHUDBB = pCore.HUD().boundingRectangle();
+
+			final var lTime = pCore.time();
+
+			final var lFontUnit = mRendererManager.textFont();
+			lFontUnit.begin(pCore.HUD());
+			lFontUnit.draw("App Time Total: " + lTime.totalAppTime(), lHUDBB.left() + 5f, lHUDBB.top() + 155f, -0.01f, 1, 1, 1, 1, 1f, -1);
+			lFontUnit.draw("Game Time Total: " + lTime.totalGameTime(), lHUDBB.left() + 5f, lHUDBB.top() + 175f, -0.01f, 1, 1, 1, 1, 1f, -1);
+			lFontUnit.draw("Current GMod: " + lTime.getGameTimeModifier(), lHUDBB.left() + 5f, lHUDBB.top() + 195f, -0.01f, 1, 1, 1, 1, 1f, -1);
+			lFontUnit.draw("Current TMod: " + mTelekinesisController.currentTimeControlModifier(), lHUDBB.left() + 5f, lHUDBB.top() + 215f, -0.01f, 1, 1, 1, 1, 1f, -1);
+			lFontUnit.draw("Paused : " + lTime.getGameTimePaused(), lHUDBB.left() + 5f, lHUDBB.top() + 235f, -0.01f, 1, 1, 1, 1, 1f, -1);
+			lFontUnit.end();
 
 		}
 

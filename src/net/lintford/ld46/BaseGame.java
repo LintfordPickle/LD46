@@ -8,6 +8,7 @@ import net.lintford.ld46.screens.GameScreen;
 import net.lintford.ld46.screens.IntroScreen;
 import net.lintford.ld46.screens.menu.TutorialMenuScreen;
 import net.lintford.library.GameInfo;
+import net.lintford.library.controllers.music.MusicController;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.screenmanager.IMenuAction;
 import net.lintford.library.screenmanager.Screen;
@@ -112,7 +113,9 @@ public class BaseGame extends LintfordCore {
 	@Override
 	protected void oninitializeGL() {
 		super.oninitializeGL();
-
+		
+		mScreenManager.loadGLContent(mResourceManager);
+		
 	}
 
 	@Override
@@ -123,6 +126,10 @@ public class BaseGame extends LintfordCore {
 
 		// Load game resources here
 		mResourceManager.pobjectManager().definitionRepository().loadDefinitionsFromMetaFile("res/pobjects/meta.json");
+		mResourceManager.musicManager().loadMusicFromMetaFile("res/music/meta.json");
+		
+		final var lControlerManager = mScreenManager.core().controllerManager();
+		new MusicController(lControlerManager, mResourceManager.musicManager(), LintfordCore.CORE_ENTITY_GROUP_ID);
 
 	}
 
