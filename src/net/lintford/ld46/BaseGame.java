@@ -113,9 +113,9 @@ public class BaseGame extends LintfordCore {
 	@Override
 	protected void oninitializeGL() {
 		super.oninitializeGL();
-		
+
 		mScreenManager.loadGLContent(mResourceManager);
-		
+
 	}
 
 	@Override
@@ -126,8 +126,9 @@ public class BaseGame extends LintfordCore {
 
 		// Load game resources here
 		mResourceManager.pobjectManager().definitionRepository().loadDefinitionsFromMetaFile("res/pobjects/meta.json");
+		mResourceManager.audioManager().loadAudioFilesFromMetafile("res/sounds/meta.json");
 		mResourceManager.musicManager().loadMusicFromMetaFile("res/music/meta.json");
-		
+
 		final var lControlerManager = mScreenManager.core().controllerManager();
 		new MusicController(lControlerManager, mResourceManager.musicManager(), LintfordCore.CORE_ENTITY_GROUP_ID);
 

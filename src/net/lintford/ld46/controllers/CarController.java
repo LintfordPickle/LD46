@@ -25,7 +25,7 @@ public class CarController extends BaseController {
 
 	public static final String CONTROLLER_NAME = "CarController";
 
-	public static final int NUMBER_OPPONENTS = 5;
+	public static final int NUMBER_OPPONENTS = 1;
 
 	// ---------------------------------------------
 	// Variables
@@ -348,6 +348,7 @@ public class CarController extends BaseController {
 		lPObjectInstance.setFixtureBitMask(Box2dGameController.CATEGORY_TRACK | Box2dGameController.CATEGORY_CAR);
 		lNewPlayerCar.setPhysicsObject(lPObjectInstance);
 		lNewPlayerCar.loadPhysics(lBox2dWorld);
+		lNewPlayerCar.loadContent(mResourceController.resourceManager());
 
 		float lAngle = getTrackGradientAtVehicleLocation(lNewPlayerCar);
 		lPObjectInstance.setTransform(0.f, 0.f, lAngle);

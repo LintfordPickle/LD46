@@ -1,6 +1,5 @@
 package net.lintford.ld46.screens;
 
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import net.lintford.ld46.controllers.CameraCarChaseController;
@@ -82,19 +81,6 @@ public class GameScreen extends BaseGameScreen {
 		super.loadGLContent(pResourceManager);
 
 		createRenderers();
-
-	}
-
-	boolean testPauseTime;
-
-	@Override
-	public void handleInput(LintfordCore pCore, boolean pAcceptMouse, boolean pAcceptKeyboard) {
-		super.handleInput(pCore, pAcceptMouse, pAcceptKeyboard);
-
-		if (pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_L)) {
-			testPauseTime = !testPauseTime;
-			pCore.time().setGameTimePaused(testPauseTime);
-		}
 
 	}
 

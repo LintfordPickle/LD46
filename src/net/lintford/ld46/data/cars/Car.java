@@ -1,13 +1,13 @@
 package net.lintford.ld46.data.cars;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
 import net.lintford.library.core.LintfordCore;
+import net.lintford.library.core.ResourceManager;
 import net.lintford.library.core.entity.JBox2dEntity;
 import net.lintford.library.core.maths.MathHelper;
 
@@ -24,6 +24,7 @@ public class Car extends JBox2dEntity {
 	// Variables
 	// ---------------------------------------------
 
+	private CarEngine mCarEngine;
 	private CarProgress mCarProgress;
 	private CarInput mCarInput;
 	private List<CarWheel> mWheels;
@@ -130,6 +131,10 @@ public class Car extends JBox2dEntity {
 
 	}
 
+	public float currentSpeedNormalized() {
+		return MathHelper.clamp(mCurrentSpeed / 100.f, 0.f, 1.f);
+	}
+
 	// ---------------------------------------------
 	// Constructor
 	// ---------------------------------------------
@@ -138,6 +143,7 @@ public class Car extends JBox2dEntity {
 		super(pPoolUid);
 
 		mCarProgress = new CarProgress(0, 0);
+		mCarEngine = new CarEngine();
 
 		mCarInput = new CarInput();
 		mWheels = new ArrayList<>();
@@ -147,6 +153,15 @@ public class Car extends JBox2dEntity {
 	// ---------------------------------------------
 	// Core-Methods
 	// ---------------------------------------------
+
+	public void loadContent(ResourceManager pResourceManager) {
+		mCarEngine.loadContent(pResourceManager);
+
+	}
+
+	public void unloadContent() {
+		mCarEngine.unloadContent();
+	}
 
 	@Override
 	public void loadPhysics(World pWorld) {
@@ -212,6 +227,9 @@ public class Car extends JBox2dEntity {
 	@Override
 	public void updatePhyics(LintfordCore pCore) {
 		super.updatePhyics(pCore);
+
+		// TODO: Move
+		mCarEngine.update(pCore, this);
 
 		mSteeringAngleDeg = MathHelper.clamp(mSteeringAngleDeg, -mSteeringAngleLockDeg, mSteeringAngleLockDeg);
 

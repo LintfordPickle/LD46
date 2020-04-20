@@ -1,0 +1,26 @@
+{
+	"AudioMetaDefinitions" : [
+	
+		{
+			"soundname":"SOUND_ENGINE_0_LOW",
+			"filepath":"res/sounds/soundEngine0Low.wav"
+		},
+		{
+			"soundname":"SOUND_ENGINE_0_HIGH",
+			"filepath":"res/sounds/soundEngine0High.wav"
+		},
+		{
+			"soundname":"SOUND_ENGINE_1_LOW",
+			"filepath":"res/sounds/soundEngine1Low.wav"
+		},
+		{
+			"soundname":"SOUND_ENGINE_1_HIGH",
+			"filepath":"res/sounds/soundEngine1High.wav"
+		},
+		{
+			"soundname":"SOUND_CRASH",
+			"filepath":"res/sounds/soundCrash.ogg"
+		}
+		
+	]
+}
