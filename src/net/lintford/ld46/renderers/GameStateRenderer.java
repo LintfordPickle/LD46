@@ -8,6 +8,7 @@ import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
 import net.lintford.library.core.graphics.fonts.FontManager.FontUnit;
 import net.lintford.library.core.graphics.textures.Texture;
+import net.lintford.library.core.maths.MathHelper;
 import net.lintford.library.renderers.RendererManager;
 import net.lintford.library.renderers.windows.UIWindow;
 
@@ -83,16 +84,24 @@ public class GameStateRenderer extends UIWindow {
 
 		lTextureBatch.begin(pCore.HUD());
 		// Panels
-		lTextureBatch.draw(mPanelsTexture, 0, 0, 128, 64, -lHudBoundingBox.getWidth() * 0.5f, -lHudBoundingBox.getHeight() * 0.5f, 128 * 2f, 64 * 2f, -0.001f, 1f, 1f, 1f, 1f);
+		lTextureBatch.draw(mPanelsTexture, 0, 0, 128, 64, -lHudBoundingBox.getWidth() * 0.5f, lHudBoundingBox.getHeight() * 0.5f - 128, 128 * 2f, 64 * 2f, -0.001f, 1f, 1f, 1f, 1f);
 
 		// Bars
 		lTextureBatch.draw(mUiTexture, 2, 95, 119, 19, -lHudBoundingBox.getWidth() * 0.5f + 256f + 10f, -lHudBoundingBox.getHeight() * 0.5f + 10f, 119f * 2f, 19f * 2f, -0.001f, 1f, 1f, 1f, 1f);
+
+		// Speed bar
+
 		lTextureBatch.draw(mUiTexture, 1, 53, 124, 34, lHudBoundingBox.getWidth() * 0.5f - 124f * 2f - 10f, lHudBoundingBox.getHeight() * 0.5f - 10f - 34f * 2f, 124f * 2f, 34f * 2f, -0.001f, 1f, 1f, 1f, 1f);
+
+		final float lCurrentSpeed = mCarController.carManager().playerCar().currentSpeed();
+		final float lMaxSpeed = 100f;
+		float lWidth = MathHelper.scaleToRange(lCurrentSpeed, 0.f, lMaxSpeed, 0.f, 124);
+		lTextureBatch.draw(mUiTexture, 1, 16, lWidth, 34, lHudBoundingBox.getWidth() * 0.5f - 124f * 2f - 10f, lHudBoundingBox.getHeight() * 0.5f - 10f - 34f * 2f, lWidth * 2f, 34f * 2f, -0.001f, 1f, 1f, 1f, 1f);
 		lTextureBatch.end();
 
-		float lLinePosY = 5.f;
+		float lLinePosY = 35.f;
 		final float lLineHeight = 35.f;
-		final float lLinePosOffsetY = lHudBoundingBox.getMinY();
+		final float lLinePosOffsetY = -lHudBoundingBox.getMinY() * 0.5f;
 
 		final var lPlayerCar = mCarController.carManager().playerCar();
 		final var lPlayerCarProgress = lPlayerCar.carProgress();
@@ -100,8 +109,8 @@ public class GameStateRenderer extends UIWindow {
 		mHudFontUnit.begin(pCore.HUD());
 		mHudFontUnit.draw("Laps:  ", lHudBoundingBox.getMinX() + 5.f, lLinePosOffsetY + (lLinePosY), 1.f);
 		mHudFontUnit.draw((lPlayerCarProgress.currentLapNumber + 1) + "/" + mGameStateController.totalLaps(), lHudBoundingBox.getMinX() + 5.f + 160f, lLinePosOffsetY + (lLinePosY), 1.f);
-		mHudFontUnit.draw("Position:  ", lHudBoundingBox.getMinX() + 5.f, lHudBoundingBox.getMinY() + (lLinePosY += lLineHeight), 1.f);
-		mHudFontUnit.draw(mGameStateController.getPlayerPosition() + "/" + mGameStateController.totalRacers(), lHudBoundingBox.getMinX() + 5.f + 160f, lHudBoundingBox.getMinY() + (lLinePosY), 1.f);
+		mHudFontUnit.draw("Position:  ", lHudBoundingBox.getMinX() + 5.f, lLinePosOffsetY + (lLinePosY += lLineHeight), 1.f);
+		mHudFontUnit.draw(mGameStateController.getPlayerPosition() + "/" + mGameStateController.totalRacers(), lHudBoundingBox.getMinX() + 5.f + 160f, lLinePosOffsetY + (lLinePosY), 1.f);
 
 		mHudFontUnit.end();
 

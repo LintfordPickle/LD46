@@ -1,5 +1,6 @@
 package net.lintford.ld46.screens;
 
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import net.lintford.ld46.controllers.CameraCarChaseController;
@@ -21,6 +22,7 @@ import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
 import net.lintford.library.core.camera.Camera;
 import net.lintford.library.screenmanager.ScreenManager;
+import net.lintford.library.screenmanager.screens.AudioOptionsScreen;
 import net.lintford.library.screenmanager.screens.BaseGameScreen;
 
 public class GameScreen extends BaseGameScreen {
@@ -93,6 +95,11 @@ public class GameScreen extends BaseGameScreen {
 		if (pOtherScreenHasFocus) {
 			return;
 
+		}
+
+		if (pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ESCAPE)) {
+			mScreenManager.addScreen(new AudioOptionsScreen(mScreenManager));
+			return;
 		}
 
 		if (mGameStateController.getEndConditionFlag() != GameStateController.END_CONDITION_NOT_SET) {

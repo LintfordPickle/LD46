@@ -87,7 +87,7 @@ public class MinimapRenderer extends BaseRenderer {
 		final var lTrackSpline = lTrack.trackSpline();
 
 		mMiniMapPositionOffsetX = lHudBoundingBox.getWidth() * 0.35f;
-		mMiniMapPositionOffsetY = -lHudBoundingBox.getHeight() * 0.35f;
+		mMiniMapPositionOffsetY = -lHudBoundingBox.getHeight() * 0.35f - 50f;
 
 		drawMiniMapTrack(pCore, lTrackSpline);
 
