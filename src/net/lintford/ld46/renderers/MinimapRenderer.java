@@ -98,7 +98,7 @@ public class MinimapRenderer extends BaseRenderer {
 			final var lPlayerCar = mCarController.carManager().playerCar();
 			drawPointOnMiniMap(pCore, lTrack, lPlayerCar, 1f, 1f, 1f);
 
-			final var lOpponentCarList = mCarController.carManager().opponents();
+			final var lOpponentCarList = mCarController.carManager().cars();
 			final int lNumberOpponents = lOpponentCarList.size();
 			for (int i = 0; i < lNumberOpponents; i++) {
 				final var lOpponentCar = lOpponentCarList.get(i);

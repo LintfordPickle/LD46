@@ -99,9 +99,9 @@ public class GameStateRenderer extends UIWindow {
 
 		mHudFontUnit.begin(pCore.HUD());
 		mHudFontUnit.draw("Laps:  ", lHudBoundingBox.getMinX() + 5.f, lLinePosOffsetY + (lLinePosY), 1.f);
-		mHudFontUnit.draw(lPlayerCarProgress.currentLapNumber + "/" + mGameStateController.totalLaps(), lHudBoundingBox.getMinX() + 5.f + 160f, lLinePosOffsetY + (lLinePosY), 1.f);
+		mHudFontUnit.draw((lPlayerCarProgress.currentLapNumber + 1) + "/" + mGameStateController.totalLaps(), lHudBoundingBox.getMinX() + 5.f + 160f, lLinePosOffsetY + (lLinePosY), 1.f);
 		mHudFontUnit.draw("Position:  ", lHudBoundingBox.getMinX() + 5.f, lHudBoundingBox.getMinY() + (lLinePosY += lLineHeight), 1.f);
-		mHudFontUnit.draw(lPlayerCarProgress.position + "/" + mGameStateController.totalRacers(), lHudBoundingBox.getMinX() + 5.f + 160f, lHudBoundingBox.getMinY() + (lLinePosY), 1.f);
+		mHudFontUnit.draw(mGameStateController.getPlayerPosition() + "/" + mGameStateController.totalRacers(), lHudBoundingBox.getMinX() + 5.f + 160f, lHudBoundingBox.getMinY() + (lLinePosY), 1.f);
 
 		mHudFontUnit.end();
 

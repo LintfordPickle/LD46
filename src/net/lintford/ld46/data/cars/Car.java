@@ -1,6 +1,7 @@
 package net.lintford.ld46.data.cars;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.jbox2d.common.Vec2;
@@ -27,6 +28,8 @@ public class Car extends JBox2dEntity {
 	private CarInput mCarInput;
 	private List<CarWheel> mWheels;
 	private boolean mIsDestroyed;
+
+	public boolean controlledByPlayer;
 
 	private float mMaxForwardSpeed;
 	private float mMaxBackwardSpeed;

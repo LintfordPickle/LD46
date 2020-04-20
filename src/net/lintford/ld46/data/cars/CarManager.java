@@ -10,7 +10,7 @@ public class CarManager {
 	// ---------------------------------------------
 
 	private Car mPlayerCar;
-	private List<Car> mOpponentCars;
+	private List<Car> mCarsList;
 
 	// ---------------------------------------------
 	// Properties
@@ -24,12 +24,16 @@ public class CarManager {
 		mPlayerCar = pNewCar;
 	}
 
+	public int numberOfCars() {
+		return mCarsList.size();
+	}
+
 	public int numberOfActiveOpponents() {
 		int lReturnNumber = 0;
 
-		final int lNumberOpponents = mOpponentCars.size();
+		final int lNumberOpponents = mCarsList.size();
 		for (int i = 0; i < lNumberOpponents; i++) {
-			if (!mOpponentCars.get(i).isDestroyed())
+			if (!mCarsList.get(i).isDestroyed() && !mCarsList.get(i).controlledByPlayer)
 				lReturnNumber++;
 
 		}
@@ -37,8 +41,8 @@ public class CarManager {
 		return lReturnNumber;
 	}
 
-	public List<Car> opponents() {
-		return mOpponentCars;
+	public List<Car> cars() {
+		return mCarsList;
 	}
 
 	// ---------------------------------------------
@@ -46,7 +50,7 @@ public class CarManager {
 	// ---------------------------------------------
 
 	public CarManager() {
-		mOpponentCars = new ArrayList<Car>();
+		mCarsList = new ArrayList<Car>();
 
 	}
 

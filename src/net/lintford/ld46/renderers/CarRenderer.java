@@ -26,7 +26,8 @@ public class CarRenderer extends BaseRenderer {
 	protected CarController mCarController;
 	private SubPixelTextureBatch mTextureBatch;
 
-	protected Texture mCarTexture;
+	protected Texture mCarTexturePlayer;
+	protected Texture mCarTextureEnemy;
 
 	// ---------------------------------------------
 	// Properties
@@ -63,7 +64,8 @@ public class CarRenderer extends BaseRenderer {
 	public void loadGLContent(ResourceManager pResourceManager) {
 		super.loadGLContent(pResourceManager);
 
-		mCarTexture = pResourceManager.textureManager().loadTexture("TEXTURE_VEHICLE_01", "res/textures/textureVehicle01.png", entityGroupID());
+		mCarTexturePlayer = pResourceManager.textureManager().loadTexture("TEXTURE_VEHICLE_01", "res/textures/textureVehicle01.png", entityGroupID());
+		mCarTextureEnemy = pResourceManager.textureManager().loadTexture("TEXTURE_VEHICLE_02", "res/textures/textureVehicle02.png", entityGroupID());
 
 		mTextureBatch.loadGLContent(pResourceManager);
 
@@ -87,7 +89,7 @@ public class CarRenderer extends BaseRenderer {
 		final var lPlayerCar = mCarController.carManager().playerCar();
 		drawCar(pCore, pCore.gameCamera(), lPlayerCar);
 
-		final var lListOfOpponents = mCarController.carManager().opponents();
+		final var lListOfOpponents = mCarController.carManager().cars();
 		final int lNumOfOpponents = lListOfOpponents.size();
 
 		for (int i = 0; i < lNumOfOpponents; i++) {
@@ -102,7 +104,7 @@ public class CarRenderer extends BaseRenderer {
 	}
 
 	public void draw(LintfordCore pCore, ICamera pCamera, int pCarIndex) {
-		final var lListOfOpponents = mCarController.carManager().opponents();
+		final var lListOfOpponents = mCarController.carManager().cars();
 		final var lSelectOpponentCar = lListOfOpponents.get(pCarIndex);
 
 		drawCar(pCore, pCamera, lSelectOpponentCar);
@@ -120,6 +122,11 @@ public class CarRenderer extends BaseRenderer {
 		mTextureBatch.begin(pCamera);
 		mTextureBatch.update(pCore);
 		mTextureBatch.pixelSize(lScale);
+		
+		var lTexture = mCarTextureEnemy;
+		if(pCar.controlledByPlayer){
+			lTexture = mCarTexturePlayer;
+		}
 
 		{// MainBody
 
@@ -131,7 +138,7 @@ public class CarRenderer extends BaseRenderer {
 			final float lDestW = lSourceW;
 			final float lDestH = lSourceH;
 
-			mTextureBatch.draw(mCarTexture, lSourceX, lSourceY, lSourceW, lSourceH, pCar.x, pCar.y, lDestW, lDestH, -0.01f, pCar.r, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
+			mTextureBatch.draw(lTexture, lSourceX, lSourceY, lSourceW, lSourceH, pCar.x, pCar.y, lDestW, lDestH, -0.01f, pCar.r, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
 
 		}
 
@@ -151,7 +158,7 @@ public class CarRenderer extends BaseRenderer {
 				final float lDestW = lSourceW;
 				final float lDestH = lSourceH;
 
-				mTextureBatch.draw(mCarTexture, lSourceX, lSourceY, lSourceW, lSourceH, lWorldPositionX, lWorldPositionY, lDestW, lDestH, -0.03f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
+				mTextureBatch.draw(lTexture, lSourceX, lSourceY, lSourceW, lSourceH, lWorldPositionX, lWorldPositionY, lDestW, lDestH, -0.03f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
 
 			}
 
@@ -173,7 +180,7 @@ public class CarRenderer extends BaseRenderer {
 				final float lDestW = lSourceW;
 				final float lDestH = lSourceH;
 
-				mTextureBatch.draw(mCarTexture, lSourceX, lSourceY, lSourceW, lSourceH, lWorldPositionX, lWorldPositionY, lDestW, lDestH, -0.03f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
+				mTextureBatch.draw(lTexture, lSourceX, lSourceY, lSourceW, lSourceH, lWorldPositionX, lWorldPositionY, lDestW, lDestH, -0.03f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
 
 			}
 
@@ -195,7 +202,7 @@ public class CarRenderer extends BaseRenderer {
 				final float lDestW = lSourceW;
 				final float lDestH = lSourceH;
 
-				mTextureBatch.draw(mCarTexture, lSourceX, lSourceY, lSourceW, lSourceH, lWorldPositionX, lWorldPositionY, lDestW, lDestH, -0.03f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
+				mTextureBatch.draw(lTexture, lSourceX, lSourceY, lSourceW, lSourceH, lWorldPositionX, lWorldPositionY, lDestW, lDestH, -0.03f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
 
 			}
 		}
@@ -217,7 +224,7 @@ public class CarRenderer extends BaseRenderer {
 				final float lDestW = lSourceW;
 				final float lDestH = lSourceH;
 
-				mTextureBatch.draw(mCarTexture, lSourceX, lSourceY, lSourceW, lSourceH, lWorldPositionX, lWorldPositionY, lDestW, lDestH, -0.03f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
+				mTextureBatch.draw(lTexture, lSourceX, lSourceY, lSourceW, lSourceH, lWorldPositionX, lWorldPositionY, lDestW, lDestH, -0.03f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
 
 			}
 

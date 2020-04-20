@@ -25,6 +25,8 @@ import net.lintford.library.screenmanager.screens.BaseGameScreen;
 
 public class GameScreen extends BaseGameScreen {
 
+	final static boolean DEMO_MODE = true;
+
 	// ---------------------------------------------
 	// Variables
 	// ---------------------------------------------
@@ -145,7 +147,7 @@ public class GameScreen extends BaseGameScreen {
 			final var lTelekManager = mGameWorld.telekinesisManager();
 			if (lTelekManager.isInTelekinesesMode) {
 
-				final var lSelectedCar = mGameWorld.carManager().opponents().get(lTelekManager.mSelectedOpponentIndex);
+				final var lSelectedCar = mGameWorld.carManager().cars().get(lTelekManager.mSelectedOpponentIndex);
 
 				mTelekCamera.setPosition(-lSelectedCar.x, -lSelectedCar.y - 150f);
 				mTelekCamera.setZoomFactor(1.f);
@@ -195,10 +197,16 @@ public class GameScreen extends BaseGameScreen {
 
 		mGameStateController.initialize(lCore);
 
-		final var lPlayerCar = mGameWorld.carManager().playerCar();
-		// DEMO MODE
-		// final var lOpCar = mGameWorld.carManager().opponents().get(0);
-		mCameraChaseControler = new CameraCarChaseController(lControllerManager, lGameCamera, lPlayerCar, entityGroupID());
+		if (!DEMO_MODE) {
+			final var lPlayerCar = mGameWorld.carManager().playerCar();
+			mCameraChaseControler = new CameraCarChaseController(lControllerManager, lGameCamera, lPlayerCar, entityGroupID());
+
+		} else {
+			final var lOpCar = mGameWorld.carManager().cars().get(0);
+			mCameraChaseControler = new CameraCarChaseController(lControllerManager, lGameCamera, lOpCar, entityGroupID());
+
+		}
+
 		mCameraChaseControler.initialize(lCore);
 
 	}

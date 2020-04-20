@@ -124,7 +124,7 @@ public class TelekinesisController extends BaseController {
 
 		updateTimeControl(pCore);
 
-		final int lNumOpponents = mCarController.carManager().opponents().size();
+		final int lNumOpponents = mCarController.carManager().cars().size();
 		if (lNumOpponents == 0) {
 			mTelekinesisManager.isInTelekinesesMode = false;
 			return;
@@ -145,7 +145,7 @@ public class TelekinesisController extends BaseController {
 		if (mTelekinesisManager.isInTelekinesesMode) {
 			final int lOpponentCarId = mTelekinesisManager.mSelectedOpponentIndex;
 
-			final var lOpponentCar = mCarController.carManager().opponents().get(lOpponentCarId);
+			final var lOpponentCar = mCarController.carManager().cars().get(lOpponentCarId);
 			if (lOpponentCar != null) {
 				lOpponentCar.input().copyFrom(mCarController.carManager().playerCar().input());
 
@@ -227,7 +227,7 @@ public class TelekinesisController extends BaseController {
 			}
 
 			final var lPlayerCar = mCarController.carManager().playerCar();
-			final var lOpponentCar = mCarController.carManager().opponents().get(mTelekinesisManager.mSelectedOpponentIndex);
+			final var lOpponentCar = mCarController.carManager().cars().get(mTelekinesisManager.mSelectedOpponentIndex);
 			float lDistToCar = Vector2f.distance(lPlayerCar.x, lPlayerCar.y, lOpponentCar.x, lOpponentCar.y);
 			if (lDistToCar < MAX_DISTANCE_FOR_TELEKINESIS) {
 				return;
@@ -258,7 +258,7 @@ public class TelekinesisController extends BaseController {
 			}
 
 			final var lPlayerCar = mCarController.carManager().playerCar();
-			final var lOpponentCar = mCarController.carManager().opponents().get(mTelekinesisManager.mSelectedOpponentIndex);
+			final var lOpponentCar = mCarController.carManager().cars().get(mTelekinesisManager.mSelectedOpponentIndex);
 			float lDistToCar = Vector2f.distance(lPlayerCar.x, lPlayerCar.y, lOpponentCar.x, lOpponentCar.y);
 			if (lDistToCar < MAX_DISTANCE_FOR_TELEKINESIS) {
 				lFound = true; // noone selected
