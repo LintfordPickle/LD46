@@ -1,7 +1,6 @@
 package net.lintford.ld46.controllers;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class GameStateController extends BaseController {
 
 	public static final String CONTROLLER_NAME = "GameState Controller";
 	
-	public static final int numLaps = 1;
+	public static final int numLaps = 5;
 
 	// ---------------------------------------------
 	// Variables
