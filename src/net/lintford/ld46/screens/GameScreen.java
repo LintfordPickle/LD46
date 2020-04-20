@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.lintford.ld46.controllers.CameraCarChaseController;
 import net.lintford.ld46.controllers.CarController;
+import net.lintford.ld46.controllers.GameCollisionController;
 import net.lintford.ld46.controllers.GameStateController;
 import net.lintford.ld46.controllers.TelekinesisController;
 import net.lintford.ld46.controllers.TrackController;
@@ -42,6 +43,7 @@ public class GameScreen extends BaseGameScreen {
 	private TrackController mTrackController;
 	private GameStateController mGameStateController;
 	private TelekinesisController mTelekinesisController;
+	private GameCollisionController mCollisionController;
 
 	private CarRenderer mCarRenderer;
 	private boolean mGameEndingShown;
@@ -168,6 +170,7 @@ public class GameScreen extends BaseGameScreen {
 		// Needs to be called after the carcontroller is initialized
 
 		mGameStateController = new GameStateController(lControllerManager, mGameWorld, entityGroupID());
+		mCollisionController = new GameCollisionController(lControllerManager, mGameWorld.box2dWorld(), entityGroupID());
 
 	}
 
@@ -180,6 +183,7 @@ public class GameScreen extends BaseGameScreen {
 		mTrackController.initialize(lCore);
 		mTelekinesisController.initialize(lCore);
 		mCarController.initialize(lCore);
+		mCollisionController.initialize(lCore);
 
 		mGameStateController.initialize(lCore);
 

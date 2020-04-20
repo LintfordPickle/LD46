@@ -13,6 +13,9 @@ import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.controllers.core.ControllerManager;
 import net.lintford.library.controllers.core.ResourceController;
 import net.lintford.library.core.LintfordCore;
+import net.lintford.library.core.audio.AudioManager;
+import net.lintford.library.core.audio.AudioSource;
+import net.lintford.library.core.audio.data.AudioData;
 import net.lintford.library.core.maths.MathHelper;
 import net.lintford.library.core.maths.Vector2f;
 import net.lintford.library.core.maths.spline.SplinePoint;
@@ -73,6 +76,13 @@ public class CarController extends BaseController {
 	// Core-Methods
 	// ---------------------------------------------
 
+	private AudioSource mCrashAudio;
+	private AudioData mCrashAudioData;
+
+	public void playCrashSound() {
+		mCrashAudio.play(mCrashAudioData.bufferID());
+	}
+
 	@Override
 	public void initialize(LintfordCore pCore) {
 		mResourceController = (ResourceController) pCore.controllerManager().getControllerByNameRequired(ResourceController.CONTROLLER_NAME, LintfordCore.CORE_ENTITY_GROUP_ID);
@@ -83,6 +93,11 @@ public class CarController extends BaseController {
 
 		setupPlayerCar();
 		setupOpponents(NUMBER_OPPONENTS);
+
+		mCrashAudio = pCore.resources().audioManager().getAudioSource(hashCode(), AudioManager.AUDIO_SOURCE_TYPE_SOUNDFX);
+		mCrashAudio.setLooping(false);
+
+		mCrashAudioData = pCore.resources().audioManager().getAudioDataBufferByName("SOUND_CRASH");
 
 	}
 
