@@ -12,6 +12,7 @@ import net.lintford.library.controllers.BaseController;
 import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.controllers.core.ControllerManager;
 import net.lintford.library.controllers.core.ResourceController;
+import net.lintford.library.controllers.core.particles.ParticleFrameworkController;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.audio.AudioManager;
 import net.lintford.library.core.audio.AudioSource;
@@ -40,6 +41,7 @@ public class CarController extends BaseController {
 	private ResourceController mResourceController;
 	private TrackController mTrackController;
 	private Box2dWorldController mBox2dWorldController;
+	private ParticleFrameworkController mParticleController;
 	private List<Car> mCarResolverList;
 	private float mCarResolverTimer;
 
@@ -88,6 +90,7 @@ public class CarController extends BaseController {
 		mResourceController = (ResourceController) pCore.controllerManager().getControllerByNameRequired(ResourceController.CONTROLLER_NAME, LintfordCore.CORE_ENTITY_GROUP_ID);
 		mBox2dWorldController = (Box2dWorldController) pCore.controllerManager().getControllerByNameRequired(Box2dWorldController.CONTROLLER_NAME, entityGroupID());
 		mTrackController = (TrackController) pCore.controllerManager().getControllerByNameRequired(TrackController.CONTROLLER_NAME, entityGroupID());
+		mParticleController = (ParticleFrameworkController) pCore.controllerManager().getControllerByNameRequired(ParticleFrameworkController.CONTROLLER_NAME, entityGroupID());
 
 		mCarUidCounter = 0;
 
@@ -316,8 +319,8 @@ public class CarController extends BaseController {
 	}
 
 	private void updateCrashResolver(LintfordCore pCore, Car pCar) {
-		final float lTimer = 2500.0f;
-		final float lMinDist = 50f;
+		final float lTimer = 1250.0f;
+		final float lMinDist = 75f;
 
 		pCar.mLastCrashResolverUpdateTime -= pCore.time().elapseAppTimeMilli();
 		if (pCar.mLastCrashResolverUpdateTime < 0.0f) {
@@ -393,6 +396,13 @@ public class CarController extends BaseController {
 
 		lNewPlayerCar.isPlayerCar = true;
 
+		final int lNumWheels = lNewPlayerCar.wheels().size();
+		for (int j = 0; j < lNumWheels; j++) {
+			final var lWheel = lNewPlayerCar.wheels().get(j);
+			lWheel.mSmokeEmitter = mParticleController.particleFrameworkData().emitterManager().getNewParticleEmitterInstanceByDefName("EMITTER_SMOKE");
+
+		}
+
 		mCarManager.cars().add(lNewPlayerCar);
 		mCarManager.playerCar(lNewPlayerCar);
 
@@ -440,6 +450,13 @@ public class CarController extends BaseController {
 			lNewOpponent.carProgress().nextControlNodeId = (int) lCurrentMarker + 1;
 			float lAngle = getTrackGradientAtVehicleLocation(lNewOpponent);
 			lPObjectInstance.setTransform(lX, lY, lAngle);
+
+			final int lNumWheels = lNewOpponent.wheels().size();
+			for (int j = 0; j < lNumWheels; j++) {
+				final var lWheel = lNewOpponent.wheels().get(j);
+				lWheel.mSmokeEmitter = mParticleController.particleFrameworkData().emitterManager().getNewParticleEmitterInstanceByDefName("EMITTER_SMOKE");
+
+			}
 
 			mCarManager.cars().add(lNewOpponent);
 

@@ -18,9 +18,12 @@ import net.lintford.ld46.screens.menu.GameLostScreen;
 import net.lintford.ld46.screens.menu.GameWonScreen;
 import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.controllers.camera.CameraZoomController;
+import net.lintford.library.controllers.core.particles.ParticleFrameworkController;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
 import net.lintford.library.core.camera.Camera;
+import net.lintford.library.core.particles.ParticleFrameworkData;
+import net.lintford.library.renderers.particles.ParticleFrameworkRenderer;
 import net.lintford.library.screenmanager.ScreenManager;
 import net.lintford.library.screenmanager.screens.AudioOptionsScreen;
 import net.lintford.library.screenmanager.screens.BaseGameScreen;
@@ -35,6 +38,7 @@ public class GameScreen extends BaseGameScreen {
 
 	// Data
 	private GameWorld mGameWorld;
+	private ParticleFrameworkData mParticleFrameworkData;
 
 	private Camera mTelekCamera;
 
@@ -46,6 +50,7 @@ public class GameScreen extends BaseGameScreen {
 	private GameStateController mGameStateController;
 	private TelekinesisController mTelekinesisController;
 	private GameCollisionController mCollisionController;
+	private ParticleFrameworkController mParticleFrameworkController;
 
 	private CarRenderer mCarRenderer;
 	private boolean mGameEndingShown;
@@ -58,6 +63,7 @@ public class GameScreen extends BaseGameScreen {
 		super(pScreenManager);
 
 		mGameWorld = new GameWorld();
+		mParticleFrameworkData = new ParticleFrameworkData();
 
 		mGameEndingShown = false;
 		mShowInBackground = false;
@@ -70,6 +76,8 @@ public class GameScreen extends BaseGameScreen {
 	@Override
 	public void initialize() {
 		super.initialize();
+
+		mParticleFrameworkData.initialize(this);
 
 		createControllers();
 		initializeControllers();
@@ -178,6 +186,7 @@ public class GameScreen extends BaseGameScreen {
 
 		mGameStateController = new GameStateController(lControllerManager, mGameWorld, entityGroupID());
 		mCollisionController = new GameCollisionController(lControllerManager, mGameWorld.box2dWorld(), entityGroupID());
+		mParticleFrameworkController = new ParticleFrameworkController(lControllerManager, mParticleFrameworkData, entityGroupID());
 
 	}
 
@@ -205,6 +214,7 @@ public class GameScreen extends BaseGameScreen {
 		}
 
 		mCameraChaseControler.initialize(lCore);
+		mParticleFrameworkController.initialize(lCore);
 
 	}
 
@@ -218,6 +228,7 @@ public class GameScreen extends BaseGameScreen {
 		mCarRenderer.initialize(lCore);
 
 		new MinimapRenderer(mRendererManager, entityGroupID()).initialize(lCore);
+		new ParticleFrameworkRenderer(mRendererManager, entityGroupID()).initialize(lCore);
 
 		// new DebugBox2dDrawer(mRendererManager, mGameWorld.box2dWorld(), entityGroupID()).initialize(lCore);
 

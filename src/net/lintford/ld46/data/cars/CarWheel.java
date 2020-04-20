@@ -4,10 +4,12 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.joints.RevoluteJoint;
 
+import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.box2d.entity.Box2dBodyInstance;
 import net.lintford.library.core.box2d.entity.Box2dJointInstance;
 import net.lintford.library.core.maths.MathHelper;
+import net.lintford.library.core.particles.particleemitters.ParticleEmitterInstance;
 
 public class CarWheel {
 
@@ -30,6 +32,10 @@ public class CarWheel {
 	private Vec2 mTempVec2;
 	public Vec2 mLateralVelocity;
 	public Vec2 mForwardVelocity;
+
+	public float x, y;
+
+	public ParticleEmitterInstance mSmokeEmitter;
 
 	// --------------------------------------
 	// Constructor
@@ -55,6 +61,16 @@ public class CarWheel {
 			return;
 
 		}
+
+		x = lBody.getPosition().x * Box2dWorldController.UNITS_TO_PIXELS;
+		y = lBody.getPosition().y * Box2dWorldController.UNITS_TO_PIXELS;
+
+		// set emitter speed
+		mSmokeEmitter.setPosition(x, y);
+		mSmokeEmitter.enabled = mParentCar.currentSpeed() > 1.0f;
+		mSmokeEmitter.emitterEmitModifierNormalized(mParentCar.currentSpeedNormalized());
+
+		// physics
 
 		updateForwardVelocity(lBody);
 		updateLateralVelocity(lBody);

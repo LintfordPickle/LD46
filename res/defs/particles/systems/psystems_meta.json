@@ -1,0 +1,9 @@
+{
+	"rootDirectory":"res//defs//particles//systems//",
+	"itemFileLocations" : [
+
+		"particlesystem_smoke",
+		"particlesystem_wisp"
+		
+	]
+}

@@ -163,6 +163,9 @@ public class Car extends JBox2dEntity {
 		mCarEngine.unloadContent();
 	}
 
+	CarWheel rearLeftWheel;
+	CarWheel rearRightWheel;
+
 	@Override
 	public void loadPhysics(World pWorld) {
 		super.loadPhysics(pWorld);
@@ -173,6 +176,7 @@ public class Car extends JBox2dEntity {
 			final var lNewCarWheel = new CarWheel(this, true);
 			lNewCarWheel.mBox2dBodyInstance = lFrontLeftWheel;
 			mWheels.add(lNewCarWheel);
+			rearLeftWheel = lNewCarWheel;
 
 			final var lFrontLeftJoint = mJBox2dEntityInstance.getJointByName("FrontLeftJoint");
 			if (lFrontLeftJoint != null) {
@@ -186,6 +190,7 @@ public class Car extends JBox2dEntity {
 			final var lNewCarWheel = new CarWheel(this, true);
 			lNewCarWheel.mBox2dBodyInstance = lFrontRightWheel;
 			mWheels.add(lNewCarWheel);
+			rearRightWheel = lNewCarWheel;
 
 			final var lFrontRightJoint = mJBox2dEntityInstance.getJointByName("FrontRightJoint");
 			if (lFrontRightJoint != null) {
@@ -235,6 +240,8 @@ public class Car extends JBox2dEntity {
 			mCarEngine.killEngine();
 
 		}
+
+		//
 
 		mSteeringAngleDeg = MathHelper.clamp(mSteeringAngleDeg, -mSteeringAngleLockDeg, mSteeringAngleLockDeg);
 

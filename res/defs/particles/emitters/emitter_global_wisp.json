@@ -1,0 +1,21 @@
+{
+	"name":"EMITTER_FIRE",
+	"displayName":"EMITTER_FIRE", 
+	
+	"childEmitters" = 
+	[
+		{
+			"name":"EMITTER_FIRE_CHILD_FIRE",
+			"displayName":"CHILD_FIRE_EMITTER_FIRE",
+			"particleSystemName":"PARTICLESYSTEM_FIRE",
+			"emitTimeMin":10,
+			"emitTimeMax":20,
+			"emitAmountMin":1,
+			"emitAmountMax":2,
+			"PositionRelOffsetX":0,
+			"PositionRelOffsetY":0
+	  	}
+	  	
+	]
+	
+}

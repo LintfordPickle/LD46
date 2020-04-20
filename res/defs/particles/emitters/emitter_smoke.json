@@ -1,0 +1,21 @@
+{
+	"name":"EMITTER_SMOKE",
+	"displayName":"EMITTER_SMOKE", 
+	
+	"childEmitters" : 
+	[
+		{
+			"name":"EMITTER_SMOKE_CHILD_SMOKE",
+			"displayName":"CHILD_SMOKE_EMITTER_SMOKE",
+			"particleSystemName":"PARTICLESYSTEM_SMOKE",
+			"emitTimeMin":20,
+			"emitTimeMax":60,
+			"emitAmountMin":1,
+			"emitAmountMax":2,
+			"PositionRelOffsetX":0,
+			"PositionRelOffsetY":0
+	  	}
+	  	
+	]
+	
+}

@@ -55,8 +55,4 @@ public class GameWorld {
 
 	}
 
-	public void setupNewGame(String pTrackName, int pNumOpponents) {
-
-	}
-
 }
