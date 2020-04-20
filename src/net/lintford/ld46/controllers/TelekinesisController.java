@@ -7,7 +7,6 @@ import net.lintford.ld46.data.TelekinesisManager;
 import net.lintford.library.controllers.BaseController;
 import net.lintford.library.controllers.core.ControllerManager;
 import net.lintford.library.core.LintfordCore;
-import net.lintford.library.core.maths.MathHelper;
 
 public class TelekinesisController extends BaseController {
 
@@ -18,6 +17,9 @@ public class TelekinesisController extends BaseController {
 	public static final String CONTROLLER_NAME = "Telekinesis Controller";
 
 	final float MAX_DISTANCE_FOR_TELEKINESIS = 10000.0f;
+
+	public static final float DRAINAGE_RATE = 0.05f;
+	public static final float REGEN_RATE = 0.05f;
 
 	// --------------------------------------
 	// Variables
@@ -33,6 +35,14 @@ public class TelekinesisController extends BaseController {
 	// --------------------------------------
 	// Properties
 	// --------------------------------------
+
+	public boolean isInTelekinesisMode() {
+		return mTelekinesisManager.isInTelekinesesMode;
+	}
+
+	public int selectedCarIndex() {
+		return mTelekinesisManager.mSelectedOpponentIndex;
+	}
 
 	public float currentTimeControlModifier() {
 		return mTimeControlModifier;
@@ -131,7 +141,6 @@ public class TelekinesisController extends BaseController {
 
 	private void updateTelekinesis(LintfordCore pCore) {
 		final float lDelta = (float) pCore.time().elapseGameTimeMilli();
-		final var lPlayerCar = mCarController.carManager().playerCar();
 
 		if (mTelekinesisManager.isInTelekinesesMode) {
 			final int lOpponentCarId = mTelekinesisManager.mSelectedOpponentIndex;
@@ -140,9 +149,7 @@ public class TelekinesisController extends BaseController {
 			if (lOpponentCar != null) {
 				lOpponentCar.input().copyFrom(mCarController.carManager().playerCar().input());
 
-				float lDistToCar = Vector2f.distance(lPlayerCar.x, lPlayerCar.y, lOpponentCar.x, lOpponentCar.y);
-
-				final float lUsageDrainAmt = 0.1f * MathHelper.clamp(lDistToCar / MAX_DISTANCE_FOR_TELEKINESIS, 0.f, 1.f);
+				final float lUsageDrainAmt = DRAINAGE_RATE; // * MathHelper.clamp(lDistToCar / MAX_DISTANCE_FOR_TELEKINESIS, 0.f, 1.f);
 				mTelekinesisManager.currentPower -= lUsageDrainAmt * lDelta;
 
 				if (mTelekinesisManager.currentPower < 0.0f) {
@@ -156,7 +163,7 @@ public class TelekinesisController extends BaseController {
 
 		} else {
 			if (mTelekinesisManager.currentPower < mTelekinesisManager.maxPower) {
-				final float lRegenAmt = 0.05f;
+				final float lRegenAmt = REGEN_RATE;
 				mTelekinesisManager.currentPower += lRegenAmt * lDelta;
 
 				if (mTelekinesisManager.currentPower > mTelekinesisManager.maxPower) {

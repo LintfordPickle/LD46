@@ -11,6 +11,7 @@ import net.lintford.ld46.controllers.TrackController;
 import net.lintford.ld46.data.GameWorld;
 import net.lintford.ld46.renderers.CarRenderer;
 import net.lintford.ld46.renderers.GameStateRenderer;
+import net.lintford.ld46.renderers.MinimapRenderer;
 import net.lintford.ld46.renderers.TrackRenderer;
 import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.controllers.camera.CameraZoomController;
@@ -208,6 +209,8 @@ public class GameScreen extends BaseGameScreen {
 
 		mCarRenderer = new CarRenderer(mRendererManager, entityGroupID());
 		mCarRenderer.initialize(lCore);
+
+		new MinimapRenderer(mRendererManager, entityGroupID()).initialize(lCore);
 
 		// new DebugBox2dDrawer(mRendererManager, mGameWorld.box2dWorld(), entityGroupID()).initialize(lCore);
 
