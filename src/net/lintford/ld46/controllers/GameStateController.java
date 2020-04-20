@@ -12,7 +12,7 @@ public class GameStateController extends BaseController {
 	// Constants
 	// ---------------------------------------------
 
-	public static final int END_CONDITION_NOT_SET = -1;
+	public static final int END_CONDITION_NOT_SET = 0;
 	public static final int END_CONDITION_DESTROYED = 1;
 	public static final int END_CONDITION_WON_RACING = 2;
 	public static final int END_CONDITION_LOST = 3;

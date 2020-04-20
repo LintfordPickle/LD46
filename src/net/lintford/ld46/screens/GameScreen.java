@@ -13,6 +13,8 @@ import net.lintford.ld46.renderers.CarRenderer;
 import net.lintford.ld46.renderers.GameStateRenderer;
 import net.lintford.ld46.renderers.MinimapRenderer;
 import net.lintford.ld46.renderers.TrackRenderer;
+import net.lintford.ld46.screens.menu.GameLostScreen;
+import net.lintford.ld46.screens.menu.GameWonScreen;
 import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.controllers.camera.CameraZoomController;
 import net.lintford.library.core.LintfordCore;
@@ -96,15 +98,27 @@ public class GameScreen extends BaseGameScreen {
 	public void update(LintfordCore pCore, boolean pOtherScreenHasFocus, boolean pCoveredByOtherScreen) {
 		super.update(pCore, pOtherScreenHasFocus, pCoveredByOtherScreen);
 
+		if (pOtherScreenHasFocus) {
+			return;
+
+		}
+
 		if (mGameStateController.getEndConditionFlag() != GameStateController.END_CONDITION_NOT_SET) {
+			pCore.time().setGameTimePaused(true);
+
 			switch (mGameStateController.getEndConditionFlag()) {
 			case GameStateController.END_CONDITION_DESTROYED:
 			case GameStateController.END_CONDITION_LOST:
+				mScreenManager.addScreen(new GameLostScreen(mScreenManager));
+				break;
+
 			case GameStateController.END_CONDITION_WON_FIGHTING:
 			case GameStateController.END_CONDITION_WON_RACING:
-				mScreenManager.exitGame();
-
+				mScreenManager.addScreen(new GameWonScreen(mScreenManager));
+				break;
 			}
+
+			return;
 
 		}
 

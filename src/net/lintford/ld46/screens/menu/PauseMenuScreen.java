@@ -24,8 +24,11 @@ public class PauseMenuScreen extends MenuScreen {
 	public PauseMenuScreen(ScreenManager pScreenManager, String pMenuTitle) {
 		super(pScreenManager, pMenuTitle);
 
+		
+		
 		mIsPopup = true;
-
+		mBlockInputInBackground = true;
+		
 	}
 
 	// ---------------------------------------------
