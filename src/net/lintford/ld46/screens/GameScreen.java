@@ -43,6 +43,7 @@ public class GameScreen extends BaseGameScreen {
 	private TelekinesisController mTelekinesisController;
 
 	private CarRenderer mCarRenderer;
+	private boolean mGameEndingShown;
 
 	// ---------------------------------------------
 	// Constructor
@@ -53,6 +54,7 @@ public class GameScreen extends BaseGameScreen {
 
 		mGameWorld = new GameWorld();
 
+		mGameEndingShown = false;
 		mShowInBackground = false;
 	}
 
@@ -106,16 +108,23 @@ public class GameScreen extends BaseGameScreen {
 		if (mGameStateController.getEndConditionFlag() != GameStateController.END_CONDITION_NOT_SET) {
 			pCore.time().setGameTimePaused(true);
 
-			switch (mGameStateController.getEndConditionFlag()) {
-			case GameStateController.END_CONDITION_DESTROYED:
-			case GameStateController.END_CONDITION_LOST:
-				mScreenManager.addScreen(new GameLostScreen(mScreenManager));
-				break;
+			if (!mGameEndingShown) {
 
-			case GameStateController.END_CONDITION_WON_FIGHTING:
-			case GameStateController.END_CONDITION_WON_RACING:
-				mScreenManager.addScreen(new GameWonScreen(mScreenManager));
-				break;
+				switch (mGameStateController.getEndConditionFlag()) {
+				case GameStateController.END_CONDITION_DESTROYED:
+				case GameStateController.END_CONDITION_LOST:
+					mScreenManager.addScreen(new GameLostScreen(mScreenManager));
+					break;
+
+				case GameStateController.END_CONDITION_WON_FIGHTING:
+				case GameStateController.END_CONDITION_WON_RACING:
+					mScreenManager.addScreen(new GameWonScreen(mScreenManager));
+					break;
+
+				}
+
+				mGameEndingShown = true;
+
 			}
 
 			return;
@@ -131,12 +140,6 @@ public class GameScreen extends BaseGameScreen {
 
 		super.draw(pCore);
 
-		{ // Normal frame render
-
-			mCarRenderer.draw(pCore, pCore.gameCamera());
-
-		}
-
 		{ // Telekinesis mode - draw the opponent car
 
 			final var lTelekManager = mGameWorld.telekinesisManager();
@@ -151,23 +154,6 @@ public class GameScreen extends BaseGameScreen {
 				mCarRenderer.draw(pCore, mTelekCamera, lTelekManager.mSelectedOpponentIndex);
 
 			}
-
-		}
-
-		{ // DEBUG
-
-			final var lHUDBB = pCore.HUD().boundingRectangle();
-
-			final var lTime = pCore.time();
-
-			final var lFontUnit = mRendererManager.textFont();
-			lFontUnit.begin(pCore.HUD());
-			lFontUnit.draw("App Time Total: " + lTime.totalAppTime(), lHUDBB.left() + 5f, lHUDBB.top() + 155f, -0.01f, 1, 1, 1, 1, 1f, -1);
-			lFontUnit.draw("Game Time Total: " + lTime.totalGameTime(), lHUDBB.left() + 5f, lHUDBB.top() + 175f, -0.01f, 1, 1, 1, 1, 1f, -1);
-			lFontUnit.draw("Current GMod: " + lTime.getGameTimeModifier(), lHUDBB.left() + 5f, lHUDBB.top() + 195f, -0.01f, 1, 1, 1, 1, 1f, -1);
-			lFontUnit.draw("Current TMod: " + mTelekinesisController.currentTimeControlModifier(), lHUDBB.left() + 5f, lHUDBB.top() + 215f, -0.01f, 1, 1, 1, 1, 1f, -1);
-			lFontUnit.draw("Paused : " + lTime.getGameTimePaused(), lHUDBB.left() + 5f, lHUDBB.top() + 235f, -0.01f, 1, 1, 1, 1, 1f, -1);
-			lFontUnit.end();
 
 		}
 
@@ -210,6 +196,8 @@ public class GameScreen extends BaseGameScreen {
 		mGameStateController.initialize(lCore);
 
 		final var lPlayerCar = mGameWorld.carManager().playerCar();
+		// DEMO MODE
+		// final var lOpCar = mGameWorld.carManager().opponents().get(0);
 		mCameraChaseControler = new CameraCarChaseController(lControllerManager, lGameCamera, lPlayerCar, entityGroupID());
 		mCameraChaseControler.initialize(lCore);
 

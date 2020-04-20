@@ -61,7 +61,6 @@ public class GameLostScreen extends MenuScreen {
 	// ---------------------------------------------
 	// Core-Methods
 	// ---------------------------------------------
-
 	@Override
 	public void loadGLContent(ResourceManager pResourceManager) {
 		super.loadGLContent(pResourceManager);
@@ -73,15 +72,6 @@ public class GameLostScreen extends MenuScreen {
 	@Override
 	public void handleInput(LintfordCore pCore, boolean pAcceptMouse, boolean pAcceptKeyboard) {
 		super.handleInput(pCore, pAcceptMouse, pAcceptKeyboard);
-
-		if (pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_SPACE) || pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ESCAPE) || pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ENTER)
-				|| pCore.input().mouse().isMouseLeftButtonDown()) {
-
-			mScreenManager.uiSounds().play("SOUND_MENU_CLICK");
-
-			exitScreen();
-
-		}
 
 	}
 
@@ -95,13 +85,16 @@ public class GameLostScreen extends MenuScreen {
 
 	@Override
 	public void draw(LintfordCore pCore) {
-		super.draw(pCore);
-
+		
+		final var lLayout = mLayouts.get(0);
+		lLayout.setEntryOffsetY(250);
+		
 		final var lTextureBatch = mRendererManager.uiTextureBatch();
 		lTextureBatch.begin(pCore.HUD());
-		lTextureBatch.draw(mLostScreenTexture, 0, 0, 600, 480, -300, -240, 600, 480, -0.001f, 1f, 1f, 1f, 1f);
+		lTextureBatch.draw(mLostScreenTexture, 0, 0, 600, 412, -280, -412*0.5f, 600, 412, -0.001f, 1f, 1f, 1f, 1f);
 		lTextureBatch.end();
-
+		
+		super.draw(pCore);
 	}
 
 	// ---------------------------------------------

@@ -136,7 +136,6 @@ public class CarController extends BaseController {
 
 		for (int i = 0; i < lNumOpponents; i++) {
 			final var lOpponentCar = lOpponentsList.get(i);
-
 			lOpponentCar.updatePhyics(pCore);
 
 			updateCarProgress(pCore, lOpponentCar, lTrack);
@@ -222,8 +221,8 @@ public class CarController extends BaseController {
 		pCar.pointOnTrackX = lTrackSplinePoint.x;
 		pCar.pointOnTrackY = lTrackSplinePoint.y;
 
-		final float lNode0X = pCar.pointOnTrackX;
-		final float lNode0Y = pCar.pointOnTrackY;
+		final float lNode0X = pCar.x;// pointOnTrackX;
+		final float lNode0Y = pCar.y;// pointOnTrackY;
 
 		lTrackSplinePoint = lTrack.trackSpline().getControlPoint(lNextNodeId);
 
@@ -249,17 +248,22 @@ public class CarController extends BaseController {
 		pCar.trackAngle = (float) Math.atan2(lHeadingVecY, lHeadingVecX);
 		pCar.aiHeadingAngle = turnToFace(pCar.wheelAngle, pCar.trackAngle, 0.15f);
 
+		if (pCar.aiHeadingAngle == Math.abs(0.15f)) {
+			pCar.input().isBrake = true;
+
+		}
+
 		pCar.steeringAngleDeg((float) Math.toDegrees(pCar.aiHeadingAngle));
 
-		if (pCar.aiHeadingAngle > 0) {
-			pCar.input().isTurningLeft = true;
-			pCar.input().isTurningRight = false;
-		}
-
-		if (pCar.aiHeadingAngle < 0) {
-			pCar.input().isTurningLeft = false;
-			pCar.input().isTurningRight = true;
-		}
+//		if (pCar.aiHeadingAngle > 0) {
+//			pCar.input().isTurningLeft = true;
+//			pCar.input().isTurningRight = false;
+//		}
+//
+//		if (pCar.aiHeadingAngle < 0) {
+//			pCar.input().isTurningLeft = false;
+//			pCar.input().isTurningRight = true;
+//		}
 
 		pCar.input().isGas = true;
 
@@ -325,10 +329,10 @@ public class CarController extends BaseController {
 
 	private void setupPlayerCar() {
 		final var lNewPlayerCar = new Car(getCarPoolUid());
-		lNewPlayerCar.setCarDriveProperties(150.f, -30.f, 75.f);
-		lNewPlayerCar.setCarSteeringProperties(3.5f, 32.0f, 320.0f);
+		lNewPlayerCar.setCarDriveProperties(230.f, -30.f, 155.f);
+		lNewPlayerCar.setCarSteeringProperties(12.f, 32.0f, 320.0f);
 
-//		lNewPlayerCar.setCarDriveProperties(150.f, -30.f, 75.f);
+//		lNewPlayerCar.setCarDriveProperties(150.f, -30.f, 75.f);d
 //		lNewPlayerCar.setCarSteeringProperties(5.5f, 32.0f, 320.0f);
 
 		final var lResourceManager = mResourceController.resourceManager();
@@ -367,8 +371,8 @@ public class CarController extends BaseController {
 			final float lY = lSplinePoint.y * Box2dWorldController.PIXELS_TO_UNITS;
 
 			final var lNewOpponent = new Car(getCarPoolUid());
-			lNewOpponent.setCarDriveProperties(150.f, -30.f, 75.f);
-			lNewOpponent.setCarSteeringProperties(5.5f, 32.0f, 320.0f);
+			lNewOpponent.setCarDriveProperties(230.f, -30.f, 155.f);
+			lNewOpponent.setCarSteeringProperties(29.5f, 32.0f, 320.0f);
 
 			final var lPObjectInstance = lResourceManager.pobjectManager().getNewInstanceFromPObject(lBox2dWorld, "POBJECT_VEHICLE_01");
 			lPObjectInstance.setFixtureCategory(Box2dGameController.CATEGORY_CAR);

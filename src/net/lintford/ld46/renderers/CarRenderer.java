@@ -84,21 +84,21 @@ public class CarRenderer extends BaseRenderer {
 
 	@Override
 	public void draw(LintfordCore pCore) {
-
-	}
-
-	public void draw(LintfordCore pCore, ICamera pCamera) {
 		final var lPlayerCar = mCarController.carManager().playerCar();
-		drawCar(pCore, pCamera, lPlayerCar);
+		drawCar(pCore, pCore.gameCamera(), lPlayerCar);
 
 		final var lListOfOpponents = mCarController.carManager().opponents();
 		final int lNumOfOpponents = lListOfOpponents.size();
 
 		for (int i = 0; i < lNumOfOpponents; i++) {
 			final var lOpponentCar = lListOfOpponents.get(i);
-			drawCar(pCore, pCamera, lOpponentCar);
+			drawCar(pCore, pCore.gameCamera(), lOpponentCar);
 
 		}
+	}
+
+	public void draw(LintfordCore pCore, ICamera pCamera) {
+
 	}
 
 	public void draw(LintfordCore pCore, ICamera pCamera, int pCarIndex) {
@@ -115,11 +115,25 @@ public class CarRenderer extends BaseRenderer {
 
 	private void drawCar(LintfordCore pCore, ICamera pCamera, Car pCar) {
 		// Yuck!
-		final float lScale = 3.f;
+		final float lScale = 4.f;
 
 		mTextureBatch.begin(pCamera);
 		mTextureBatch.update(pCore);
 		mTextureBatch.pixelSize(lScale);
+
+		{// MainBody
+
+			final float lSourceX = 1.f;
+			final float lSourceY = 2.f;
+			final float lSourceW = 34.f;
+			final float lSourceH = 73.f;
+
+			final float lDestW = lSourceW;
+			final float lDestH = lSourceH;
+
+			mTextureBatch.draw(mCarTexture, lSourceX, lSourceY, lSourceW, lSourceH, pCar.x, pCar.y, lDestW, lDestH, -0.01f, pCar.r, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
+
+		}
 
 		{ // Rear Left Wheel
 			final var lRLWheelBody = pCar.mJBox2dEntityInstance.getBodyByName("WheelRearLeft");
@@ -128,7 +142,16 @@ public class CarRenderer extends BaseRenderer {
 				final float lWorldPositionX = lRLWheelBody.mBody.getWorldCenter().x * Box2dWorldController.UNITS_TO_PIXELS;
 				final float lWorldPositionY = lRLWheelBody.mBody.getWorldCenter().y * Box2dWorldController.UNITS_TO_PIXELS;
 				final float lRotation = lRLWheelBody.mBody.getAngle();
-				mTextureBatch.draw(mCarTexture, 1, 36, 18, 34, lWorldPositionX, lWorldPositionY, 18, 34, -0.03f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
+
+				final float lSourceX = 38.f;
+				final float lSourceY = 24.f;
+				final float lSourceW = 12.f;
+				final float lSourceH = 20.f;
+
+				final float lDestW = lSourceW;
+				final float lDestH = lSourceH;
+
+				mTextureBatch.draw(mCarTexture, lSourceX, lSourceY, lSourceW, lSourceH, lWorldPositionX, lWorldPositionY, lDestW, lDestH, -0.03f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
 
 			}
 
@@ -141,14 +164,18 @@ public class CarRenderer extends BaseRenderer {
 				final float lWorldPositionX = lRRWheelBody.mBody.getWorldCenter().x * Box2dWorldController.UNITS_TO_PIXELS;
 				final float lWorldPositionY = lRRWheelBody.mBody.getWorldCenter().y * Box2dWorldController.UNITS_TO_PIXELS;
 				final float lRotation = lRRWheelBody.mBody.getAngle();
-				mTextureBatch.draw(mCarTexture, 1, 36, 18, 34, lWorldPositionX, lWorldPositionY, 18, 34, -0.03f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
+
+				final float lSourceX = 38.f;
+				final float lSourceY = 24.f;
+				final float lSourceW = 12.f;
+				final float lSourceH = 20.f;
+
+				final float lDestW = lSourceW;
+				final float lDestH = lSourceH;
+
+				mTextureBatch.draw(mCarTexture, lSourceX, lSourceY, lSourceW, lSourceH, lWorldPositionX, lWorldPositionY, lDestW, lDestH, -0.03f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
 
 			}
-
-		}
-
-		{// MainBody
-			mTextureBatch.draw(mCarTexture, 0, 71, 50, 66, pCar.x, pCar.y, 50, 66, -0.01f, pCar.r, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
 
 		}
 
@@ -159,7 +186,16 @@ public class CarRenderer extends BaseRenderer {
 				final float lWorldPositionX = lFLWheelBody.mBody.getWorldCenter().x * Box2dWorldController.UNITS_TO_PIXELS;
 				final float lWorldPositionY = lFLWheelBody.mBody.getWorldCenter().y * Box2dWorldController.UNITS_TO_PIXELS;
 				final float lRotation = lFLWheelBody.mBody.getAngle();
-				mTextureBatch.draw(mCarTexture, 1, 138, 18, 34, lWorldPositionX, lWorldPositionY, 18, 34, -0.01f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
+
+				final float lSourceX = 38.f;
+				final float lSourceY = 2.f;
+				final float lSourceW = 10.f;
+				final float lSourceH = 20.f;
+
+				final float lDestW = lSourceW;
+				final float lDestH = lSourceH;
+
+				mTextureBatch.draw(mCarTexture, lSourceX, lSourceY, lSourceW, lSourceH, lWorldPositionX, lWorldPositionY, lDestW, lDestH, -0.03f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
 
 			}
 		}
@@ -172,7 +208,16 @@ public class CarRenderer extends BaseRenderer {
 				final float lWorldPositionX = lFRWheelBody.mBody.getWorldCenter().x * Box2dWorldController.UNITS_TO_PIXELS;
 				final float lWorldPositionY = lFRWheelBody.mBody.getWorldCenter().y * Box2dWorldController.UNITS_TO_PIXELS;
 				final float lRotation = lFRWheelBody.mBody.getAngle();
-				mTextureBatch.draw(mCarTexture, 1, 138, 18, 34, lWorldPositionX, lWorldPositionY, 18, 34, -0.01f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
+
+				final float lSourceX = 38.f;
+				final float lSourceY = 2.f;
+				final float lSourceW = 10.f;
+				final float lSourceH = 20.f;
+
+				final float lDestW = lSourceW;
+				final float lDestH = lSourceH;
+
+				mTextureBatch.draw(mCarTexture, lSourceX, lSourceY, lSourceW, lSourceH, lWorldPositionX, lWorldPositionY, lDestW, lDestH, -0.03f, lRotation, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
 
 			}
 

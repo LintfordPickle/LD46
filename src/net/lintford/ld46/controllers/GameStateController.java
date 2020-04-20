@@ -30,10 +30,15 @@ public class GameStateController extends BaseController {
 
 	private int mNumberCarsFinished;
 	private int mEndConditionFlag;
+	private boolean mIsGameFinished;
 
 	// ---------------------------------------------
 	// Properties
 	// ---------------------------------------------
+
+	public boolean isGameFinished() {
+		return mIsGameFinished;
+	}
 
 	public int getEndConditionFlag() {
 		return mEndConditionFlag;
@@ -99,10 +104,12 @@ public class GameStateController extends BaseController {
 		updatePositions();
 
 		if (checkPlayerEndRaceCondition()) {
+			mIsGameFinished = true;
 
 		}
 
 		if (checkLoseCondition()) { // destroyed
+			mIsGameFinished = true;
 
 		}
 

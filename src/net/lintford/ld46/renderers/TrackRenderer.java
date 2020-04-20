@@ -2,6 +2,7 @@ package net.lintford.ld46.renderers;
 
 import java.nio.FloatBuffer;
 
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -14,7 +15,7 @@ import net.lintford.ld46.data.tracks.Track;
 import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
-import net.lintford.library.core.graphics.shaders.ShaderMVP_PT;
+import net.lintford.library.core.graphics.shaders.ShaderSubPixel;
 import net.lintford.library.core.graphics.textures.Texture;
 import net.lintford.library.core.maths.Matrix4f;
 import net.lintford.library.renderers.BaseRenderer;
@@ -53,7 +54,7 @@ public class TrackRenderer extends BaseRenderer {
 	public static final String RENDERER_NAME = "Track Renderer";
 
 	protected static final String VERT_FILENAME = "/res/shaders/shader_basic_pct.vert";
-	protected static final String FRAG_FILENAME = "/res/shaders/shader_basic_pct.frag";
+	protected static final String FRAG_FILENAME = "res/shaders/shaderTrack.frag";
 
 	// ---------------------------------------------
 	// Variables
@@ -65,7 +66,7 @@ public class TrackRenderer extends BaseRenderer {
 	protected int mVboId = -1;
 	protected int mVertexCount = 0;
 
-	protected ShaderMVP_PT mShader;
+	protected ShaderSubPixel mShader;
 	protected Matrix4f mModelMatrix;
 
 	protected boolean mIsTrackGenerated;
@@ -80,14 +81,7 @@ public class TrackRenderer extends BaseRenderer {
 	public TrackRenderer(RendererManager pRendererManager, int pEntityGroupID) {
 		super(pRendererManager, RENDERER_NAME, pEntityGroupID);
 
-		mShader = new ShaderMVP_PT("TrackShader", VERT_FILENAME, FRAG_FILENAME) {
-			@Override
-			protected void bindAtrributeLocations(int pShaderID) {
-				GL20.glBindAttribLocation(pShaderID, 0, "inPosition");
-				GL20.glBindAttribLocation(pShaderID, 1, "inColor");
-				GL20.glBindAttribLocation(pShaderID, 2, "inTexCoord");
-			}
-		};
+		mShader = new ShaderSubPixel("TrackShader", VERT_FILENAME, FRAG_FILENAME);
 
 		mModelMatrix = new Matrix4f();
 
@@ -123,6 +117,8 @@ public class TrackRenderer extends BaseRenderer {
 
 		mShader.loadGLContent(pResourceManager);
 
+		mTrackTexture = pResourceManager.textureManager().loadTexture("TEXTURE_TRACK", "res/textures/textureTrack.png", GL11.GL_LINEAR, entityGroupID());
+
 		loadTrackMesh(lTrack);
 
 	}
@@ -132,12 +128,30 @@ public class TrackRenderer extends BaseRenderer {
 		super.unloadGLContent();
 
 		mShader.unloadGLContent();
+		mTrackTexture = null;
 
 		if (mVaoId > -1)
 			GL30.glDeleteVertexArrays(mVaoId);
 
 		if (mVboId > -1)
 			GL15.glDeleteBuffers(mVboId);
+
+	}
+
+	@Override
+	public void update(LintfordCore pCore) {
+		super.update(pCore);
+
+		final var lDesktopWidth = pCore.config().display().desktopWidth();
+		final var lDesktopHeight = pCore.config().display().desktopHeight();
+		mShader.screenResolutionWidth(lDesktopWidth);
+		mShader.screenResolutionHeight(lDesktopHeight);
+
+		final var lCamera = pCore.gameCamera();
+		mShader.cameraResolutionWidth(lCamera.getWidth());
+		mShader.cameraResolutionHeight(lCamera.getHeight());
+
+		mShader.pixelSize(3f);
 
 	}
 
@@ -153,7 +167,7 @@ public class TrackRenderer extends BaseRenderer {
 			return;
 
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		// GL11.glBindTexture(GL11.GL_TEXTURE_2D, mTrackTexture.getTextureID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, mTrackTexture.getTextureID());
 
 		GL30.glBindVertexArray(mVaoId);
 
@@ -211,20 +225,32 @@ public class TrackRenderer extends BaseRenderer {
 		final int lNumSplinePoints = lInnerVertices.length;
 		mTrackBuffer = BufferUtils.createFloatBuffer(lNumSplinePoints * 4 * stride);
 
+		float lDistanceTravelled = 0.f;
+		float lLengthOfSegment = 0.f;
+
+		float lCurX = 0.f;
+		float lCurY = 0.f;
+		float lPrevX = 0.f;
+		float lPrevY = 0.f;
+
 		for (int i = 0; i < lNumSplinePoints; i++) {
-			int nextIndex = i + 1;
-			if (nextIndex > lNumSplinePoints - 1) {
-				nextIndex = 0;
-			}
+
+			lCurX = lInnerVertices[i].x * Box2dWorldController.UNITS_TO_PIXELS;
+			lCurY = lInnerVertices[i].y * Box2dWorldController.UNITS_TO_PIXELS;
+
+			lLengthOfSegment = Vector2f.distance(lCurX, lCurY, lPrevX, lPrevY) / 1024.f;
+			lDistanceTravelled += lLengthOfSegment;
 
 			final float lInnerPointX = lInnerVertices[i].x * Box2dWorldController.UNITS_TO_PIXELS;
 			final float lInnerPointY = lInnerVertices[i].y * Box2dWorldController.UNITS_TO_PIXELS;
 			final float lOuterPointX = lOuterVertices[i].x * Box2dWorldController.UNITS_TO_PIXELS;
 			final float lOuterPointY = lOuterVertices[i].y * Box2dWorldController.UNITS_TO_PIXELS;
 
-			// TODO: If I want to texture the segments, need to generate UVs
-			addVertToBuffer(lInnerPointX, lInnerPointY, 0, 0, 1);
-			addVertToBuffer(lOuterPointX, lOuterPointY, 0, 1, 1);
+			addVertToBuffer(lInnerPointX, lInnerPointY, 0, 0.f, lDistanceTravelled);
+			addVertToBuffer(lOuterPointX, lOuterPointY, 0, 1.f, lDistanceTravelled);
+
+			lPrevX = lCurX;
+			lPrevY = lCurY;
 
 		}
 

@@ -1,7 +1,5 @@
 package net.lintford.ld46.screens.menu;
 
-import org.lwjgl.glfw.GLFW;
-
 import net.lintford.ld46.screens.GameScreen;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
@@ -73,15 +71,6 @@ public class GameWonScreen extends MenuScreen {
 	@Override
 	public void handleInput(LintfordCore pCore, boolean pAcceptMouse, boolean pAcceptKeyboard) {
 		super.handleInput(pCore, pAcceptMouse, pAcceptKeyboard);
-
-		if (pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_SPACE) || pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ESCAPE) || pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ENTER)
-				|| pCore.input().mouse().isMouseLeftButtonDown()) {
-
-			mScreenManager.uiSounds().play("SOUND_MENU_CLICK");
-
-			exitScreen();
-
-		}
 
 	}
 

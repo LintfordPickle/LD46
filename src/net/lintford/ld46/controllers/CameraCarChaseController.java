@@ -20,8 +20,8 @@ public class CameraCarChaseController extends BaseController {
 
 	private static final float CAMERA_MAN_MOVE_SPEED = 0.2f;
 
-	private static final float MIN_ZOOM = 0.8f;
-	private static final float MAX_ZOOM = 0.25f;
+	private static final float MIN_ZOOM = 1.1f;  // how close to the cars
+	private static final float MAX_ZOOM = 0.25f; //how far to zoom out
 
 	// ---------------------------------------------
 	// Variables

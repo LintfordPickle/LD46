@@ -8,10 +8,10 @@ import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
 import net.lintford.library.core.graphics.fonts.FontManager.FontUnit;
 import net.lintford.library.core.graphics.textures.Texture;
-import net.lintford.library.renderers.BaseRenderer;
 import net.lintford.library.renderers.RendererManager;
+import net.lintford.library.renderers.windows.UIWindow;
 
-public class GameStateRenderer extends BaseRenderer {
+public class GameStateRenderer extends UIWindow {
 
 	// ---------------------------------------------
 	// Constants
