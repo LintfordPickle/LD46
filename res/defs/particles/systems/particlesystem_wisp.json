@@ -18,8 +18,8 @@
 		
 		{ 
 			"className":"ParticleRandomSizeInitializer",
-			"minValue":0.3,
-			"maxValue":2
+			"minValue":6,
+			"maxValue":12
 		}, 
 		
 		{

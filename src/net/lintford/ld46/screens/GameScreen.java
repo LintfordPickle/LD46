@@ -10,6 +10,7 @@ import net.lintford.ld46.controllers.GameStateController;
 import net.lintford.ld46.controllers.TelekinesisController;
 import net.lintford.ld46.controllers.TrackController;
 import net.lintford.ld46.data.GameWorld;
+import net.lintford.ld46.data.particles.WispController;
 import net.lintford.ld46.renderers.CarRenderer;
 import net.lintford.ld46.renderers.GameStateRenderer;
 import net.lintford.ld46.renderers.MinimapRenderer;
@@ -51,6 +52,7 @@ public class GameScreen extends BaseGameScreen {
 	private TelekinesisController mTelekinesisController;
 	private GameCollisionController mCollisionController;
 	private ParticleFrameworkController mParticleFrameworkController;
+	private WispController mWispController;
 
 	private CarRenderer mCarRenderer;
 	private boolean mGameEndingShown;
@@ -104,6 +106,8 @@ public class GameScreen extends BaseGameScreen {
 			return;
 
 		}
+		
+		mWispController.update(pCore);
 
 		if (pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ESCAPE)) {
 			mScreenManager.addScreen(new AudioOptionsScreen(mScreenManager));
@@ -188,6 +192,8 @@ public class GameScreen extends BaseGameScreen {
 		mCollisionController = new GameCollisionController(lControllerManager, mGameWorld.box2dWorld(), entityGroupID());
 		mParticleFrameworkController = new ParticleFrameworkController(lControllerManager, mParticleFrameworkData, entityGroupID());
 
+		mWispController = new WispController(lControllerManager, entityGroupID());
+		
 	}
 
 	private void initializeControllers() {
@@ -200,6 +206,7 @@ public class GameScreen extends BaseGameScreen {
 		mTelekinesisController.initialize(lCore);
 		mCarController.initialize(lCore);
 		mCollisionController.initialize(lCore);
+		mWispController.initialize(lCore);
 
 		mGameStateController.initialize(lCore);
 
