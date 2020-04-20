@@ -17,6 +17,7 @@ import net.lintford.library.core.audio.AudioManager;
 import net.lintford.library.core.audio.AudioSource;
 import net.lintford.library.core.audio.data.AudioData;
 import net.lintford.library.core.maths.MathHelper;
+import net.lintford.library.core.maths.RandomNumbers;
 import net.lintford.library.core.maths.Vector2f;
 import net.lintford.library.core.maths.spline.SplinePoint;
 
@@ -28,7 +29,7 @@ public class CarController extends BaseController {
 
 	public static final String CONTROLLER_NAME = "CarController";
 
-	public static final int NUMBER_OPPONENTS = 1;
+	public static final int NUMBER_OPPONENTS = 4;
 
 	// ---------------------------------------------
 	// Variables
@@ -39,9 +40,11 @@ public class CarController extends BaseController {
 	private ResourceController mResourceController;
 	private TrackController mTrackController;
 	private Box2dWorldController mBox2dWorldController;
-
 	private List<Car> mCarResolverList;
 	private float mCarResolverTimer;
+
+	private AudioSource mCrashAudio;
+	private AudioData mCrashAudioData;
 
 	// ---------------------------------------------
 	// Properties
@@ -75,9 +78,6 @@ public class CarController extends BaseController {
 	// ---------------------------------------------
 	// Core-Methods
 	// ---------------------------------------------
-
-	private AudioSource mCrashAudio;
-	private AudioData mCrashAudioData;
 
 	public void playCrashSound() {
 		mCrashAudio.play(mCrashAudioData.bufferID());
@@ -118,6 +118,20 @@ public class CarController extends BaseController {
 		lPlayerCar.input().isBrake = pCore.input().keyboard().isKeyDown(GLFW.GLFW_KEY_S);
 		lPlayerCar.input().isHandBrake = pCore.input().keyboard().isKeyDown(GLFW.GLFW_KEY_SPACE);
 
+		if (pCore.input().keyboard().isKeyDown(GLFW.GLFW_KEY_A)) {
+			lPlayerCar.input().isTurningLeft = true;
+
+		}
+
+		// if the player is controlling another vehicle, then don't process car input
+		if (mCarManager.telekinesisCar() != null) {
+			// first, stop the player from turning
+			lPlayerCar.steeringAngleDeg(0);
+
+			return super.handleInput(pCore);
+
+		}
+
 		if (lPlayerCar.input().isTurningLeft) {
 			lPlayerCar.steeringAngleDeg(lPlayerCar.steeringAngleLockDeg());
 		}
@@ -148,8 +162,15 @@ public class CarController extends BaseController {
 
 			updateCarProgress(pCore, lCarToUpdate, lTrack);
 
-			if (!lCarToUpdate.controlledByPlayer) {
-				updateCarAI(pCore, lCarToUpdate);
+			if (!lCarToUpdate.isPlayerCar) {
+				if (mCarManager.telekinesisCar() != null && mCarManager.telekinesisCar().equals(lCarToUpdate)) {
+					updateCarAiWithPlayerInput(pCore, lCarToUpdate);
+
+				} else {
+					updateCarAI(pCore, lCarToUpdate);
+
+				}
+
 				updateCrashResolver(pCore, lCarToUpdate);
 
 			}
@@ -277,16 +298,18 @@ public class CarController extends BaseController {
 		}
 
 		pCar.steeringAngleDeg((float) Math.toDegrees(pCar.aiHeadingAngle));
+		pCar.input().isGas = true;
 
-//		if (pCar.aiHeadingAngle > 0) {
-//			pCar.input().isTurningLeft = true;
-//			pCar.input().isTurningRight = false;
-//		}
-//
-//		if (pCar.aiHeadingAngle < 0) {
-//			pCar.input().isTurningLeft = false;
-//			pCar.input().isTurningRight = true;
-//		}
+	}
+
+	private void updateCarAiWithPlayerInput(LintfordCore pCore, Car pCar) {
+		final var lPlayerCar = mCarManager.playerCar();
+
+		if (lPlayerCar.input().isTurningLeft) {
+			pCar.steeringAngleDeg(pCar.steeringAngleLockDeg());
+		} else if (lPlayerCar.input().isTurningRight) {
+			pCar.steeringAngleDeg(-pCar.steeringAngleLockDeg());
+		}
 
 		pCar.input().isGas = true;
 
@@ -368,7 +391,7 @@ public class CarController extends BaseController {
 		float lAngle = getTrackGradientAtVehicleLocation(lNewPlayerCar);
 		lPObjectInstance.setTransform(0.f, 0.f, lAngle);
 
-		lNewPlayerCar.controlledByPlayer = true;
+		lNewPlayerCar.isPlayerCar = true;
 
 		mCarManager.cars().add(lNewPlayerCar);
 		mCarManager.playerCar(lNewPlayerCar);
@@ -379,7 +402,7 @@ public class CarController extends BaseController {
 		final var lResourceManager = mResourceController.resourceManager();
 		final var lBox2dWorld = mBox2dWorldController.world();
 
-		final float lNormalizedDistanceBetweenSpawns = 0.2f;
+		final float lNormalizedDistanceBetweenSpawns = 0.3f;
 		float lCurrentMarker = lNormalizedDistanceBetweenSpawns;
 		final var lTrack = mTrackController.currentTrack();
 
@@ -388,16 +411,22 @@ public class CarController extends BaseController {
 		}
 
 		for (int i = 0; i < pNumOpponents; i++) {
-			// Work out a start position
 			final var lSplinePoint = lTrack.trackSpline().getPointOnSpline(lCurrentMarker += lNormalizedDistanceBetweenSpawns);
 
 			final float lX = lSplinePoint.x * Box2dWorldController.PIXELS_TO_UNITS;
 			final float lY = lSplinePoint.y * Box2dWorldController.PIXELS_TO_UNITS;
 
 			final var lNewOpponent = new Car(getCarPoolUid());
-			lNewOpponent.setCarDriveProperties(80.f, -30.f, 35.f);
-			// lNewOpponent.setCarDriveProperties(180.f, -30.f, 135.f);
-			lNewOpponent.setCarSteeringProperties(29.5f, 32.0f, 320.0f);
+			// Make slow for testing
+			// lNewOpponent.setCarDriveProperties(80.f, -30.f, 35.f);
+
+			final float lRandSpeedAdd = RandomNumbers.random(-20.f, 30.f);
+			final float lRandPowerAdd = RandomNumbers.random(-5.f, 10.f);
+
+			final float lRandSkidCoefff = RandomNumbers.random(-5.f, 5.f);
+
+			lNewOpponent.setCarDriveProperties(150.f + lRandSpeedAdd, -30.f, 125.f + lRandPowerAdd);
+			lNewOpponent.setCarSteeringProperties(27.5f + lRandSkidCoefff, 32.0f, 320.0f);
 
 			final var lPObjectInstance = lResourceManager.pobjectManager().getNewInstanceFromPObject(lBox2dWorld, "POBJECT_VEHICLE_01");
 			lPObjectInstance.setFixtureCategory(Box2dGameController.CATEGORY_CAR);

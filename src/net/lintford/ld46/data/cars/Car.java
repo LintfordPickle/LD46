@@ -30,7 +30,7 @@ public class Car extends JBox2dEntity {
 	private List<CarWheel> mWheels;
 	private boolean mIsDestroyed;
 
-	public boolean controlledByPlayer;
+	public boolean isPlayerCar;
 
 	private float mMaxForwardSpeed;
 	private float mMaxBackwardSpeed;
@@ -231,6 +231,11 @@ public class Car extends JBox2dEntity {
 		// TODO: Move
 		mCarEngine.update(pCore, this);
 
+		if (mCarProgress.hasCarFinished) {
+			mCarEngine.killEngine();
+
+		}
+
 		mSteeringAngleDeg = MathHelper.clamp(mSteeringAngleDeg, -mSteeringAngleLockDeg, mSteeringAngleLockDeg);
 
 		final int lNumWheels = mWheels.size();
@@ -260,10 +265,6 @@ public class Car extends JBox2dEntity {
 			mImpulseVector.set(mImpulseVector.mul(lMaxLateralForce / mImpulseVector.length()));
 
 		lBody.applyLinearImpulse(mImpulseVector, lBody.getWorldCenter(), true);
-
-		// reduce the angular velocity of the wheel
-		// with the follow, the vehicle is stable
-		// lBody.applyAngularImpulse(1f * lBody.getInertia() * -lBody.getAngularVelocity());
 		lBody.applyAngularImpulse(.4f * lBody.getInertia() * -lBody.getAngularVelocity());
 
 		mTempVec2.set(lBody.getWorldVector(CarWheel.FORWARD_VECTOR));

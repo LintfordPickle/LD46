@@ -10,6 +10,8 @@ public class CarManager {
 	// ---------------------------------------------
 
 	private Car mPlayerCar;
+	private Car mTelekinesisCar;
+
 	private List<Car> mCarsList;
 
 	// ---------------------------------------------
@@ -24,6 +26,14 @@ public class CarManager {
 		mPlayerCar = pNewCar;
 	}
 
+	public Car telekinesisCar() {
+		return mTelekinesisCar;
+	}
+
+	public void telekinesisCar(Car pTelekinesisCar) {
+		mTelekinesisCar = pTelekinesisCar;
+	}
+
 	public int numberOfCars() {
 		return mCarsList.size();
 	}
@@ -33,7 +43,7 @@ public class CarManager {
 
 		final int lNumberOpponents = mCarsList.size();
 		for (int i = 0; i < lNumberOpponents; i++) {
-			if (!mCarsList.get(i).isDestroyed() && !mCarsList.get(i).controlledByPlayer)
+			if (!mCarsList.get(i).isDestroyed() && !mCarsList.get(i).isPlayerCar)
 				lReturnNumber++;
 
 		}

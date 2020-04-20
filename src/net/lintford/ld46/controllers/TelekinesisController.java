@@ -215,6 +215,8 @@ public class TelekinesisController extends BaseController {
 		if (lNumOpponents == 0)
 			return;
 
+		final var lCarManager = mCarController.carManager();
+
 		boolean lFound = false;
 		while (!lFound) {
 			mTelekinesisManager.mSelectedOpponentIndex++;
@@ -226,14 +228,15 @@ public class TelekinesisController extends BaseController {
 
 			}
 
-			final var lPlayerCar = mCarController.carManager().playerCar();
-			final var lOpponentCar = mCarController.carManager().cars().get(mTelekinesisManager.mSelectedOpponentIndex);
-			if(!lOpponentCar.equals(lPlayerCar)) {
+			final var lPlayerCar = lCarManager.playerCar();
+			final var lOpponentCar = lCarManager.cars().get(mTelekinesisManager.mSelectedOpponentIndex);
+			if (!lOpponentCar.equals(lPlayerCar)) {
 				float lDistToCar = Vector2f.distance(lPlayerCar.x, lPlayerCar.y, lOpponentCar.x, lOpponentCar.y);
 				if (lDistToCar < MAX_DISTANCE_FOR_TELEKINESIS) {
+					mCarController.carManager().telekinesisCar(lOpponentCar);
 					return;
 				}
-				
+
 			}
 
 		}
@@ -245,6 +248,8 @@ public class TelekinesisController extends BaseController {
 
 		if (lNumOpponents == 0)
 			return;
+
+		final var lCarManager = mCarController.carManager();
 
 		boolean lFound = false;
 		while (!lFound) {
@@ -260,14 +265,15 @@ public class TelekinesisController extends BaseController {
 
 			}
 
-			final var lPlayerCar = mCarController.carManager().playerCar();
-			final var lOpponentCar = mCarController.carManager().cars().get(mTelekinesisManager.mSelectedOpponentIndex);
-			if(!lOpponentCar.equals(lPlayerCar)) {
+			final var lPlayerCar = lCarManager.playerCar();
+			final var lOpponentCar = lCarManager.cars().get(mTelekinesisManager.mSelectedOpponentIndex);
+			if (!lOpponentCar.equals(lPlayerCar)) {
 				float lDistToCar = Vector2f.distance(lPlayerCar.x, lPlayerCar.y, lOpponentCar.x, lOpponentCar.y);
 				if (lDistToCar < MAX_DISTANCE_FOR_TELEKINESIS) {
+					lCarManager.telekinesisCar(lOpponentCar);
 					lFound = true; // noone selected
 				}
-				
+
 			}
 
 		}
@@ -277,6 +283,8 @@ public class TelekinesisController extends BaseController {
 	public void disableTelekinesis() {
 		mTelekinesisManager.isInTelekinesesMode = false;
 		mTelekinesisManager.mSelectedOpponentIndex = -1;
+
+		mCarController.carManager().telekinesisCar(null);
 	}
 
 }

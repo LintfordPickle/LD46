@@ -17,6 +17,7 @@ import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
 import net.lintford.library.core.graphics.shaders.ShaderSubPixel;
 import net.lintford.library.core.graphics.textures.Texture;
+import net.lintford.library.core.maths.MathHelper;
 import net.lintford.library.core.maths.Matrix4f;
 import net.lintford.library.renderers.BaseRenderer;
 import net.lintford.library.renderers.RendererManager;
@@ -71,6 +72,7 @@ public class TrackRenderer extends BaseRenderer {
 
 	protected boolean mIsTrackGenerated;
 	protected Texture mTrackTexture;
+	protected Texture mTrackPropsTexture;
 
 	protected TrackController mTrackController;
 
@@ -118,6 +120,7 @@ public class TrackRenderer extends BaseRenderer {
 		mShader.loadGLContent(pResourceManager);
 
 		mTrackTexture = pResourceManager.textureManager().loadTexture("TEXTURE_TRACK", "res/textures/textureTrack.png", GL11.GL_LINEAR, entityGroupID());
+		mTrackPropsTexture = pResourceManager.textureManager().loadTexture("TEXTURE_TRACK_PROS", "res/textures/textureTrackProps.png", GL11.GL_LINEAR, entityGroupID());
 
 		loadTrackMesh(lTrack);
 
@@ -187,7 +190,16 @@ public class TrackRenderer extends BaseRenderer {
 
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 
+		final var lTextureBatch = mRendererManager.uiTextureBatch();
+		lTextureBatch.begin(pCore.gameCamera());
+		final var lScale = 4.0f;
+		final var lRot = (float) MathHelper.toRadians(45);
+		lTextureBatch.draw(mTrackPropsTexture, 0, 0, 256, 62, x, y, 256*lScale, 62*lScale, -0.1f, r + (float) Math.toRadians(90), 0f, 0f, 1f, 1f, 1f, 1f, 1f);
+		lTextureBatch.end();
+
 	}
+
+	float x, y, r;
 
 	// ---------------------------------------------
 	// Methods
@@ -232,6 +244,11 @@ public class TrackRenderer extends BaseRenderer {
 		float lCurY = 0.f;
 		float lPrevX = 0.f;
 		float lPrevY = 0.f;
+
+		x = (lInnerVertices[0].x + (lOuterVertices[0].x - lInnerVertices[0].x) * .5f) * Box2dWorldController.UNITS_TO_PIXELS;
+		y = (lInnerVertices[0].y + (lOuterVertices[0].y - lInnerVertices[0].y) * .5f) * Box2dWorldController.UNITS_TO_PIXELS;
+
+		r = (float) Math.atan2(-lOuterVertices[1].x - lOuterVertices[0].x, lOuterVertices[1].x - lOuterVertices[0].x);
 
 		for (int i = 0; i < lNumSplinePoints; i++) {
 

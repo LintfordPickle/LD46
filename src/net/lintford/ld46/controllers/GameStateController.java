@@ -32,6 +32,8 @@ public class GameStateController extends BaseController {
 	public static final int END_CONDITION_WON_FIGHTING = 4;
 
 	public static final String CONTROLLER_NAME = "GameState Controller";
+	
+	public static final int numLaps = 1;
 
 	// ---------------------------------------------
 	// Variables
@@ -154,7 +156,7 @@ public class GameStateController extends BaseController {
 	// ---------------------------------------------
 
 	public void startNewGame() {
-		mTotalLaps = 5;
+		mTotalLaps = numLaps;
 
 	}
 

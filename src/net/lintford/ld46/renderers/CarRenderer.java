@@ -124,7 +124,7 @@ public class CarRenderer extends BaseRenderer {
 		mTextureBatch.pixelSize(lScale);
 		
 		var lTexture = mCarTextureEnemy;
-		if(pCar.controlledByPlayer){
+		if(pCar.isPlayerCar){
 			lTexture = mCarTexturePlayer;
 		}
 

@@ -12,12 +12,6 @@ public class CarEngine {
 	// Variables
 	// ---------------------------------------------
 
-	private float mPitchEngine0 = 1.f;
-	private float mPitchEngine1 = 1.f;
-
-	private float mGainEngine0 = 1.f;
-	private float mGainEngine1 = 1.f;
-
 	private AudioSource mEngineSource0Low;
 	private AudioSource mEngineSource0High;
 	private AudioSource mEngineSource1Low;
@@ -70,11 +64,7 @@ public class CarEngine {
 		final float lNormalizedSpeed = pCar.currentSpeedNormalized();
 
 		if (mEngineSource0Low != null) {
-			float lHN = lNormalizedSpeed * 1.5f * lNormalizedSpeed;
-			mPitchEngine0 = lNormalizedSpeed * lGameTimeModifer;
-
-			mGainEngine0 = (1.f - lNormalizedSpeed) * lGameTimeModifer;
-
+			float lHalfNormalized = lNormalizedSpeed * 1.5f * lNormalizedSpeed;
 			mEngineSource0Low.setGain(1.f - lNormalizedSpeed);
 			mEngineSource0High.setGain(lNormalizedSpeed * 1.3f);
 
@@ -82,13 +72,34 @@ public class CarEngine {
 			mEngineSource1Low.setGain(0.4f + s);
 			mEngineSource1High.setGain(0);
 
-			mEngineSource0Low.setPitch(lGameTimeModifer * (1.f + lHN));
-			mEngineSource1Low.setPitch(lGameTimeModifer * (1.f + lHN));
-			mEngineSource0High.setPitch(lGameTimeModifer * (1.f + lHN));
-			mEngineSource1High.setPitch(lGameTimeModifer * (1.f + lHN));
+			mEngineSource0Low.setPitch(lGameTimeModifer * (1.f + lHalfNormalized));
+			mEngineSource1Low.setPitch(lGameTimeModifer * (1.f + lHalfNormalized));
+			mEngineSource0High.setPitch(lGameTimeModifer * (1.f + lHalfNormalized));
+			mEngineSource1High.setPitch(lGameTimeModifer * (1.f + lHalfNormalized));
 
-			System.out.println(String.format("%.2f", s));
+		}
 
+	}
+
+	// ---------------------------------------------
+	// Methods
+	// ---------------------------------------------
+
+	public void killEngine() {
+		if (mEngineSource0Low != null) {
+			mEngineSource0Low.stop();
+		}
+
+		if (mEngineSource0High != null) {
+			mEngineSource0High.stop();
+		}
+
+		if (mEngineSource1Low != null) {
+			mEngineSource1Low.stop();
+		}
+
+		if (mEngineSource1High != null) {
+			mEngineSource1High.stop();
 		}
 
 	}
