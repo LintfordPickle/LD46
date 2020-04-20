@@ -126,7 +126,7 @@ public class TrackController extends BaseController {
 	private Spline getHiResSpline(Spline pSpline) {
 		List<SplinePoint> lNewSplinePoints = new ArrayList<>();
 		final var offset = pSpline.isLooped() ? 0f : 3f;
-		for (float t = 0; t < pSpline.points().size() - offset; t += 0.105f) {
+		for (float t = 0; t < pSpline.points().size() - offset; t += 0.09f) {
 			final var lPoint = pSpline.getPointOnSpline(t);
 			SplinePoint lNewSplinePoint = new SplinePoint(lPoint.x, lPoint.y);
 

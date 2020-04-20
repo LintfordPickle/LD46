@@ -1,0 +1,713 @@
+
+{
+	"allowSleep" : true,
+	"autoClearForces" : true,
+	"body" : 
+	[
+		
+		{
+			"angle" : 0,
+			"angularVelocity" : 0,
+			"awake" : true,
+			"fixture" : 
+			[
+				
+				{
+					"density" : 0.001000000047497451,
+					"friction" : 0.2,
+					"name" : "fixture3",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								2.018688201904297,
+								2.018688201904297,
+								-2.018688201904297,
+								-2.018688201904297
+							],
+							"y" : 
+							[
+								-1.598170042037964,
+								0.3000137805938721,
+								0.3000137805938721,
+								-1.598170042037964
+							]
+						}
+					}
+				}
+			],
+			"linearVelocity" : 0,
+			"massData-I" : 0.01593991182744503,
+			"massData-center" : 
+			{
+				"x" : -1.551278572264891e-008,
+				"y" : -0.6490781307220459
+			},
+			"massData-mass" : 0.007663683034479618,
+			"name" : "crashGuard",
+			"position" : 
+			{
+				"x" : 0,
+				"y" : 3
+			},
+			"type" : 2
+		},
+		
+		{
+			"angle" : 0,
+			"angularVelocity" : 0,
+			"awake" : true,
+			"fixture" : 
+			[
+				
+				{
+					"density" : 1,
+					"friction" : 0.2,
+					"name" : "fixture2",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								0.4879915714263916,
+								0.4879915714263916,
+								-0.4879915714263916,
+								-0.4879915714263916
+							],
+							"y" : 
+							[
+								-0.9818620681762695,
+								0.9779760837554932,
+								0.9779760837554932,
+								-0.9818620681762695
+							]
+						}
+					}
+				}
+			],
+			"linearVelocity" : 0,
+			"massData-I" : 0.7640801668167114,
+			"massData-center" : 
+			{
+				"x" : -2.556413136733937e-010,
+				"y" : -0.001942986389622092
+			},
+			"massData-mass" : 1.912768959999085,
+			"name" : "WheelFrontRight",
+			"position" : 
+			{
+				"x" : 1.4,
+				"y" : 2.4
+			},
+			"type" : 2
+		},
+		
+		{
+			"angle" : 0,
+			"angularVelocity" : 0,
+			"awake" : true,
+			"fixture" : 
+			[
+				
+				{
+					"density" : 1,
+					"friction" : 0.2,
+					"name" : "fixture2",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								0.4879915714263916,
+								0.4879915714263916,
+								-0.4879915714263916,
+								-0.4879915714263916
+							],
+							"y" : 
+							[
+								-0.9818620681762695,
+								0.9779760837554932,
+								0.9779760837554932,
+								-0.9818620681762695
+							]
+						}
+					}
+				}
+			],
+			"linearVelocity" : 0,
+			"massData-I" : 0.7640801668167114,
+			"massData-center" : 
+			{
+				"x" : -2.556413136733937e-010,
+				"y" : -0.001942986389622092
+			},
+			"massData-mass" : 1.912768959999085,
+			"name" : "WheelFrontLeft",
+			"position" : 
+			{
+				"x" : -1.4,
+				"y" : 2.4
+			},
+			"type" : 2
+		},
+		
+		{
+			"angle" : 0,
+			"angularVelocity" : 0,
+			"awake" : true,
+			"fixture" : 
+			[
+				
+				{
+					"density" : 1,
+					"friction" : 0.2,
+					"name" : "fixture1",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								0.4711349010467529,
+								0.4711349010467529,
+								-0.4711346626281738,
+								-0.4711346626281738
+							],
+							"y" : 
+							[
+								-0.9369890689849854,
+								0.9411908388137817,
+								0.9411908388137817,
+								-0.9369890689849854
+							]
+						}
+					}
+				}
+			],
+			"linearVelocity" : 0,
+			"massData-I" : 0.6511926651000977,
+			"massData-center" : 
+			{
+				"x" : 1.227815715765246e-007,
+				"y" : 0.002100877463817596
+			},
+			"massData-mass" : 1.769751667976379,
+			"name" : "WheelRearRight",
+			"position" : 
+			{
+				"x" : 1,
+				"y" : -2
+			},
+			"type" : 2
+		},
+		
+		{
+			"angle" : 0,
+			"angularVelocity" : 0,
+			"awake" : true,
+			"fixture" : 
+			[
+				
+				{
+					"density" : 1,
+					"friction" : 0.2,
+					"name" : "fixture1",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								0.4711349010467529,
+								0.4711349010467529,
+								-0.4711346626281738,
+								-0.4711346626281738
+							],
+							"y" : 
+							[
+								-0.9369890689849854,
+								0.9411908388137817,
+								0.9411908388137817,
+								-0.9369890689849854
+							]
+						}
+					}
+				}
+			],
+			"linearVelocity" : 0,
+			"massData-I" : 0.6511926651000977,
+			"massData-center" : 
+			{
+				"x" : 1.227815715765246e-007,
+				"y" : 0.002100877463817596
+			},
+			"massData-mass" : 1.769751667976379,
+			"name" : "WheelRearLeft",
+			"position" : 
+			{
+				"x" : -1,
+				"y" : -2
+			},
+			"type" : 2
+		},
+		
+		{
+			"angle" : 0,
+			"angularVelocity" : 0,
+			"awake" : true,
+			"fixture" : 
+			[
+				
+				{
+					"density" : 0.7,
+					"friction" : 0.2,
+					"name" : "fixture0",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : [ 1.230672478675842, -0.001158656086772680, 0.0, 0.7 ],
+							"y" : [ -1.383935928344727, 2.141122341156006, -0.5, -2 ]
+						}
+					}
+				},
+				
+				{
+					"density" : 0.7,
+					"friction" : 0.2,
+					"name" : "fixture0",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : [ 0.0, -0.001158656086772680, -1.230672478675842, -0.7 ],
+							"y" : [ -0.5, 2.141122341156006, -1.383935928344727, -2 ]
+						}
+					}
+				}
+			],
+			"linearVelocity" : 0,
+			"massData-I" : 3.798297882080078,
+			"massData-center" : 
+			{
+				"x" : -0.0003742163826245815,
+				"y" : -0.2926134467124939
+			},
+			"massData-mass" : 3.134326934814453,
+			"name" : "MainBody",
+			"position" : 0,
+			"type" : 2
+		}
+	],
+	"collisionbitplanes" : 
+	{
+		"names" : 
+		[
+			"bitplane1",
+			"bitplane2",
+			"bitplane3",
+			"bitplane4",
+			"bitplane5",
+			"bitplane6",
+			"bitplane7",
+			"bitplane8",
+			"bitplane9",
+			"bitplane10",
+			"bitplane11",
+			"bitplane12",
+			"bitplane13",
+			"bitplane14",
+			"bitplane15",
+			"bitplane16",
+			"bitplane17",
+			"bitplane18",
+			"bitplane19",
+			"bitplane20",
+			"bitplane21",
+			"bitplane22",
+			"bitplane23",
+			"bitplane24",
+			"bitplane25",
+			"bitplane26",
+			"bitplane27",
+			"bitplane28",
+			"bitplane29",
+			"bitplane30",
+			"bitplane31",
+			"bitplane32"
+		]
+	},
+	"continuousPhysics" : true,
+	"gravity" : 
+	{
+		"x" : 0,
+		"y" : -10
+	},
+	"image" : 
+	[
+		
+		{
+			"aspectScale" : 1,
+			"body" : -1,
+			"center" : 0,
+			"corners" : 
+			{
+				"x" : 
+				[
+					-1.192120075225830,
+					1.192120075225830,
+					1.192120075225830,
+					-1.192120075225830
+				],
+				"y" : 
+				[
+					-2.128785848617554,
+					-2.128785848617554,
+					2.128785848617554,
+					2.128785848617554
+				]
+			},
+			"file" : "../../Aseprite/Vehicle01/split/MainBody.png",
+			"filter" : 1,
+			"glDrawElements" : [ 0, 1, 2, 2, 3, 0 ],
+			"glTexCoordPointer" : [ 0.0, 0.0, 1, 0.0, 1, 1, 0.0, 1 ],
+			"glVertexPointer" : 
+			[
+				-1.192120075225830,
+				-2.128785848617554,
+				1.192120075225830,
+				-2.128785848617554,
+				1.192120075225830,
+				2.128785848617554,
+				-1.192120075225830,
+				2.128785848617554
+			],
+			"name" : "image0",
+			"opacity" : 0.5,
+			"scale" : 4.257571697235107
+		},
+		
+		{
+			"aspectScale" : 1,
+			"body" : 4,
+			"center" : 0,
+			"corners" : 
+			{
+				"x" : 
+				[
+					-0.4702664315700531,
+					0.4702664315700531,
+					0.4702664315700531,
+					-0.4702664315700531
+				],
+				"y" : 
+				[
+					-0.9405328631401062,
+					-0.9405328631401062,
+					0.9405328631401062,
+					0.9405328631401062
+				]
+			},
+			"file" : "../../Aseprite/Vehicle01/split/WheelRear.png",
+			"filter" : 1,
+			"glDrawElements" : [ 0, 1, 2, 2, 3, 0 ],
+			"glTexCoordPointer" : [ 0.0, 0.0, 1, 0.0, 1, 1, 0.0, 1 ],
+			"glVertexPointer" : 
+			[
+				-0.4702664315700531,
+				-0.9405328631401062,
+				0.4702664315700531,
+				-0.9405328631401062,
+				0.4702664315700531,
+				0.9405328631401062,
+				-0.4702664315700531,
+				0.9405328631401062
+			],
+			"name" : "image3",
+			"opacity" : 0.5,
+			"scale" : 1.881065726280212
+		},
+		
+		{
+			"aspectScale" : 1,
+			"body" : 1,
+			"center" : 0,
+			"corners" : 
+			{
+				"x" : 
+				[
+					-0.4910899698734283,
+					0.4910899698734283,
+					0.4910899698734283,
+					-0.4910899698734283
+				],
+				"y" : 
+				[
+					-0.9821799397468567,
+					-0.9821799397468567,
+					0.9821799397468567,
+					0.9821799397468567
+				]
+			},
+			"file" : "../../Aseprite/Vehicle01/split/WheelFront.png",
+			"filter" : 1,
+			"glDrawElements" : [ 0, 1, 2, 2, 3, 0 ],
+			"glTexCoordPointer" : [ 0.0, 0.0, 1, 0.0, 1, 1, 0.0, 1 ],
+			"glVertexPointer" : 
+			[
+				-0.4910899698734283,
+				-0.9821799397468567,
+				0.4910899698734283,
+				-0.9821799397468567,
+				0.4910899698734283,
+				0.9821799397468567,
+				-0.4910899698734283,
+				0.9821799397468567
+			],
+			"name" : "image1",
+			"opacity" : 0.5,
+			"scale" : 1.964359879493713
+		},
+		
+		{
+			"aspectScale" : 1,
+			"body" : 3,
+			"center" : 0,
+			"corners" : 
+			{
+				"x" : 
+				[
+					-0.4702664315700531,
+					0.4702664315700531,
+					0.4702664315700531,
+					-0.4702664315700531
+				],
+				"y" : 
+				[
+					-0.9405328631401062,
+					-0.9405328631401062,
+					0.9405328631401062,
+					0.9405328631401062
+				]
+			},
+			"file" : "../../Aseprite/Vehicle01/split/WheelRear.png",
+			"filter" : 1,
+			"glDrawElements" : [ 0, 1, 2, 2, 3, 0 ],
+			"glTexCoordPointer" : [ 0.0, 0.0, 1, 0.0, 1, 1, 0.0, 1 ],
+			"glVertexPointer" : 
+			[
+				-0.4702664315700531,
+				-0.9405328631401062,
+				0.4702664315700531,
+				-0.9405328631401062,
+				0.4702664315700531,
+				0.9405328631401062,
+				-0.4702664315700531,
+				0.9405328631401062
+			],
+			"name" : "image3",
+			"opacity" : 0.5,
+			"scale" : 1.881065726280212
+		},
+		
+		{
+			"aspectScale" : 1,
+			"body" : 2,
+			"center" : 0,
+			"corners" : 
+			{
+				"x" : 
+				[
+					-0.4910899698734283,
+					0.4910899698734283,
+					0.4910899698734283,
+					-0.4910899698734283
+				],
+				"y" : 
+				[
+					-0.9821799397468567,
+					-0.9821799397468567,
+					0.9821799397468567,
+					0.9821799397468567
+				]
+			},
+			"file" : "../../Aseprite/Vehicle01/split/WheelFront.png",
+			"filter" : 1,
+			"glDrawElements" : [ 0, 1, 2, 2, 3, 0 ],
+			"glTexCoordPointer" : [ 0.0, 0.0, 1, 0.0, 1, 1, 0.0, 1 ],
+			"glVertexPointer" : 
+			[
+				-0.4910899698734283,
+				-0.9821799397468567,
+				0.4910899698734283,
+				-0.9821799397468567,
+				0.4910899698734283,
+				0.9821799397468567,
+				-0.4910899698734283,
+				0.9821799397468567
+			],
+			"name" : "image1",
+			"opacity" : 0.5,
+			"scale" : 1.964359879493713
+		}
+	],
+	"joint" : 
+	[
+		
+		{
+			"anchorA" : 0,
+			"anchorB" : 
+			{
+				"x" : 0,
+				"y" : 3
+			},
+			"bodyA" : 0,
+			"bodyB" : 5,
+			"enableLimit" : true,
+			"enableMotor" : false,
+			"jointSpeed" : 0,
+			"lowerLimit" : 0,
+			"maxMotorTorque" : 0,
+			"motorSpeed" : 0,
+			"name" : "joint0",
+			"refAngle" : 0,
+			"type" : "revolute",
+			"upperLimit" : 0
+		},
+		
+		{
+			"anchorA" : 0,
+			"anchorB" : 
+			{
+				"x" : 1.4,
+				"y" : 0.6
+			},
+			"bodyA" : 0,
+			"bodyB" : 2,
+			"enableLimit" : false,
+			"enableMotor" : false,
+			"jointSpeed" : 0,
+			"lowerLimit" : 0,
+			"maxMotorTorque" : 0,
+			"motorSpeed" : 0,
+			"name" : "joint2",
+			"refAngle" : 0,
+			"type" : "revolute",
+			"upperLimit" : 0
+		},
+		
+		{
+			"anchorA" : 0,
+			"anchorB" : 
+			{
+				"x" : -1.4,
+				"y" : 0.6
+			},
+			"bodyA" : 0,
+			"bodyB" : 1,
+			"enableLimit" : false,
+			"enableMotor" : false,
+			"jointSpeed" : 0,
+			"lowerLimit" : 0,
+			"maxMotorTorque" : 0,
+			"motorSpeed" : 0,
+			"name" : "joint1",
+			"refAngle" : 0,
+			"type" : "revolute",
+			"upperLimit" : 0
+		},
+		
+		{
+			"anchorA" : 0,
+			"anchorB" : 
+			{
+				"x" : -1,
+				"y" : -2
+			},
+			"bodyA" : 4,
+			"bodyB" : 5,
+			"enableLimit" : true,
+			"enableMotor" : false,
+			"jointSpeed" : 0,
+			"lowerLimit" : 0,
+			"maxMotorTorque" : 0,
+			"motorSpeed" : 0,
+			"name" : "RearLeftJoint",
+			"refAngle" : 0,
+			"type" : "revolute",
+			"upperLimit" : 0
+		},
+		
+		{
+			"anchorA" : 0,
+			"anchorB" : 
+			{
+				"x" : 1,
+				"y" : -2
+			},
+			"bodyA" : 3,
+			"bodyB" : 5,
+			"enableLimit" : true,
+			"enableMotor" : false,
+			"jointSpeed" : 0,
+			"lowerLimit" : 0,
+			"maxMotorTorque" : 0,
+			"motorSpeed" : 0,
+			"name" : "RearRightJoint",
+			"refAngle" : 0,
+			"type" : "revolute",
+			"upperLimit" : 0
+		},
+		
+		{
+			"anchorA" : 0,
+			"anchorB" : 
+			{
+				"x" : -1.4,
+				"y" : 2.4
+			},
+			"bodyA" : 2,
+			"bodyB" : 5,
+			"enableLimit" : false,
+			"enableMotor" : false,
+			"jointSpeed" : 0,
+			"lowerLimit" : 0,
+			"maxMotorTorque" : 0,
+			"motorSpeed" : 0,
+			"name" : "FrontLeftJoint",
+			"refAngle" : 0,
+			"type" : "revolute",
+			"upperLimit" : 0
+		},
+		
+		{
+			"anchorA" : 0,
+			"anchorB" : 
+			{
+				"x" : 1.4,
+				"y" : 2.4
+			},
+			"bodyA" : 1,
+			"bodyB" : 5,
+			"enableLimit" : false,
+			"enableMotor" : false,
+			"jointSpeed" : 0,
+			"lowerLimit" : 0,
+			"maxMotorTorque" : 0,
+			"motorSpeed" : 0,
+			"name" : "FrontRightJoint",
+			"refAngle" : 0,
+			"type" : "revolute",
+			"upperLimit" : 0
+		}
+	],
+	"positionIterations" : 3,
+	"stepsPerSecond" : 60.0,
+	"subStepping" : false,
+	"velocityIterations" : 8,
+	"warmStarting" : true
+}

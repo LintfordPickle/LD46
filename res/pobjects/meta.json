@@ -5,6 +5,11 @@
 			"pObjectName":"POBJECT_VEHICLE_01",
 			"filepath":"res/pobjects/pobjectVehicle01.json",
 			"reloadable":"false"
+		}, 
+		{
+			"pObjectName":"POBJECT_VEHICLE_02",
+			"filepath":"res/pobjects/pobjectVehicle02.json",
+			"reloadable":"false"
 		}
 		
 	]

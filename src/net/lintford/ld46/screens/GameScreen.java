@@ -49,6 +49,7 @@ public class GameScreen extends BaseGameScreen {
 
 		mGameWorld = new GameWorld();
 
+		mShowInBackground = false;
 	}
 
 	// ---------------------------------------------
@@ -106,7 +107,7 @@ public class GameScreen extends BaseGameScreen {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
 		super.draw(pCore);
-		
+
 		{ // Normal frame render
 
 			mCarRenderer.draw(pCore, pCore.gameCamera());
@@ -129,8 +130,6 @@ public class GameScreen extends BaseGameScreen {
 			}
 
 		}
-		
-		
 
 	}
 
@@ -181,12 +180,12 @@ public class GameScreen extends BaseGameScreen {
 
 		new TrackRenderer(mRendererManager, entityGroupID()).initialize(lCore);
 		new GameStateRenderer(mRendererManager, entityGroupID()).initialize(lCore);
-		
+
 		mCarRenderer = new CarRenderer(mRendererManager, entityGroupID());
 		mCarRenderer.initialize(lCore);
 
 		// new DebugBox2dDrawer(mRendererManager, mGameWorld.box2dWorld(), entityGroupID()).initialize(lCore);
-		
+
 	}
 
 }

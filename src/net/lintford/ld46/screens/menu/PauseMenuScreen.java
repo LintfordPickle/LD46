@@ -25,6 +25,7 @@ public class PauseMenuScreen extends MenuScreen {
 		super(pScreenManager, pMenuTitle);
 
 		mIsPopup = true;
+
 	}
 
 	// ---------------------------------------------

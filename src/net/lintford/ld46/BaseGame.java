@@ -1,7 +1,12 @@
 package net.lintford.ld46;
 
+import static org.lwjgl.opengl.GL11.glClearColor;
+
+import org.lwjgl.opengl.GL11;
+
 import net.lintford.ld46.screens.GameScreen;
 import net.lintford.ld46.screens.IntroScreen;
+import net.lintford.ld46.screens.menu.TutorialMenuScreen;
 import net.lintford.library.GameInfo;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.screenmanager.IMenuAction;
@@ -18,8 +23,8 @@ public class BaseGame extends LintfordCore {
 	public static final String APPLICATION_NAME = "Ludum Dare #46";
 	public static final String WINDOW_TITLE = "Ludum Dare #46 - John Hampson";
 
-	private static final boolean SKIP_INTRO = true;
-	private static final boolean SKIP_MENU = true;
+	private static final boolean SKIP_INTRO = false;
+	private static final boolean SKIP_MENU = false;
 
 	// ---------------------------------------------
 	// Entry Point
@@ -62,7 +67,7 @@ public class BaseGame extends LintfordCore {
 	}
 
 	// ---------------------------------------------
-	// Methods
+	// Core-Methods
 	// ---------------------------------------------
 
 	@Override
@@ -77,20 +82,22 @@ public class BaseGame extends LintfordCore {
 
 				@Override
 				public void TimerFinished(Screen pScreen) {
-					addMenuScreens();
+					if (!SKIP_MENU) {
+						addMenuScreens();
+
+					} else {
+						LoadingScreen.load(mScreenManager, true, new GameScreen(mScreenManager));
+
+					}
 
 				}
 			});
 
 			mScreenManager.addScreen(lIntroScreen);
-		}
-
-		if (!SKIP_MENU) {
+		} else if (!SKIP_MENU) {
 			addMenuScreens();
 
 		} else {
-			// LoadingScreen.load(mScreenManager, true, new CarGameScreen(mScreenManager));
-			// LoadingScreen.load(mScreenManager, true, new TrackGameScreen(mScreenManager));
 			LoadingScreen.load(mScreenManager, true, new GameScreen(mScreenManager));
 
 		}
@@ -98,6 +105,7 @@ public class BaseGame extends LintfordCore {
 	}
 
 	private void addMenuScreens() {
+		LoadingScreen.load(mScreenManager, true, new GameScreen(mScreenManager), new TutorialMenuScreen(mScreenManager));
 
 	}
 
@@ -143,6 +151,9 @@ public class BaseGame extends LintfordCore {
 	@Override
 	protected void onDraw() {
 		super.onDraw();
+
+		glClearColor(0.0f / 255.0f, 9.0f / 255.0f, 0.0f / 255.0f, 1.0f);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
 		mScreenManager.draw(this);
 
