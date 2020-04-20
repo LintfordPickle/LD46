@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.lintford.ld46.controllers.CarController;
 import net.lintford.ld46.controllers.GameStateController;
+import net.lintford.ld46.controllers.TelekinesisController;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
 import net.lintford.library.core.graphics.fonts.FontManager.FontUnit;
@@ -25,6 +26,7 @@ public class GameStateRenderer extends UIWindow {
 	// ---------------------------------------------
 
 	private CarController mCarController;
+	private TelekinesisController mTelekinesisController;
 	private GameStateController mGameStateController;
 
 	private FontUnit mHudFontUnit;
@@ -60,6 +62,7 @@ public class GameStateRenderer extends UIWindow {
 
 		mGameStateController = (GameStateController) lControllerManager.getControllerByNameRequired(GameStateController.CONTROLLER_NAME, entityGroupID());
 		mCarController = (CarController) lControllerManager.getControllerByNameRequired(CarController.CONTROLLER_NAME, entityGroupID());
+		mTelekinesisController = (TelekinesisController) lControllerManager.getControllerByNameRequired(TelekinesisController.CONTROLLER_NAME, entityGroupID());
 
 	}
 
@@ -86,11 +89,15 @@ public class GameStateRenderer extends UIWindow {
 		// Panels
 		lTextureBatch.draw(mPanelsTexture, 0, 0, 128, 64, -lHudBoundingBox.getWidth() * 0.5f, lHudBoundingBox.getHeight() * 0.5f - 128, 128 * 2f, 64 * 2f, -0.001f, 1f, 1f, 1f, 1f);
 
-		// Bars
-		lTextureBatch.draw(mUiTexture, 2, 95, 119, 19, -lHudBoundingBox.getWidth() * 0.5f + 256f + 10f, -lHudBoundingBox.getHeight() * 0.5f + 10f, 119f * 2f, 19f * 2f, -0.001f, 1f, 1f, 1f, 1f);
+		// Telekinesis bar
+		lTextureBatch.draw(mUiTexture, 2, 95, 119, 19, -lHudBoundingBox.getWidth() * 0.5f + 256f + 10f, lHudBoundingBox.getHeight() * 0.5f - 10f - 40, 119f * 2f, 19f * 2f, -0.001f, 1f, 1f, 1f, 1f);
+
+		final float lCurrentTele = mTelekinesisController.currentTelekinesisPower();
+		final float lMaxTele = 100f;
+		float lWidthT = MathHelper.scaleToRange(lCurrentTele, 0.f, lMaxTele, 0.f, 119);
+		lTextureBatch.draw(mUiTexture, 2, 121, lWidthT, 19, -lHudBoundingBox.getWidth() * 0.5f + 256f + 10f, lHudBoundingBox.getHeight() * 0.5f - 10f - 40, lWidthT * 2f, 19f * 2f, -0.001f, 1f, 1f, 1f, 1f);
 
 		// Speed bar
-
 		lTextureBatch.draw(mUiTexture, 1, 53, 124, 34, lHudBoundingBox.getWidth() * 0.5f - 124f * 2f - 10f, lHudBoundingBox.getHeight() * 0.5f - 10f - 34f * 2f, 124f * 2f, 34f * 2f, -0.001f, 1f, 1f, 1f, 1f);
 
 		final float lCurrentSpeed = mCarController.carManager().playerCar().currentSpeed();
