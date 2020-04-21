@@ -22,6 +22,9 @@ import net.lintford.library.controllers.camera.CameraZoomController;
 import net.lintford.library.controllers.core.particles.ParticleFrameworkController;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
+import net.lintford.library.core.audio.AudioManager;
+import net.lintford.library.core.audio.AudioSource;
+import net.lintford.library.core.audio.data.AudioData;
 import net.lintford.library.core.camera.Camera;
 import net.lintford.library.core.particles.ParticleFrameworkData;
 import net.lintford.library.renderers.particles.ParticleFrameworkRenderer;
@@ -56,6 +59,10 @@ public class GameScreen extends BaseGameScreen {
 
 	private CarRenderer mCarRenderer;
 	private boolean mGameEndingShown;
+
+	private AudioData mStartRaceAudioData;
+	private AudioData mCountdownAudioData;
+	private AudioSource mCountDownAudio;
 
 	// ---------------------------------------------
 	// Constructor
@@ -96,6 +103,14 @@ public class GameScreen extends BaseGameScreen {
 
 		createRenderers();
 
+		final var lCore = mScreenManager.core();
+
+		mCountDownAudio = lCore.resources().audioManager().getAudioSource(hashCode(), AudioManager.AUDIO_SOURCE_TYPE_SOUNDFX);
+		mCountDownAudio.setLooping(false);
+
+		mStartRaceAudioData = lCore.resources().audioManager().getAudioDataBufferByName("SOUND_STARTRACE");
+		mCountdownAudioData = lCore.resources().audioManager().getAudioDataBufferByName("SOUND_COUNTDOWN");
+
 	}
 
 	@Override
@@ -106,7 +121,37 @@ public class GameScreen extends BaseGameScreen {
 			return;
 
 		}
-		
+
+		if (!mGameStateController.mHasRaceStarted) {
+			// update the countdown
+			final float lDelta = (float) pCore.time().elapseAppTimeMilli();
+			mGameStateController.mCountDownTimer -= lDelta;
+			if (mGameStateController.mCountDownTimer < 0.f) {
+				mGameStateController.mCountDownTimer += 1000.f;
+				mGameStateController.mStartCountDown--;
+				if (mGameStateController.mStartCountDown > 0) {
+					mCountDownAudio.play(mCountdownAudioData.bufferID());
+
+				} else {
+					mCountDownAudio.play(mStartRaceAudioData.bufferID());
+
+				}
+
+				System.out.println("Race starts in " + mGameStateController.mStartCountDown);
+
+				if (mGameStateController.mStartCountDown < 0) {
+					mGameStateController.mHasRaceStarted = true;
+					pCore.time().setGameTimePaused(false);
+					return;
+				}
+
+			}
+
+			pCore.time().setGameTimePaused(true);
+
+			return;
+		}
+
 		mWispController.update(pCore);
 
 		if (pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ESCAPE)) {
@@ -193,7 +238,7 @@ public class GameScreen extends BaseGameScreen {
 		mParticleFrameworkController = new ParticleFrameworkController(lControllerManager, mParticleFrameworkData, entityGroupID());
 
 		mWispController = new WispController(lControllerManager, entityGroupID());
-		
+
 	}
 
 	private void initializeControllers() {

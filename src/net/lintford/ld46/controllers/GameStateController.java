@@ -31,7 +31,7 @@ public class GameStateController extends BaseController {
 	public static final int END_CONDITION_WON_FIGHTING = 4;
 
 	public static final String CONTROLLER_NAME = "GameState Controller";
-	
+
 	public static final int numLaps = 5;
 
 	// ---------------------------------------------
@@ -45,6 +45,10 @@ public class GameStateController extends BaseController {
 	private int mNumberCarsFinished;
 	private int mEndConditionFlag;
 	private boolean mIsGameFinished;
+
+	public boolean mHasRaceStarted;
+	public int mStartCountDown = 5;
+	public float mCountDownTimer = 1000.f;
 
 	private List<Car> mPositionsList;
 	private CarPositionSorter mCarPositionSorter = new CarPositionSorter();
@@ -135,6 +139,10 @@ public class GameStateController extends BaseController {
 	@Override
 	public void update(LintfordCore pCore) {
 		super.update(pCore);
+
+		if (!mHasRaceStarted) {
+			return;
+		}
 
 		updatePositions();
 

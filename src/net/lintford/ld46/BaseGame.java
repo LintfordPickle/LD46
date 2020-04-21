@@ -130,8 +130,10 @@ public class BaseGame extends LintfordCore {
 		mResourceManager.musicManager().loadMusicFromMetaFile("res/music/meta.json");
 
 		final var lControlerManager = mScreenManager.core().controllerManager();
-		new MusicController(lControlerManager, mResourceManager.musicManager(), LintfordCore.CORE_ENTITY_GROUP_ID);
+		final var lMusic = new MusicController(lControlerManager, mResourceManager.musicManager(), LintfordCore.CORE_ENTITY_GROUP_ID);
 
+		lMusic.nextSong();
+		
 	}
 
 	@Override

@@ -20,6 +20,14 @@
 		{
 			"soundname":"SOUND_CRASH",
 			"filepath":"res/sounds/soundCrash.ogg"
+		},
+		{
+			"soundname":"SOUND_COUNTDOWN",
+			"filepath":"res/sounds/soundCountDown.wav"
+		},
+		{
+			"soundname":"SOUND_STARTRACE",
+			"filepath":"res/sounds/soundStartRace.wav"
 		}
 		
 	]

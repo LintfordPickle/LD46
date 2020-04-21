@@ -18,7 +18,7 @@ public class TelekinesisController extends BaseController {
 
 	final float MAX_DISTANCE_FOR_TELEKINESIS = 10000.0f;
 
-	public static final float DRAINAGE_RATE = 0.05f;
+	public static final float DRAINAGE_RATE = 0.01f;
 	public static final float REGEN_RATE = 0.05f;
 
 	// --------------------------------------

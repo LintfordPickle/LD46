@@ -113,6 +113,22 @@ public class GameStateRenderer extends UIWindow {
 		final var lPlayerCar = mCarController.carManager().playerCar();
 		final var lPlayerCarProgress = lPlayerCar.carProgress();
 
+		{ // countdown timer
+			if (!mGameStateController.mHasRaceStarted) {
+				final var lTitleFont = mRendererManager.titleFont();
+
+				float lScale = 2.f + (MathHelper.clamp(mGameStateController.mCountDownTimer * 0.001f, 0.f, 1.f));
+				final String lText = mGameStateController.mStartCountDown + "";
+				final float lTextWidth = lTitleFont.bitmap().getStringWidth(lText, lScale);
+				final float lTextHeight = lTitleFont.bitmap().getStringWidth(lText, lScale);
+
+				lTitleFont.begin(pCore.HUD());
+				lTitleFont.draw(lText, 0 - lTextWidth * 0.5f, 0 - lTextHeight * 0.5f - 240f, -0.1f, 1, 1, 1, 1, lScale, -1);
+				lTitleFont.end();
+
+			}
+		}
+
 		mHudFontUnit.begin(pCore.HUD());
 		mHudFontUnit.draw("Laps:  ", lHudBoundingBox.getMinX() + 5.f, lLinePosOffsetY + (lLinePosY), 1.f);
 		mHudFontUnit.draw((lPlayerCarProgress.currentLapNumber) + "/" + (mGameStateController.totalLaps()), lHudBoundingBox.getMinX() + 5.f + 160f, lLinePosOffsetY + (lLinePosY), 1.f);

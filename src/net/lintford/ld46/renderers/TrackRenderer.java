@@ -17,7 +17,6 @@ import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
 import net.lintford.library.core.graphics.shaders.ShaderSubPixel;
 import net.lintford.library.core.graphics.textures.Texture;
-import net.lintford.library.core.maths.MathHelper;
 import net.lintford.library.core.maths.Matrix4f;
 import net.lintford.library.renderers.BaseRenderer;
 import net.lintford.library.renderers.RendererManager;
@@ -73,6 +72,11 @@ public class TrackRenderer extends BaseRenderer {
 	protected boolean mIsTrackGenerated;
 	protected Texture mTrackTexture;
 	protected Texture mTrackPropsTexture;
+	protected Texture mTrackGrassTexture;
+
+	private float mCheckeredStartX;
+	private float mCheckeredStartY;
+	private float mCheckeredStartRotation;
 
 	protected TrackController mTrackController;
 
@@ -120,7 +124,8 @@ public class TrackRenderer extends BaseRenderer {
 		mShader.loadGLContent(pResourceManager);
 
 		mTrackTexture = pResourceManager.textureManager().loadTexture("TEXTURE_TRACK", "res/textures/textureTrack.png", GL11.GL_LINEAR, entityGroupID());
-		mTrackPropsTexture = pResourceManager.textureManager().loadTexture("TEXTURE_TRACK_PROS", "res/textures/textureTrackProps.png", GL11.GL_LINEAR, entityGroupID());
+		mTrackPropsTexture = pResourceManager.textureManager().loadTexture("TEXTURE_TRACK_PROPS", "res/textures/textureTrackProps.png", GL11.GL_LINEAR, entityGroupID());
+		mTrackGrassTexture = pResourceManager.textureManager().loadTexture("TEXTURE_TRACK_GRASS", "res/textures/textureTrackGrass.png", GL11.GL_LINEAR, entityGroupID());
 
 		loadTrackMesh(lTrack);
 
@@ -160,7 +165,6 @@ public class TrackRenderer extends BaseRenderer {
 
 	@Override
 	public void draw(LintfordCore pCore) {
-
 		if (!mTrackController.isinitialized()) {
 			return;
 		}
@@ -168,6 +172,28 @@ public class TrackRenderer extends BaseRenderer {
 		final var lTrack = mTrackController.currentTrack();
 		if (lTrack == null)
 			return;
+
+		final var lTextureBatch = mRendererManager.uiTextureBatch();
+//		lTextureBatch.begin(pCore.HUD());
+//
+//		final var lBoundingRect = pCore.HUD().boundingRectangle();
+//		final float lHudWidth = lBoundingRect.width();
+//		final float lHudHeight = lBoundingRect.height();
+//		
+//		GL11.glBindTexture(GL11.GL_TEXTURE_2D, mTrackGrassTexture.getTextureID());
+//
+//		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+//		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+//
+//		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_REPEAT);
+//		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_REPEAT);
+//
+//		float lGrassScale = 2.f;
+//		float lOffsetX = pCore.gameCamera().getZoomFactor() + pCore.gameCamera().getMinX() * 0.01f;
+//		float lOffsetY = pCore.gameCamera().getZoomFactor() + pCore.gameCamera().getMinY() * 0.01f;
+//
+//		lTextureBatch.draw(mTrackGrassTexture, 0 + lOffsetX, 0 + lOffsetY, 800, 600, -lHudWidth * .5f, -lHudHeight * .5f, lHudWidth * lGrassScale, lHudHeight * lGrassScale, -0.1f, 1f, 1f, 1f, 1f);
+//		lTextureBatch.end();
 
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, mTrackTexture.getTextureID());
@@ -190,16 +216,12 @@ public class TrackRenderer extends BaseRenderer {
 
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 
-		final var lTextureBatch = mRendererManager.uiTextureBatch();
 		lTextureBatch.begin(pCore.gameCamera());
 		final var lScale = 4.0f;
-		final var lRot = (float) MathHelper.toRadians(45);
-		lTextureBatch.draw(mTrackPropsTexture, 0, 0, 256, 62, x, y, 256*lScale, 62*lScale, -0.1f, r + (float) Math.toRadians(90), 0f, 0f, 1f, 1f, 1f, 1f, 1f);
+		lTextureBatch.draw(mTrackPropsTexture, 0, 0, 256, 62, mCheckeredStartX, mCheckeredStartY, 256 * lScale, 62 * lScale, -0.1f, mCheckeredStartRotation + (float) Math.toRadians(90), 0f, 0f, 1f, 1f, 1f, 1f, 1f);
 		lTextureBatch.end();
 
 	}
-
-	float x, y, r;
 
 	// ---------------------------------------------
 	// Methods
@@ -245,10 +267,10 @@ public class TrackRenderer extends BaseRenderer {
 		float lPrevX = 0.f;
 		float lPrevY = 0.f;
 
-		x = (lInnerVertices[0].x + (lOuterVertices[0].x - lInnerVertices[0].x) * .5f) * Box2dWorldController.UNITS_TO_PIXELS;
-		y = (lInnerVertices[0].y + (lOuterVertices[0].y - lInnerVertices[0].y) * .5f) * Box2dWorldController.UNITS_TO_PIXELS;
+		mCheckeredStartX = (lInnerVertices[0].x + (lOuterVertices[0].x - lInnerVertices[0].x) * .5f) * Box2dWorldController.UNITS_TO_PIXELS;
+		mCheckeredStartY = (lInnerVertices[0].y + (lOuterVertices[0].y - lInnerVertices[0].y) * .5f) * Box2dWorldController.UNITS_TO_PIXELS;
 
-		r = (float) Math.atan2(-lOuterVertices[1].x - lOuterVertices[0].x, lOuterVertices[1].x - lOuterVertices[0].x);
+		mCheckeredStartRotation = (float) Math.atan2(-lOuterVertices[1].x - lOuterVertices[0].x, lOuterVertices[1].x - lOuterVertices[0].x);
 
 		for (int i = 0; i < lNumSplinePoints; i++) {
 
