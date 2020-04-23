@@ -207,17 +207,17 @@ public class GameStateController extends BaseController {
 	}
 
 	private boolean checkWinCondition() {
-		boolean lTop3Finish = mNumberCarsFinished < 3;
+		boolean lFInishedFirst = mNumberCarsFinished <= 1; // the player being the one who just finished
 		boolean AllOpponentsDead = mGameWorld.carManager().numberOfActiveOpponents() <= 0;
 
 		if (AllOpponentsDead) {
-			mEndConditionFlag = lTop3Finish ? END_CONDITION_WON_FIGHTING : END_CONDITION_LOST;
+			mEndConditionFlag = lFInishedFirst ? END_CONDITION_WON_FIGHTING : END_CONDITION_LOST;
 			return true;
 
 		}
 
 		// Top 3 over the finish line
-		if (lTop3Finish) {
+		if (lFInishedFirst) {
 			mEndConditionFlag = END_CONDITION_WON_RACING; // finished top 3
 			return true;
 		}

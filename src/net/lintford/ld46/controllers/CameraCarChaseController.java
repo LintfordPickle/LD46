@@ -176,6 +176,8 @@ public class CameraCarChaseController extends BaseController {
 
 		float elapsed = (float) pCore.time().elapseGameTimeSeconds();
 
+		System.out.println("cgt: " + elapsed);
+		
 		// Calculate spring force
 		float stretchX = mPosition.x - mDesiredPosition.x;
 		float stretchY = mPosition.y - mDesiredPosition.y;

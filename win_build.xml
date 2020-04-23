@@ -18,7 +18,7 @@
 	<property name="project.website">
 	</property>
 
-	<!-- Use Core.jar as the application name if using JavaLauncher (just makes it easier) -->
+	<!-- Use Core.jar as the application name if using chJavaLauncher (just makes it easier) -->
 	<property name="application.name">Core</property>
 
 	<property name="client-main-class">net.lintford.ld46.BaseGame</property>

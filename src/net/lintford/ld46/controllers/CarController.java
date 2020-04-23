@@ -126,15 +126,6 @@ public class CarController extends BaseController {
 
 		}
 
-		// if the player is controlling another vehicle, then don't process car input
-//		if (mCarManager.telekinesisCar() != null) {
-//			// first, stop the player from turning
-//			lPlayerCar.steeringAngleDeg(0);
-//
-//			return super.handleInput(pCore);
-//
-//		}
-
 		if (lPlayerCar.input().isTurningLeft) {
 			lPlayerCar.steeringAngleDeg(lPlayerCar.steeringAngleLockDeg());
 		}

@@ -64,6 +64,7 @@ public class BaseGame extends LintfordCore {
 		super(pGameInfo, pArgs, false);
 
 		mScreenManager = new ScreenManager(this);
+//		mIsFixedTimeStep = true;
 
 	}
 
