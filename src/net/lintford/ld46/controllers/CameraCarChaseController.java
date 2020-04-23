@@ -20,8 +20,8 @@ public class CameraCarChaseController extends BaseController {
 
 	private static final float CAMERA_MAN_MOVE_SPEED = 0.2f;
 
-	private static final float MIN_ZOOM = 1.1f;  // how close to the cars
-	private static final float MAX_ZOOM = 0.25f; //how far to zoom out
+	private static final float MIN_ZOOM = 1.1f; // how close to the cars
+	private static final float MAX_ZOOM = 0.25f; // how far to zoom out
 
 	// ---------------------------------------------
 	// Variables
@@ -174,10 +174,8 @@ public class CameraCarChaseController extends BaseController {
 		updatewWorldPositions(pCore);
 		updateWorldZoomFactor(pCore);
 
-		float elapsed = (float) pCore.time().elapseGameTimeSeconds();
+		float elapsed = (float) pCore.gameTime().elapseTimeSeconds();
 
-		System.out.println("cgt: " + elapsed);
-		
 		// Calculate spring force
 		float stretchX = mPosition.x - mDesiredPosition.x;
 		float stretchY = mPosition.y - mDesiredPosition.y;
@@ -223,7 +221,7 @@ public class CameraCarChaseController extends BaseController {
 
 		}
 
-		mZoomFactor += mZoomVelocity * pCore.time().elapseGameTimeMilli() * 0.001f;
+		mZoomFactor += mZoomVelocity * pCore.gameTime().elapseTimeMilli() * 0.001f;
 		mZoomVelocity *= 0.987f;
 		mZoomVelocity = MathHelper.clamp(mZoomVelocity, -0.25f, 0.25f);
 		mZoomFactor = MathHelper.clamp(mZoomFactor, MAX_ZOOM, MIN_ZOOM);

@@ -70,7 +70,7 @@ public class TutorialMenuScreen extends MenuScreen {
 	public void update(LintfordCore pCore, boolean pOtherScreenHasFocus, boolean pCoveredByOtherScreen) {
 		super.update(pCore, pOtherScreenHasFocus, pCoveredByOtherScreen);
 
-		pCore.time().setGameTimePaused(mScreenState == ScreenState.Active);
+		pCore.gameTime().setPaused(mScreenState == ScreenState.Active);
 
 	}
 

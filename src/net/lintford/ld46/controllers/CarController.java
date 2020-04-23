@@ -173,7 +173,7 @@ public class CarController extends BaseController {
 
 		// Resolve crashes one vehicle at a time
 		if (mCarResolverList.size() > 0) {
-			mCarResolverTimer -= pCore.time().elapseAppTimeMilli();
+			mCarResolverTimer -= pCore.appTime().elapseTimeMilli();
 			if (mCarResolverTimer < 0.0f) {
 				mCarResolverTimer = 1000.0f;
 
@@ -313,7 +313,7 @@ public class CarController extends BaseController {
 		final float lTimer = 1250.0f;
 		final float lMinDist = 75f;
 
-		pCar.mLastCrashResolverUpdateTime -= pCore.time().elapseAppTimeMilli();
+		pCar.mLastCrashResolverUpdateTime -= pCore.appTime().elapseTimeMilli();
 		if (pCar.mLastCrashResolverUpdateTime < 0.0f) {
 			final float lDistTravelled = Vector2f.distance(pCar.mLastCrashResolverUpdateX, pCar.mLastCrashResolverUpdateY, pCar.x, pCar.y);
 

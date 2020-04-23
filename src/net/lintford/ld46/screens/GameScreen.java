@@ -124,7 +124,7 @@ public class GameScreen extends BaseGameScreen {
 
 		if (!mGameStateController.mHasRaceStarted) {
 			// update the countdown
-			final float lDelta = (float) pCore.time().elapseAppTimeMilli();
+			final float lDelta = (float) pCore.appTime().elapseTimeMilli();
 			mGameStateController.mCountDownTimer -= lDelta;
 			if (mGameStateController.mCountDownTimer < 0.f) {
 				mGameStateController.mCountDownTimer += 1000.f;
@@ -141,13 +141,13 @@ public class GameScreen extends BaseGameScreen {
 
 				if (mGameStateController.mStartCountDown < 0) {
 					mGameStateController.mHasRaceStarted = true;
-					pCore.time().setGameTimePaused(false);
+					pCore.gameTime().setPaused(false);
 					return;
 				}
 
 			}
 
-			pCore.time().setGameTimePaused(true);
+			pCore.gameTime().setPaused(true);
 
 			return;
 		}
@@ -160,7 +160,7 @@ public class GameScreen extends BaseGameScreen {
 		}
 
 		if (mGameStateController.getEndConditionFlag() != GameStateController.END_CONDITION_NOT_SET) {
-			pCore.time().setGameTimePaused(true);
+			pCore.gameTime().setPaused(true);
 
 			if (!mGameEndingShown) {
 

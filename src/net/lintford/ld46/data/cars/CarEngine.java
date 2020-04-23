@@ -60,7 +60,7 @@ public class CarEngine {
 	}
 
 	public void update(LintfordCore pCore, Car pCar) {
-		final float lGameTimeModifer = pCore.time().getGameTimeModifier();
+		final float lGameTimeModifer = pCore.gameTime().timeModifier();
 		final float lNormalizedSpeed = pCar.currentSpeedNormalized();
 
 		if (mEngineSource0Low != null) {

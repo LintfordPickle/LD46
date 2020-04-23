@@ -140,7 +140,7 @@ public class TelekinesisController extends BaseController {
 	// --------------------------------------
 
 	private void updateTelekinesis(LintfordCore pCore) {
-		final float lDelta = (float) pCore.time().elapseGameTimeMilli();
+		final float lDelta = (float) pCore.gameTime().elapseTimeMilli();
 
 		if (mTelekinesisManager.isInTelekinesesMode) {
 			final int lOpponentCarId = mTelekinesisManager.mSelectedOpponentIndex;
@@ -180,7 +180,7 @@ public class TelekinesisController extends BaseController {
 		final float lMinModiferValue = 0.25f;
 		mTimeControlModifierTarget = mTelekinesisManager.isInTelekinesesMode ? lMinModiferValue : lMaxModiferValue;
 
-		final float lDelta = (float) pCore.time().elapseAppTimeMilli() * 0.001f;
+		final float lDelta = (float) pCore.appTime().elapseTimeMilli() * 0.001f;
 		final float lVelStepSize = 0.05f;
 
 		if (mTimeControlModifier > mTimeControlModifierTarget) {
@@ -203,7 +203,7 @@ public class TelekinesisController extends BaseController {
 			mTimeControlModifierVelocity = 0.f;
 		}
 
-		pCore.time().setGameTimeModifier(mTimeControlModifier);
+		pCore.gameTime().setGameTimeModifier(mTimeControlModifier);
 
 		mTimeControlModifierVelocity *= .95f;
 

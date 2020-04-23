@@ -1,7 +1,5 @@
 package net.lintford.ld46.screens.menu;
 
-import org.lwjgl.glfw.GLFW;
-
 import net.lintford.ld46.screens.GameScreen;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
@@ -79,7 +77,7 @@ public class GameLostScreen extends MenuScreen {
 	public void update(LintfordCore pCore, boolean pOtherScreenHasFocus, boolean pCoveredByOtherScreen) {
 		super.update(pCore, pOtherScreenHasFocus, pCoveredByOtherScreen);
 
-		pCore.time().setGameTimePaused(mScreenState == ScreenState.Active);
+		pCore.gameTime().setPaused(mScreenState == ScreenState.Active);
 
 	}
 
