@@ -61,6 +61,10 @@ public class Car extends JBox2dEntity {
 	// Properties
 	// ---------------------------------------------
 
+	public Vec2 forwardUnitVelocity() {
+		return mForwardVelocity;
+	}
+
 	public List<CarWheel> wheels() {
 		return mWheels;
 	}
@@ -225,8 +229,8 @@ public class Car extends JBox2dEntity {
 	}
 
 	@Override
-	public void updatePhyics(LintfordCore pCore) {
-		super.updatePhyics(pCore);
+	public void updatePhysics(LintfordCore pCore) {
+		super.updatePhysics(pCore);
 
 		// TODO: Move
 		mCarAudio.update(pCore, this);
