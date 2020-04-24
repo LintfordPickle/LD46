@@ -112,7 +112,10 @@ public class CarController extends BaseController {
 
 	@Override
 	public void unload() {
-		// TODO Auto-generated method stub
+		mCrashAudio.unassign();
+
+		mCrashAudioData = null;
+		mCarResolverList.clear();
 
 	}
 
@@ -172,7 +175,7 @@ public class CarController extends BaseController {
 
 		for (int i = 0; i < lNumCars; i++) {
 			final var lCarToUpdate = lCarsList.get(i);
-			lCarToUpdate.updatePhyics(pCore);
+			lCarToUpdate.updatePhysics(pCore);
 
 			updateCarProgress(pCore, lCarToUpdate, lTrack);
 
@@ -398,14 +401,15 @@ public class CarController extends BaseController {
 		final var lPObjectInstance = lResourceManager.pobjectManager().getNewInstanceFromPObject(lBox2dWorld, "POBJECT_VEHICLE_01");
 		lPObjectInstance.setFixtureCategory(Box2dGameController.CATEGORY_CAR);
 		lPObjectInstance.setFixtureBitMask(Box2dGameController.CATEGORY_TRACK | Box2dGameController.CATEGORY_CAR);
+
+		lNewPlayerCar.isPlayerCar = true;
+
 		lNewPlayerCar.setPhysicsObject(lPObjectInstance);
 		lNewPlayerCar.loadPhysics(lBox2dWorld);
 		lNewPlayerCar.loadContent(mResourceController.resourceManager());
 
 		float lAngle = getTrackGradientAtVehicleLocation(lNewPlayerCar);
-		lPObjectInstance.setTransform(0.f, 0.f, lAngle);
-
-		lNewPlayerCar.isPlayerCar = true;
+		lNewPlayerCar.setTransform(0.f, 0.f, lAngle);
 
 		final int lNumWheels = lNewPlayerCar.wheels().size();
 		for (int j = 0; j < lNumWheels; j++) {
