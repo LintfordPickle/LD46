@@ -4,16 +4,20 @@ import org.lwjgl.opengl.GL11;
 
 import net.lintford.ld46.controllers.CarController;
 import net.lintford.ld46.controllers.GameStateController;
+import net.lintford.ld46.controllers.GameStateController.ICountDownListener;
 import net.lintford.ld46.controllers.TelekinesisController;
 import net.lintford.library.core.LintfordCore;
 import net.lintford.library.core.ResourceManager;
+import net.lintford.library.core.audio.AudioManager;
+import net.lintford.library.core.audio.AudioSource;
+import net.lintford.library.core.audio.data.AudioData;
 import net.lintford.library.core.graphics.fonts.FontManager.FontUnit;
 import net.lintford.library.core.graphics.textures.Texture;
 import net.lintford.library.core.maths.MathHelper;
 import net.lintford.library.renderers.RendererManager;
 import net.lintford.library.renderers.windows.UIWindow;
 
-public class GameStateRenderer extends UIWindow {
+public class GameStateRenderer extends UIWindow implements ICountDownListener {
 
 	// ---------------------------------------------
 	// Constants
@@ -33,6 +37,10 @@ public class GameStateRenderer extends UIWindow {
 
 	private Texture mUiTexture;
 	private Texture mPanelsTexture;
+
+	private AudioData mStartRaceAudioData;
+	private AudioData mCountdownAudioData;
+	private AudioSource mCountDownAudio;
 
 	// ---------------------------------------------
 	// Properties
@@ -61,6 +69,8 @@ public class GameStateRenderer extends UIWindow {
 		final var lControllerManager = pCore.controllerManager();
 
 		mGameStateController = (GameStateController) lControllerManager.getControllerByNameRequired(GameStateController.CONTROLLER_NAME, entityGroupID());
+		mGameStateController.countDownCallBack(this);
+
 		mCarController = (CarController) lControllerManager.getControllerByNameRequired(CarController.CONTROLLER_NAME, entityGroupID());
 		mTelekinesisController = (TelekinesisController) lControllerManager.getControllerByNameRequired(TelekinesisController.CONTROLLER_NAME, entityGroupID());
 
@@ -76,6 +86,13 @@ public class GameStateRenderer extends UIWindow {
 		// TODO: Subpixel sampling
 		mPanelsTexture = pResourceManager.textureManager().loadTexture("TEXTURE_PANELS", "res/textures/textureGamePanel.png", GL11.GL_NEAREST, entityGroupID());
 		mUiTexture = pResourceManager.textureManager().loadTexture("TEXTURE_UI", "res/textures/textureUI.png", GL11.GL_NEAREST, entityGroupID());
+
+		// Audio
+		mCountDownAudio = pResourceManager.audioManager().getAudioSource(hashCode(), AudioManager.AUDIO_SOURCE_TYPE_SOUNDFX);
+		mCountDownAudio.setLooping(false);
+
+		mStartRaceAudioData = pResourceManager.audioManager().getAudioDataBufferByName("SOUND_STARTRACE");
+		mCountdownAudioData = pResourceManager.audioManager().getAudioDataBufferByName("SOUND_COUNTDOWN");
 
 	}
 
@@ -114,11 +131,11 @@ public class GameStateRenderer extends UIWindow {
 		final var lPlayerCarProgress = lPlayerCar.carProgress();
 
 		{ // countdown timer
-			if (!mGameStateController.mHasRaceStarted) {
+			if (!mGameStateController.hasRaceStarted()) {
 				final var lTitleFont = mRendererManager.titleFont();
 
-				float lScale = 2.f + (MathHelper.clamp(mGameStateController.mCountDownTimer * 0.001f, 0.f, 1.f));
-				final String lText = mGameStateController.mStartCountDown + "";
+				float lScale = 2.f + (MathHelper.clamp(mGameStateController.countDown() * 0.001f, 0.f, 1.f));
+				final String lText = mGameStateController.countDown() + "";
 				final float lTextWidth = lTitleFont.bitmap().getStringWidth(lText, lScale);
 				final float lTextHeight = lTitleFont.bitmap().getStringWidth(lText, lScale);
 
@@ -131,11 +148,24 @@ public class GameStateRenderer extends UIWindow {
 
 		mHudFontUnit.begin(pCore.HUD());
 		mHudFontUnit.draw("Laps:  ", lHudBoundingBox.getMinX() + 5.f, lLinePosOffsetY + (lLinePosY), 1.f);
-		mHudFontUnit.draw((lPlayerCarProgress.currentLapNumber) + "/" + ((int)MathHelper.clampi(mGameStateController.totalLaps(), 0, GameStateController.numLaps)), lHudBoundingBox.getMinX() + 5.f + 160f, lLinePosOffsetY + (lLinePosY), 1.f);
+		mHudFontUnit.draw((lPlayerCarProgress.currentLapNumber) + "/" + ((int) MathHelper.clampi(mGameStateController.totalLaps(), 0, GameStateController.numLaps)), lHudBoundingBox.getMinX() + 5.f + 160f,
+				lLinePosOffsetY + (lLinePosY), 1.f);
 		mHudFontUnit.draw("Position:  ", lHudBoundingBox.getMinX() + 5.f, lLinePosOffsetY + (lLinePosY += lLineHeight), 1.f);
 		mHudFontUnit.draw(mGameStateController.getPlayerPosition() + "/" + mGameStateController.totalRacers(), lHudBoundingBox.getMinX() + 5.f + 160f, lLinePosOffsetY + (lLinePosY), 1.f);
 
 		mHudFontUnit.end();
+
+	}
+
+	@Override
+	public void onCountDown(int pCurrentSecondsToBegin) {
+		if (pCurrentSecondsToBegin > 0) {
+			mCountDownAudio.play(mCountdownAudioData.bufferID());
+
+		} else {
+			mCountDownAudio.play(mStartRaceAudioData.bufferID());
+
+		}
 
 	}
 

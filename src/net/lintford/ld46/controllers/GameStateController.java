@@ -12,6 +12,10 @@ import net.lintford.library.core.LintfordCore;
 
 public class GameStateController extends BaseController {
 
+	public interface ICountDownListener {
+		public void onCountDown(int pCurrentSecondsToBegin);
+	}
+
 	public class CarPositionSorter implements Comparator<Car> {
 
 		@Override
@@ -33,12 +37,15 @@ public class GameStateController extends BaseController {
 	public static final String CONTROLLER_NAME = "GameState Controller";
 
 	public static final int numLaps = 5;
+	public static final int countDownStart = 5;
 
 	// ---------------------------------------------
 	// Variables
 	// ---------------------------------------------
 
 	private GameWorld mGameWorld;
+	private boolean mIsGameScreenActive;
+	private ICountDownListener mCountDownCallback;
 
 	private int mTotalLaps;
 
@@ -46,9 +53,9 @@ public class GameStateController extends BaseController {
 	private int mEndConditionFlag;
 	private boolean mIsGameFinished;
 
-	public boolean mHasRaceStarted;
-	public int mStartCountDown = 5;
-	public float mCountDownTimer = 1000.f;
+	private boolean mHasRaceStarted;
+	private int mStartCountDown;
+	private float mCountDownTimer;
 
 	private List<Car> mPositionsList;
 	private CarPositionSorter mCarPositionSorter = new CarPositionSorter();
@@ -56,6 +63,26 @@ public class GameStateController extends BaseController {
 	// ---------------------------------------------
 	// Properties
 	// ---------------------------------------------
+
+	public boolean isGameScreenActive() {
+		return mIsGameScreenActive;
+	}
+
+	public void isGameScreenActive(boolean pNewValue) {
+		mIsGameScreenActive = pNewValue;
+	}
+
+	public void countDownCallBack(ICountDownListener pCallbackOnObject) {
+		mCountDownCallback = pCallbackOnObject;
+	}
+
+	public int countDown() {
+		return mStartCountDown;
+	}
+
+	public boolean hasRaceStarted() {
+		return mHasRaceStarted;
+	}
 
 	public boolean isGameFinished() {
 		return mIsGameFinished;
@@ -104,6 +131,7 @@ public class GameStateController extends BaseController {
 		super(pControllerManager, CONTROLLER_NAME, pEntityGroupID);
 
 		mGameWorld = pGameWorld;
+		mStartCountDown = countDownStart;
 
 	}
 
@@ -140,8 +168,32 @@ public class GameStateController extends BaseController {
 	public void update(LintfordCore pCore) {
 		super.update(pCore);
 
-		if (!mHasRaceStarted) {
+		if (!mIsGameScreenActive)
 			return;
+
+		if (!mHasRaceStarted) {
+			// update the countdown
+			final float lDelta = (float) pCore.appTime().elapseTimeMilli();
+			mCountDownTimer -= lDelta;
+			if (mCountDownTimer < 0.f) {
+				mCountDownTimer += 1000.f;
+				mStartCountDown--;
+				if (mCountDownCallback != null) {
+					mCountDownCallback.onCountDown(mStartCountDown);
+				}
+
+				if (mStartCountDown <= 0) {
+					startRace();
+					pCore.gameTime().setPaused(false);
+					return;
+				}
+
+			}
+
+			pCore.gameTime().setPaused(true);
+
+			return;
+
 		}
 
 		updatePositions();
@@ -234,6 +286,11 @@ public class GameStateController extends BaseController {
 
 		// Car destroyed
 		return false;
+	}
+
+	public void startRace() {
+		mHasRaceStarted = true;
+
 	}
 
 }

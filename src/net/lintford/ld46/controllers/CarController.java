@@ -41,12 +41,14 @@ public class CarController extends BaseController {
 	private ResourceController mResourceController;
 	private TrackController mTrackController;
 	private Box2dWorldController mBox2dWorldController;
+	private GameStateController mGameStateController;
 	private ParticleFrameworkController mParticleController;
 	private List<Car> mCarResolverList;
 	private float mCarResolverTimer;
 
 	private AudioSource mCrashAudio;
 	private AudioData mCrashAudioData;
+	private boolean mHasRaceBegun;
 
 	// ---------------------------------------------
 	// Properties
@@ -75,6 +77,8 @@ public class CarController extends BaseController {
 		mCarManager = pCarManager;
 		mCarResolverList = new ArrayList<>();
 
+		mHasRaceBegun = false;
+
 	}
 
 	// ---------------------------------------------
@@ -91,6 +95,8 @@ public class CarController extends BaseController {
 		mBox2dWorldController = (Box2dWorldController) pCore.controllerManager().getControllerByNameRequired(Box2dWorldController.CONTROLLER_NAME, entityGroupID());
 		mTrackController = (TrackController) pCore.controllerManager().getControllerByNameRequired(TrackController.CONTROLLER_NAME, entityGroupID());
 		mParticleController = (ParticleFrameworkController) pCore.controllerManager().getControllerByNameRequired(ParticleFrameworkController.CONTROLLER_NAME, entityGroupID());
+
+		mGameStateController = (GameStateController) pCore.controllerManager().getControllerByNameRequired(GameStateController.CONTROLLER_NAME, entityGroupID());
 
 		mCarUidCounter = 0;
 
@@ -143,12 +149,26 @@ public class CarController extends BaseController {
 	public void update(LintfordCore pCore) {
 		super.update(pCore);
 
-		final var lTrack = mTrackController.currentTrack();
-		if (lTrack == null)
+		if (!mGameStateController.hasRaceStarted()) {
 			return;
+		}
 
 		final var lCarsList = mCarManager.cars();
 		final int lNumCars = lCarsList.size();
+
+		if (!mHasRaceBegun) {
+			for (int i = 0; i < lNumCars; i++) {
+				final var lCarToUpdate = lCarsList.get(i);
+				lCarToUpdate.startEngine();
+
+			}
+
+			mHasRaceBegun = true;
+		}
+
+		final var lTrack = mTrackController.currentTrack();
+		if (lTrack == null)
+			return;
 
 		for (int i = 0; i < lNumCars; i++) {
 			final var lCarToUpdate = lCarsList.get(i);
@@ -434,6 +454,7 @@ public class CarController extends BaseController {
 			lPObjectInstance.setFixtureBitMask(Box2dGameController.CATEGORY_TRACK | Box2dGameController.CATEGORY_CAR);
 
 			lPObjectInstance.setPosition(lX, lY);
+			lNewOpponent.loadContent(mResourceController.resourceManager());
 			lNewOpponent.setPhysicsObject(lPObjectInstance);
 			lNewOpponent.loadPhysics(lBox2dWorld);
 

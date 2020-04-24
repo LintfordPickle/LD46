@@ -24,9 +24,9 @@ public class Car extends JBox2dEntity {
 	// Variables
 	// ---------------------------------------------
 
-	private CarEngine mCarEngine;
 	private CarProgress mCarProgress;
 	private CarInput mCarInput;
+	private CarAudio mCarAudio;
 	private List<CarWheel> mWheels;
 	private boolean mIsDestroyed;
 
@@ -143,7 +143,7 @@ public class Car extends JBox2dEntity {
 		super(pPoolUid);
 
 		mCarProgress = new CarProgress(0, 0);
-		mCarEngine = new CarEngine();
+		mCarAudio = new CarAudio();
 
 		mCarInput = new CarInput();
 		mWheels = new ArrayList<>();
@@ -155,16 +155,13 @@ public class Car extends JBox2dEntity {
 	// ---------------------------------------------
 
 	public void loadContent(ResourceManager pResourceManager) {
-		mCarEngine.loadContent(pResourceManager);
+		mCarAudio.loadContent(pResourceManager);
 
 	}
 
 	public void unloadContent() {
-		mCarEngine.unloadContent();
+		mCarAudio.unloadContent();
 	}
-
-	CarWheel rearLeftWheel;
-	CarWheel rearRightWheel;
 
 	@Override
 	public void loadPhysics(World pWorld) {
@@ -176,7 +173,6 @@ public class Car extends JBox2dEntity {
 			final var lNewCarWheel = new CarWheel(this, true);
 			lNewCarWheel.mBox2dBodyInstance = lFrontLeftWheel;
 			mWheels.add(lNewCarWheel);
-			rearLeftWheel = lNewCarWheel;
 
 			final var lFrontLeftJoint = mJBox2dEntityInstance.getJointByName("FrontLeftJoint");
 			if (lFrontLeftJoint != null) {
@@ -190,7 +186,6 @@ public class Car extends JBox2dEntity {
 			final var lNewCarWheel = new CarWheel(this, true);
 			lNewCarWheel.mBox2dBodyInstance = lFrontRightWheel;
 			mWheels.add(lNewCarWheel);
-			rearRightWheel = lNewCarWheel;
 
 			final var lFrontRightJoint = mJBox2dEntityInstance.getJointByName("FrontRightJoint");
 			if (lFrontRightJoint != null) {
@@ -234,10 +229,10 @@ public class Car extends JBox2dEntity {
 		super.updatePhyics(pCore);
 
 		// TODO: Move
-		mCarEngine.update(pCore, this);
+		mCarAudio.update(pCore, this);
 
 		if (mCarProgress.hasCarFinished) {
-			mCarEngine.killEngine();
+			mCarAudio.stopEngine();
 
 		}
 
@@ -282,6 +277,19 @@ public class Car extends JBox2dEntity {
 		mTempVec2.set(lBody.getWorldVector(CarWheel.FORWARD_VECTOR));
 		mCurrentSpeed = Vec2.dot(mTempVec2, mForwardVelocity);
 
+	}
+
+	// ---------------------------------------------
+	// Methods
+	// ---------------------------------------------
+
+	public void startEngine() {
+		mCarAudio.startEngine();
+
+	}
+
+	public void stopEngine() {
+		mCarAudio.stopEngine();
 	}
 
 }

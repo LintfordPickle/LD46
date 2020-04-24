@@ -101,7 +101,7 @@ public class TelekinesisController extends BaseController {
 		final var lKeyboard = pCore.input().keyboard();
 		final boolean isCancelEvent = lKeyboard.isKeyDown(GLFW.GLFW_KEY_DOWN) || lKeyboard.isKeyDown(GLFW.GLFW_KEY_UP);
 
-		if (!mGameStateController.mHasRaceStarted)
+		if (!mGameStateController.hasRaceStarted())
 			return super.handleInput(pCore);
 
 		if (isCancelEvent) {
