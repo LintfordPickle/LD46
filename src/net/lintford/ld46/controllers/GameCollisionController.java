@@ -64,7 +64,8 @@ public class GameCollisionController extends Box2dContactController {
 
 	@Override
 	public void beginContact(Contact pContact) {
-		mCarController.playCrashSound();
+		if(mCarController != null)
+			mCarController.playCrashSound();
 
 	}
 
