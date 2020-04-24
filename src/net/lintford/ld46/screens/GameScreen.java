@@ -139,7 +139,7 @@ public class GameScreen extends BaseGameScreen {
 
 				System.out.println("Race starts in " + mGameStateController.mStartCountDown);
 
-				if (mGameStateController.mStartCountDown < 0) {
+				if (mGameStateController.mStartCountDown <= 0) {
 					mGameStateController.mHasRaceStarted = true;
 					pCore.gameTime().setPaused(false);
 					return;
