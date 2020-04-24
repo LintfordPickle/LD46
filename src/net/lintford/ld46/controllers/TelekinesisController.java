@@ -18,14 +18,15 @@ public class TelekinesisController extends BaseController {
 
 	final float MAX_DISTANCE_FOR_TELEKINESIS = 10000.0f;
 
-	public static final float DRAINAGE_RATE = 0.01f;
-	public static final float REGEN_RATE = 0.05f;
+	public static final float DRAINAGE_RATE = 0.03f;
+	public static final float REGEN_RATE = 0.03f;
 
 	// --------------------------------------
 	// Variables
 	// --------------------------------------
 
 	private TelekinesisManager mTelekinesisManager;
+	private GameStateController mGameStateController;
 	private CarController mCarController;
 
 	private float mTimeControlModifier;
@@ -86,6 +87,7 @@ public class TelekinesisController extends BaseController {
 	@Override
 	public void initialize(LintfordCore pCore) {
 		mCarController = (CarController) (pCore.controllerManager().getControllerByNameRequired(CarController.CONTROLLER_NAME, entityGroupID()));
+		mGameStateController = (GameStateController) (pCore.controllerManager().getControllerByNameRequired(GameStateController.CONTROLLER_NAME, entityGroupID()));
 
 	}
 
@@ -98,6 +100,9 @@ public class TelekinesisController extends BaseController {
 	public boolean handleInput(LintfordCore pCore) {
 		final var lKeyboard = pCore.input().keyboard();
 		final boolean isCancelEvent = lKeyboard.isKeyDown(GLFW.GLFW_KEY_DOWN) || lKeyboard.isKeyDown(GLFW.GLFW_KEY_UP);
+
+		if (!mGameStateController.mHasRaceStarted)
+			return super.handleInput(pCore);
 
 		if (isCancelEvent) {
 			disableTelekinesis();
