@@ -15,7 +15,7 @@ public class CarAudio {
 	// ---------------------------------------------
 
 	private AudioListener mAudioListener;
-	
+
 	private AudioSource mEngineSource0Low;
 	private AudioSource mEngineSource0High;
 	private AudioSource mEngineSource1Low;
@@ -31,9 +31,9 @@ public class CarAudio {
 	// ---------------------------------------------
 
 	public void loadContent(ResourceManager pResourceManager) {
-		
+
 		mAudioListener = pResourceManager.audioManager().listener();
-		
+
 		mEngineSource0Low = pResourceManager.audioManager().getAudioSource(hashCode(), AudioManager.AUDIO_SOURCE_TYPE_SOUNDFX);
 		mEngineSource0High = pResourceManager.audioManager().getAudioSource(hashCode(), AudioManager.AUDIO_SOURCE_TYPE_SOUNDFX);
 		mEngineSource1Low = pResourceManager.audioManager().getAudioSource(hashCode(), AudioManager.AUDIO_SOURCE_TYPE_SOUNDFX);
@@ -74,25 +74,37 @@ public class CarAudio {
 		final float lGameTimeModifer = pCore.gameTime().timeModifier();
 		final float lNormalizedSpeed = pCar.currentSpeedNormalized();
 
+		float lWorldGain = .5f;
+
 		// 3d positional audio
-//		if (!pCar.isPlayerCar) {
-//			mEngineSource0Low.setPosition(pCar.x, pCar.y, 0f);
-//			mEngineSource1Low.setPosition(pCar.x, pCar.y, 0f);
-//			mEngineSource0High.setPosition(pCar.x, pCar.y, 0f);
-//			mEngineSource1High.setPosition(pCar.x, pCar.y, 0f);
-//
-//		} else {
-//			mAudioListener.setPosition(pCar.x, pCar.y, 0f);
-//			
-//		}
+		if (!pCar.isPlayerCar) {
+			lWorldGain = 500.f;
+			mEngineSource0Low.setPosition(pCar.x, pCar.y, 0f);
+			mEngineSource1Low.setPosition(pCar.x, pCar.y, 0f);
+			mEngineSource0High.setPosition(pCar.x, pCar.y, 0f);
+			mEngineSource1High.setPosition(pCar.x, pCar.y, 0f);
+
+			mEngineSource0Low.setVelocity(pCar.forwardUnitVelocity().x, pCar.forwardUnitVelocity().y, 0f);
+			mEngineSource1Low.setVelocity(pCar.forwardUnitVelocity().x, pCar.forwardUnitVelocity().y, 0f);
+			mEngineSource0High.setVelocity(pCar.forwardUnitVelocity().x, pCar.forwardUnitVelocity().y, 0f);
+			mEngineSource1High.setVelocity(pCar.forwardUnitVelocity().x, pCar.forwardUnitVelocity().y, 0f);
+
+		} else {
+			mAudioListener.setPosition(pCar.x, pCar.y, 0f);
+			mEngineSource0Low.setPosition(pCar.x, pCar.y, 0f);
+			mEngineSource1Low.setPosition(pCar.x, pCar.y, 0f);
+			mEngineSource0High.setPosition(pCar.x, pCar.y, 0f);
+			mEngineSource1High.setPosition(pCar.x, pCar.y, 0f);
+
+		}
 
 		if (mEngineSource0Low != null) {
 			float lHalfNormalized = lNormalizedSpeed * 1.5f * lNormalizedSpeed;
-			mEngineSource0Low.setGain(1.f - lNormalizedSpeed);
-			mEngineSource0High.setGain(lNormalizedSpeed * 1.3f);
+			mEngineSource0Low.setGain((1.f - lNormalizedSpeed) * lWorldGain);
+			mEngineSource0High.setGain((lNormalizedSpeed * 1.3f) * lWorldGain);
 
 			float s = MathHelper.clamp(-1f + lNormalizedSpeed * 2.f, 0f, 1f);
-			mEngineSource1Low.setGain(0.4f + s);
+			mEngineSource1Low.setGain((0.4f + s) * lWorldGain);
 			mEngineSource1High.setGain(0);
 
 			mEngineSource0Low.setPitch(lGameTimeModifer * (1.f + lHalfNormalized));
