@@ -17,6 +17,7 @@ import net.lintford.ld46.renderers.MinimapRenderer;
 import net.lintford.ld46.renderers.TrackRenderer;
 import net.lintford.ld46.screens.menu.GameLostScreen;
 import net.lintford.ld46.screens.menu.GameWonScreen;
+import net.lintford.ld46.screens.menu.PauseMenuScreen;
 import net.lintford.library.controllers.box2d.Box2dWorldController;
 import net.lintford.library.controllers.camera.CameraZoomController;
 import net.lintford.library.controllers.core.particles.ParticleFrameworkController;
@@ -26,7 +27,6 @@ import net.lintford.library.core.camera.Camera;
 import net.lintford.library.core.particles.ParticleFrameworkData;
 import net.lintford.library.renderers.particles.ParticleFrameworkRenderer;
 import net.lintford.library.screenmanager.ScreenManager;
-import net.lintford.library.screenmanager.screens.AudioOptionsScreen;
 import net.lintford.library.screenmanager.screens.BaseGameScreen;
 
 public class GameScreen extends BaseGameScreen {
@@ -103,10 +103,16 @@ public class GameScreen extends BaseGameScreen {
 		super.update(pCore, pOtherScreenHasFocus, pCoveredByOtherScreen);
 
 		mGameStateController.isGameScreenActive(!pOtherScreenHasFocus);
+		pCore.gameTime().setPaused(pOtherScreenHasFocus);
 
 		if (pOtherScreenHasFocus) {
 			return;
 
+		}
+
+		if (pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ESCAPE)) {
+			mScreenManager.addScreen(new PauseMenuScreen(mScreenManager));
+			return;
 		}
 
 		if (!mGameStateController.hasRaceStarted()) {
@@ -116,11 +122,6 @@ public class GameScreen extends BaseGameScreen {
 		}
 
 		mWispController.update(pCore);
-
-		if (pCore.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ESCAPE)) {
-			mScreenManager.addScreen(new AudioOptionsScreen(mScreenManager));
-			return;
-		}
 
 		if (mGameStateController.getEndConditionFlag() != GameStateController.END_CONDITION_NOT_SET) {
 			pCore.gameTime().setPaused(true);
