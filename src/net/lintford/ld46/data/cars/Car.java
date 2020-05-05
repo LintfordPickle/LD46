@@ -172,54 +172,54 @@ public class Car extends JBox2dEntity {
 		super.loadPhysics(pWorld);
 
 		// add hooks for box2d bodies
-		final var lFrontLeftWheel = mJBox2dEntityInstance.getBodyByName("WheelFrontLeft");
+		final var lFrontLeftWheel = box2dEntityInstance().getBodyByName("WheelFrontLeft");
 		if (lFrontLeftWheel != null) {
 			final var lNewCarWheel = new CarWheel(this, true);
 			lNewCarWheel.mBox2dBodyInstance = lFrontLeftWheel;
 			mWheels.add(lNewCarWheel);
 
-			final var lFrontLeftJoint = mJBox2dEntityInstance.getJointByName("FrontLeftJoint");
+			final var lFrontLeftJoint = box2dEntityInstance().getJointByName("FrontLeftJoint");
 			if (lFrontLeftJoint != null) {
 				lNewCarWheel.mBox2dJointInstance = lFrontLeftJoint;
 			}
 
 		}
 
-		final var lFrontRightWheel = mJBox2dEntityInstance.getBodyByName("WheelFrontRight");
+		final var lFrontRightWheel = box2dEntityInstance().getBodyByName("WheelFrontRight");
 		if (lFrontRightWheel != null) {
 			final var lNewCarWheel = new CarWheel(this, true);
 			lNewCarWheel.mBox2dBodyInstance = lFrontRightWheel;
 			mWheels.add(lNewCarWheel);
 
-			final var lFrontRightJoint = mJBox2dEntityInstance.getJointByName("FrontRightJoint");
+			final var lFrontRightJoint = box2dEntityInstance().getJointByName("FrontRightJoint");
 			if (lFrontRightJoint != null) {
 				lNewCarWheel.mBox2dJointInstance = lFrontRightJoint;
 			}
 
 		}
 
-		final var lRearLeftWheel = mJBox2dEntityInstance.getBodyByName("WheelRearLeft");
+		final var lRearLeftWheel = box2dEntityInstance().getBodyByName("WheelRearLeft");
 		if (lRearLeftWheel != null) {
 			final var lNewCarWheel = new CarWheel(this, false);
 			lNewCarWheel.mBox2dBodyInstance = lRearLeftWheel;
 			mWheels.add(lNewCarWheel);
 
 			// Not really needed for non steerable wheels
-			final var lRearLeftJoint = mJBox2dEntityInstance.getJointByName("RearLeftJoint");
+			final var lRearLeftJoint = box2dEntityInstance().getJointByName("RearLeftJoint");
 			if (lRearLeftJoint != null) {
 				lNewCarWheel.mBox2dJointInstance = lRearLeftJoint;
 			}
 
 		}
 
-		final var lRearRightWheel = mJBox2dEntityInstance.getBodyByName("WheelRearRight");
+		final var lRearRightWheel = box2dEntityInstance().getBodyByName("WheelRearRight");
 		if (lRearRightWheel != null) {
 			final var lNewCarWheel = new CarWheel(this, false);
 			lNewCarWheel.mBox2dBodyInstance = lRearRightWheel;
 			mWheels.add(lNewCarWheel);
 
 			// Not really needed for non steerable wheels
-			final var lRearRightJoint = mJBox2dEntityInstance.getJointByName("RearRightJoint");
+			final var lRearRightJoint = box2dEntityInstance().getJointByName("RearRightJoint");
 			if (lRearRightJoint != null) {
 				lNewCarWheel.mBox2dJointInstance = lRearRightJoint;
 			}
@@ -253,7 +253,7 @@ public class Car extends JBox2dEntity {
 
 		// TEST
 
-		final var lBody = mJBox2dEntityInstance.mainBody().mBody;
+		final var lBody = box2dEntityInstance().mainBody().mBody;
 		Vec2 mTempVec2 = new Vec2();
 		Vec2 mLatVec2 = new Vec2();
 

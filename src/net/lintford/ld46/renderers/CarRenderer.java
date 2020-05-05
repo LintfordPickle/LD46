@@ -122,9 +122,9 @@ public class CarRenderer extends BaseRenderer {
 		mTextureBatch.begin(pCamera);
 		mTextureBatch.update(pCore);
 		mTextureBatch.pixelSize(lScale);
-		
+
 		var lTexture = mCarTextureEnemy;
-		if(pCar.isPlayerCar){
+		if (pCar.isPlayerCar) {
 			lTexture = mCarTexturePlayer;
 		}
 
@@ -143,7 +143,7 @@ public class CarRenderer extends BaseRenderer {
 		}
 
 		{ // Rear Left Wheel
-			final var lRLWheelBody = pCar.mJBox2dEntityInstance.getBodyByName("WheelRearLeft");
+			final var lRLWheelBody = pCar.box2dEntityInstance().getBodyByName("WheelRearLeft");
 
 			if (lRLWheelBody != null) {
 				final float lWorldPositionX = lRLWheelBody.mBody.getWorldCenter().x * Box2dWorldController.UNITS_TO_PIXELS;
@@ -165,7 +165,7 @@ public class CarRenderer extends BaseRenderer {
 		}
 
 		{ // Rear Right Wheel
-			final var lRRWheelBody = pCar.mJBox2dEntityInstance.getBodyByName("WheelRearRight");
+			final var lRRWheelBody = pCar.box2dEntityInstance().getBodyByName("WheelRearRight");
 
 			if (lRRWheelBody != null) {
 				final float lWorldPositionX = lRRWheelBody.mBody.getWorldCenter().x * Box2dWorldController.UNITS_TO_PIXELS;
@@ -187,7 +187,7 @@ public class CarRenderer extends BaseRenderer {
 		}
 
 		{ // Front Left Wheel
-			final var lFLWheelBody = pCar.mJBox2dEntityInstance.getBodyByName("WheelFrontLeft");
+			final var lFLWheelBody = pCar.box2dEntityInstance().getBodyByName("WheelFrontLeft");
 
 			if (lFLWheelBody != null) {
 				final float lWorldPositionX = lFLWheelBody.mBody.getWorldCenter().x * Box2dWorldController.UNITS_TO_PIXELS;
@@ -208,7 +208,7 @@ public class CarRenderer extends BaseRenderer {
 		}
 
 		{ // Front Right Wheel
-			final var lFRWheelBody = pCar.mJBox2dEntityInstance.getBodyByName("WheelFrontRight");
+			final var lFRWheelBody = pCar.box2dEntityInstance().getBodyByName("WheelFrontRight");
 
 			if (lFRWheelBody != null) {
 				// "x": 1, "y": 138, "w": 18, "h": 34

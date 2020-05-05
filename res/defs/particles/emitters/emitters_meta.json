@@ -2,6 +2,7 @@
 	"rootDirectory":"res//defs//particles//emitters//",
 	"itemFileLocations": [
 		"emitter_smoke",
+		"emitter_dirt",
 		"emitter_global_wisp"
 	]
 }

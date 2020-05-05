@@ -366,7 +366,7 @@ public class CarController extends BaseController {
 
 		float lAngle = getTrackGradientAtVehicleLocation(pCar);
 
-		pCar.mJBox2dEntityInstance.setTransform(pCar.pointOnTrackX * Box2dWorldController.PIXELS_TO_UNITS, pCar.pointOnTrackY * Box2dWorldController.PIXELS_TO_UNITS, lAngle);
+		pCar.box2dEntityInstance().setTransform(pCar.pointOnTrackX * Box2dWorldController.PIXELS_TO_UNITS, pCar.pointOnTrackY * Box2dWorldController.PIXELS_TO_UNITS, lAngle);
 
 	}
 
@@ -415,6 +415,7 @@ public class CarController extends BaseController {
 		for (int j = 0; j < lNumWheels; j++) {
 			final var lWheel = lNewPlayerCar.wheels().get(j);
 			lWheel.mSmokeEmitter = mParticleController.particleFrameworkData().emitterManager().getNewParticleEmitterInstanceByDefName("EMITTER_SMOKE");
+			lWheel.mDirtEmitter = mParticleController.particleFrameworkData().emitterManager().getNewParticleEmitterInstanceByDefName("EMITTER_DIRT");
 
 		}
 

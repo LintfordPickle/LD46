@@ -1,0 +1,21 @@
+{
+	"name":"EMITTER_DIRT",
+	"displayName":"EMITTER_DIRT", 
+	
+	"childEmitters" : 
+	[
+		{
+			"name":"EMITTER_DIRT_CHILD_DIRT",
+			"displayName":"CHILD_DIRT_EMITTER_DIRT",
+			"particleSystemName":"PARTICLESYSTEM_DIRT",
+			"emitTimeMin":20,
+			"emitTimeMax":60,
+			"emitAmountMin":1,
+			"emitAmountMax":2,
+			"PositionRelOffsetX":0,
+			"PositionRelOffsetY":0
+	  	}
+	  	
+	]
+	
+}

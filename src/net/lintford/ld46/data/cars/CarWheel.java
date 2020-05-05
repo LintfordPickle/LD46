@@ -36,6 +36,7 @@ public class CarWheel {
 	public float x, y;
 
 	public ParticleEmitterInstance mSmokeEmitter;
+	public ParticleEmitterInstance mDirtEmitter;
 
 	// --------------------------------------
 	// Constructor
@@ -66,10 +67,20 @@ public class CarWheel {
 		y = lBody.getPosition().y * Box2dWorldController.UNITS_TO_PIXELS;
 
 		// set emitter speed
-		mSmokeEmitter.setPosition(x, y);
-		mSmokeEmitter.enabled = mParentCar.currentSpeed() > 1.0f;
-		mSmokeEmitter.emitterEmitModifierNormalized(mParentCar.currentSpeedNormalized());
+		if(mSmokeEmitter != null) {
+			mSmokeEmitter.setPosition(x, y);
+			mSmokeEmitter.enabled = mParentCar.currentSpeed() > 1.0f;
+			mSmokeEmitter.emitterEmitModifierNormalized(mParentCar.currentSpeedNormalized());
+			
+		}
 
+		if(mDirtEmitter != null) {
+			mDirtEmitter.setPosition(x, y);
+			mDirtEmitter.enabled = mParentCar.currentSpeed() > 1.0f;
+			mDirtEmitter.emitterEmitModifierNormalized(mParentCar.currentSpeedNormalized());
+			
+		}
+		
 		// physics
 
 		updateForwardVelocity(lBody);

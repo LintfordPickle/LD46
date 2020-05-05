@@ -9,12 +9,12 @@
 <!-- Ludum Dare Build  -->
 <project name="Ludum Dare 46" basedir="." default="main">
 
-	<property name="LDLibrary.dir">f:/dist/libs/LDLibrary</property>
-	<property name="JavaLauncher.dir">f:/dist/tools/build/launcher</property>
+	<property name="LDLibrary.dir">d:/dist/libs/LDLibrary</property>
+	<property name="JavaLauncher.dir">d:/dist/tools/build/launcher</property>
 	<property name="jre.dir">jre</property>
 
-	<property name="build-drive">f:</property>
-	<property name="project.name">LudumDare46</property>
+	<property name="build-drive">d:</property>
+	<property name="project.name">LD46</property>
 	<property name="project.website">
 	</property>
 
