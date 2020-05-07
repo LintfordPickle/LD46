@@ -242,7 +242,7 @@ public class CarController extends BaseController {
 
 			final var lNode = pTrack.trackSpline().getControlPoint(j);
 
-			final float lDist2 = Vector2f.distance2(pCar.x, pCar.y, lNode.x, lNode.y);
+			final float lDist2 = Vector2f.distance2(pCar.worldPositionX, pCar.worldPositionY, lNode.x, lNode.y);
 			if (lDist2 < 512f * 512) {
 				if (j != lNextNodeId) {
 					// going the wrong way
@@ -276,14 +276,14 @@ public class CarController extends BaseController {
 		final int lLastNodeId = pCar.carProgress().lastVisitedNodeId;
 		final int lNextNodeId = (int) ((lLastNodeId + 1 >= lNumControlNodes) ? 0 : lLastNodeId + 1);
 
-		final float lCarPositionAlongSpling = lTrack.trackSpline().getNormalizedPositionAlongSpline(lLastNodeId, pCar.x, pCar.y);
+		final float lCarPositionAlongSpling = lTrack.trackSpline().getNormalizedPositionAlongSpline(lLastNodeId, pCar.worldPositionX, pCar.worldPositionY);
 		SplinePoint lTrackSplinePoint = lTrack.trackSpline().getPointOnSpline(lLastNodeId + lCarPositionAlongSpling);
 
 		pCar.pointOnTrackX = lTrackSplinePoint.x;
 		pCar.pointOnTrackY = lTrackSplinePoint.y;
 
-		final float lNode0X = pCar.x;// pointOnTrackX;
-		final float lNode0Y = pCar.y;// pointOnTrackY;
+		final float lNode0X = pCar.worldPositionX;
+		final float lNode0Y = pCar.worldPositionY;
 
 		lTrackSplinePoint = lTrack.trackSpline().getControlPoint(lNextNodeId);
 
@@ -338,7 +338,7 @@ public class CarController extends BaseController {
 
 		pCar.mLastCrashResolverUpdateTime -= pCore.appTime().elapseTimeMilli();
 		if (pCar.mLastCrashResolverUpdateTime < 0.0f) {
-			final float lDistTravelled = Vector2f.distance(pCar.mLastCrashResolverUpdateX, pCar.mLastCrashResolverUpdateY, pCar.x, pCar.y);
+			final float lDistTravelled = Vector2f.distance(pCar.mLastCrashResolverUpdateX, pCar.mLastCrashResolverUpdateY, pCar.worldPositionX, pCar.worldPositionY);
 
 			if (lDistTravelled < lMinDist) {
 				pCar.mLastCrashResolverCounter++;
@@ -353,8 +353,8 @@ public class CarController extends BaseController {
 				}
 
 			} else {
-				pCar.mLastCrashResolverUpdateX = pCar.x;
-				pCar.mLastCrashResolverUpdateY = pCar.y;
+				pCar.mLastCrashResolverUpdateX = pCar.worldPositionX;
+				pCar.mLastCrashResolverUpdateY = pCar.worldPositionY;
 			}
 
 			pCar.mLastCrashResolverUpdateTime = lTimer;
@@ -366,7 +366,7 @@ public class CarController extends BaseController {
 
 		float lAngle = getTrackGradientAtVehicleLocation(pCar);
 
-		pCar.box2dEntityInstance().setTransform(pCar.pointOnTrackX * Box2dWorldController.PIXELS_TO_UNITS, pCar.pointOnTrackY * Box2dWorldController.PIXELS_TO_UNITS, lAngle);
+		pCar.box2dEntityInstance().transformEntityInstance(pCar.pointOnTrackX * Box2dWorldController.PIXELS_TO_UNITS, pCar.pointOnTrackY * Box2dWorldController.PIXELS_TO_UNITS, lAngle);
 
 	}
 
@@ -409,7 +409,7 @@ public class CarController extends BaseController {
 		lNewPlayerCar.loadContent(mResourceController.resourceManager());
 
 		float lAngle = getTrackGradientAtVehicleLocation(lNewPlayerCar);
-		lNewPlayerCar.setTransform(0.f, 0.f, lAngle);
+		lNewPlayerCar.transformPObject(0.f, 0.f, lAngle);
 
 		final int lNumWheels = lNewPlayerCar.wheels().size();
 		for (int j = 0; j < lNumWheels; j++) {
@@ -439,8 +439,8 @@ public class CarController extends BaseController {
 		for (int i = 0; i < pNumOpponents; i++) {
 			final var lSplinePoint = lTrack.trackSpline().getPointOnSpline(lCurrentMarker += lNormalizedDistanceBetweenSpawns);
 
-			final float lX = lSplinePoint.x * Box2dWorldController.PIXELS_TO_UNITS;
-			final float lY = lSplinePoint.y * Box2dWorldController.PIXELS_TO_UNITS;
+			final float lX = lSplinePoint.x;
+			final float lY = lSplinePoint.y;
 
 			final var lNewOpponent = new Car(getCarPoolUid());
 			// Make slow for testing
@@ -458,15 +458,15 @@ public class CarController extends BaseController {
 			lPObjectInstance.setFixtureCategory(Box2dGameController.CATEGORY_CAR);
 			lPObjectInstance.setFixtureBitMask(Box2dGameController.CATEGORY_TRACK | Box2dGameController.CATEGORY_CAR);
 
-			lPObjectInstance.setPosition(lX, lY);
 			lNewOpponent.loadContent(mResourceController.resourceManager());
 			lNewOpponent.setPhysicsObject(lPObjectInstance);
 			lNewOpponent.loadPhysics(lBox2dWorld);
 
 			lNewOpponent.carProgress().lastVisitedNodeId = (int) lCurrentMarker;
 			lNewOpponent.carProgress().nextControlNodeId = (int) lCurrentMarker + 1;
+
 			float lAngle = getTrackGradientAtVehicleLocation(lNewOpponent);
-			lPObjectInstance.setTransform(lX, lY, lAngle);
+			lNewOpponent.transformPObject(lX, lY, lAngle);
 
 			final int lNumWheels = lNewOpponent.wheels().size();
 			for (int j = 0; j < lNumWheels; j++) {
@@ -487,7 +487,7 @@ public class CarController extends BaseController {
 		final int lNumControlNodes = lTrack.trackSpline().numberSplineControlPoints();
 		final int lLastNodeId = (int) ((pCar.carProgress().lastVisitedNodeId + 1 >= lNumControlNodes) ? 0 : pCar.carProgress().lastVisitedNodeId);
 
-		return lTrack.trackSpline().getNormalizedPositionAlongSpline(lLastNodeId, pCar.x, pCar.y);
+		return lTrack.trackSpline().getNormalizedPositionAlongSpline(lLastNodeId, pCar.worldPositionX, pCar.worldPositionY);
 	}
 
 	private float getCarDistanceIntoSegment(Car pCar) {
@@ -497,7 +497,7 @@ public class CarController extends BaseController {
 		final int lLastNodeId = (int) ((pCar.carProgress().lastVisitedNodeId + 1 >= lNumControlNodes) ? 0 : pCar.carProgress().lastVisitedNodeId);
 		final var lSegment = lTrack.trackSpline().getControlPoint(lLastNodeId);
 
-		return lTrack.trackSpline().getNormalizedPositionAlongSpline(lLastNodeId, pCar.x, pCar.y) * lSegment.length;
+		return lTrack.trackSpline().getNormalizedPositionAlongSpline(lLastNodeId, pCar.worldPositionX, pCar.worldPositionY) * lSegment.length;
 	}
 
 	private float getTrackGradientAtVehicleLocation(Car pCar) {

@@ -156,7 +156,7 @@ public class MinimapRenderer extends BaseRenderer {
 	private void drawPointOnMiniMap(LintfordCore pCore, Track pTrack, Car pCar, float pR, float pG, float pB) {
 		final int lNumControlNodes = pTrack.trackSpline().numberSplineControlPoints();
 		final int lLastNodeId = (int) ((pCar.carProgress().lastVisitedNodeId + 1 >= lNumControlNodes) ? 0 : pCar.carProgress().lastVisitedNodeId);
-		final float lCarPositionAlongSpling = pTrack.trackSpline().getNormalizedPositionAlongSpline(lLastNodeId, pCar.x, pCar.y);
+		final float lCarPositionAlongSpling = pTrack.trackSpline().getNormalizedPositionAlongSpline(lLastNodeId, pCar.worldPositionX, pCar.worldPositionY);
 		final var lTrackSplinePoint = pTrack.trackSpline().getPointOnSpline(lLastNodeId + lCarPositionAlongSpling);
 
 		final float pPointPosX = mMiniMapPositionOffsetX + (lTrackSplinePoint.x * mMiniMapTrackScale);

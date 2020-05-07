@@ -86,8 +86,8 @@ public class CameraCarChaseController extends BaseController {
 		mPosition = new Vector2f();
 		mLookAhead = new Vector2f();
 
-		mPosition.x = pTrackedCar.x;
-		mPosition.y = pTrackedCar.y;
+		mPosition.x = pTrackedCar.worldPositionX;
+		mPosition.y = pTrackedCar.worldPositionY;
 
 		//
 		mGameCamera = pCamera;
@@ -197,13 +197,13 @@ public class CameraCarChaseController extends BaseController {
 	}
 
 	private void updatewWorldPositions(LintfordCore pCore) {
-		float lAngle = mTrackedEntity.r + (float) Math.toRadians(-90.f);
+		float lAngle = mTrackedEntity.rotationInRadians + (float) Math.toRadians(-90.f);
 		mLookAhead.x = (float) Math.cos(lAngle);
 		mLookAhead.y = (float) Math.sin(lAngle);
 
 		float lSpeedMod = mTrackedEntity.currentSpeed() * 20.f;
-		mDesiredPosition.x = mTrackedEntity.x + mLookAhead.x * lSpeedMod;
-		mDesiredPosition.y = mTrackedEntity.y + mLookAhead.y * lSpeedMod;
+		mDesiredPosition.x = mTrackedEntity.worldPositionX + mLookAhead.x * lSpeedMod;
+		mDesiredPosition.y = mTrackedEntity.worldPositionY + mLookAhead.y * lSpeedMod;
 
 	}
 

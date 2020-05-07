@@ -165,7 +165,7 @@ public class GameScreen extends BaseGameScreen {
 
 				final var lSelectedCar = mGameWorld.carManager().cars().get(lTelekManager.mSelectedOpponentIndex);
 
-				mTelekCamera.setPosition(-lSelectedCar.x, -lSelectedCar.y - 150f);
+				mTelekCamera.setPosition(-lSelectedCar.worldPositionX, -lSelectedCar.worldPositionY - 150f);
 				mTelekCamera.setZoomFactor(1.f);
 				mTelekCamera.update(pCore);
 

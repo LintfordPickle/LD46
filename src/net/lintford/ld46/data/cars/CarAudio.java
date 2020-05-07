@@ -79,10 +79,10 @@ public class CarAudio {
 		// 3d positional audio
 		if (!pCar.isPlayerCar) {
 			lWorldGain = 500.f;
-			mEngineSource0Low.setPosition(pCar.x, pCar.y, 0f);
-			mEngineSource1Low.setPosition(pCar.x, pCar.y, 0f);
-			mEngineSource0High.setPosition(pCar.x, pCar.y, 0f);
-			mEngineSource1High.setPosition(pCar.x, pCar.y, 0f);
+			mEngineSource0Low.setPosition(pCar.worldPositionX, pCar.worldPositionY, 0f);
+			mEngineSource1Low.setPosition(pCar.worldPositionX, pCar.worldPositionY, 0f);
+			mEngineSource0High.setPosition(pCar.worldPositionX, pCar.worldPositionY, 0f);
+			mEngineSource1High.setPosition(pCar.worldPositionX, pCar.worldPositionY, 0f);
 
 			mEngineSource0Low.setVelocity(pCar.forwardUnitVelocity().x, pCar.forwardUnitVelocity().y, 0f);
 			mEngineSource1Low.setVelocity(pCar.forwardUnitVelocity().x, pCar.forwardUnitVelocity().y, 0f);
@@ -90,11 +90,11 @@ public class CarAudio {
 			mEngineSource1High.setVelocity(pCar.forwardUnitVelocity().x, pCar.forwardUnitVelocity().y, 0f);
 
 		} else {
-			mAudioListener.setPosition(pCar.x, pCar.y, 0f);
-			mEngineSource0Low.setPosition(pCar.x, pCar.y, 0f);
-			mEngineSource1Low.setPosition(pCar.x, pCar.y, 0f);
-			mEngineSource0High.setPosition(pCar.x, pCar.y, 0f);
-			mEngineSource1High.setPosition(pCar.x, pCar.y, 0f);
+			mAudioListener.setPosition(pCar.worldPositionX, pCar.worldPositionY, 0f);
+			mEngineSource0Low.setPosition(pCar.worldPositionX, pCar.worldPositionY, 0f);
+			mEngineSource1Low.setPosition(pCar.worldPositionX, pCar.worldPositionY, 0f);
+			mEngineSource0High.setPosition(pCar.worldPositionX, pCar.worldPositionY, 0f);
+			mEngineSource1High.setPosition(pCar.worldPositionX, pCar.worldPositionY, 0f);
 
 		}
 

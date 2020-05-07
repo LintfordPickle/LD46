@@ -138,7 +138,7 @@ public class CarRenderer extends BaseRenderer {
 			final float lDestW = lSourceW;
 			final float lDestH = lSourceH;
 
-			mTextureBatch.draw(lTexture, lSourceX, lSourceY, lSourceW, lSourceH, pCar.x, pCar.y, lDestW, lDestH, -0.01f, pCar.r, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
+			mTextureBatch.draw(lTexture, lSourceX, lSourceY, lSourceW, lSourceH, pCar.worldPositionX, pCar.worldPositionY, lDestW, lDestH, -0.01f, pCar.rotationInRadians, 0f, 0f, lScale, 1f, 1f, 1f, 1f);
 
 		}
 
